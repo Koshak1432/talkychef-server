@@ -1,0 +1,47 @@
+package voicerecipeserver.model.entities;
+
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
+
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Entity
+@Table(name =  "measure_units")
+public class MeasureUnit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    @Column(unique = true)
+    private String name;
+
+    @ManyToMany(mappedBy = "units")
+    @ToString.Exclude
+    private Set<MeasureUnitsSet> measureUnitsSets;
+
+    @OneToMany(mappedBy="unit")
+    @ToString.Exclude
+    private Set<IngredientsDistribution> ingredientsDistributions;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MeasureUnit unit)) return false;
+        return getId() == unit.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+}
