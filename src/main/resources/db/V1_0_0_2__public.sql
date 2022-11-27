@@ -8,6 +8,10 @@ INSERT INTO measure_units( name) VALUES
 ('ч.л.'),
 ('ст.л.');
 
+INSERT INTO users(username) VALUES
+('root');
+
+
 INSERT INTO measure_units_sets VALUES (0);
 
 INSERT INTO measure_units_distribution(set_id, unit_id)  VALUES
