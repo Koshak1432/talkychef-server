@@ -12,21 +12,20 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Entity
-@Table(name = "categories")
-public class Category {
+@Entity(name = "collections")
+public class Collection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
+    private String name;
 
-    @ToString.Exclude
     @ManyToMany
-    @JoinTable(name = "categories_distribution",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    @JoinTable(
+            name = "collections_distribution",
+            joinColumns = @JoinColumn(name = "collection_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    @ToString.Exclude
     private List<Recipe> recipes;
-
-
 }

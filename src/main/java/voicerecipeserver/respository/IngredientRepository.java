@@ -13,6 +13,6 @@ public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
     Optional<Ingredient> findByName(String name);
 
     //todo захардкодил цифру - нехорошо
-    List<Ingredient> findFirst3ByNameContainingIgnoreCase(String infix);
+    List<Ingredient> findFirst5ByNameContaining(String lowerCaseInfix);
 
 }

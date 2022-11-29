@@ -8,20 +8,20 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * IngredientDto
+ * CollectionDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-11-21T15:54:58.689Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-11-27T07:10:16.229Z[GMT]")
 
 
-public class IngredientDto   {
+public class CollectionDto   {
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("id")
   private Long id = null;
 
-  public IngredientDto name(String name) {
+  public CollectionDto name(String name) {
     this.name = name;
     return this;
   }
@@ -32,7 +32,7 @@ public class IngredientDto   {
    **/
       @NotNull
 
-  @Size(max=64)   public String getName() {
+  @Size(max=128)   public String getName() {
     return name;
   }
 
@@ -40,7 +40,7 @@ public class IngredientDto   {
     this.name = name;
   }
 
-  public IngredientDto id(Long id) {
+  public CollectionDto id(Long id) {
     this.id = id;
     return this;
   }
@@ -49,7 +49,8 @@ public class IngredientDto   {
    * Get id
    * @return id
    **/
-  
+      @NotNull
+
     public Long getId() {
     return id;
   }
@@ -67,9 +68,9 @@ public class IngredientDto   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    IngredientDto ingredientDto = (IngredientDto) o;
-    return Objects.equals(this.name, ingredientDto.name) &&
-        Objects.equals(this.id, ingredientDto.id);
+    CollectionDto collectionDto = (CollectionDto) o;
+    return Objects.equals(this.name, collectionDto.name) &&
+        Objects.equals(this.id, collectionDto.id);
   }
 
   @Override
@@ -80,7 +81,7 @@ public class IngredientDto   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class IngredientDto {\n");
+    sb.append("class CollectionDto {\n");
     
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");

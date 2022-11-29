@@ -8,7 +8,6 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -54,7 +53,12 @@ public class Recipe {
 
     @ManyToMany(mappedBy = "recipes")
     @ToString.Exclude
-    private Set<Category> categories;
+    private List<Category> categories;
+
+    @ManyToMany(mappedBy = "recipes")
+    @ToString.Exclude
+    private List<Collection> collections;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     @ToString.Exclude

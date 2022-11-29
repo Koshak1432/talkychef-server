@@ -2,7 +2,10 @@ package voicerecipeserver.model.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import voicerecipeserver.model.dto.IdDto;
+import voicerecipeserver.model.dto.IngredientsDistributionDto;
+import voicerecipeserver.model.dto.StepDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +16,7 @@ import javax.validation.constraints.*;
  * RecipeDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-11-21T15:54:58.689Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-11-27T07:10:16.229Z[GMT]")
 
 
 public class RecipeDto   {
@@ -28,10 +31,6 @@ public class RecipeDto   {
 
   @JsonProperty("author_id")
   private Long authorId = null;
-
-  @JsonProperty("categories")
-  @Valid
-  private List<CategoryDto> categories = null;
 
   @JsonProperty("prep_time_mins")
   private Double prepTimeMins = null;
@@ -48,7 +47,7 @@ public class RecipeDto   {
   @JsonProperty("carbohydrates")
   private Double carbohydrates = null;
 
-  @JsonProperty("ingredients")
+  @JsonProperty("ingredients_distributions")
   @Valid
   private List<IngredientsDistributionDto> ingredientsDistributions = null;
 
@@ -131,32 +130,6 @@ public class RecipeDto   {
 
   public void setAuthorId(Long authorId) {
     this.authorId = authorId;
-  }
-
-  public RecipeDto categories(List<CategoryDto> categories) {
-    this.categories = categories;
-    return this;
-  }
-
-  public RecipeDto addCategoriesItem(CategoryDto categoriesItem) {
-    if (this.categories == null) {
-      this.categories = new ArrayList<CategoryDto>();
-    }
-    this.categories.add(categoriesItem);
-    return this;
-  }
-
-  /**
-   * Get categories
-   * @return categories
-   **/
-      @Valid
-    public List<CategoryDto> getCategories() {
-    return categories;
-  }
-
-  public void setCategories(List<CategoryDto> categories) {
-    this.categories = categories;
   }
 
   public RecipeDto prepTimeMins(Double prepTimeMins) {
@@ -249,22 +222,22 @@ public class RecipeDto   {
     this.carbohydrates = carbohydrates;
   }
 
-  public RecipeDto ingredients(List<IngredientsDistributionDto> ingredients) {
-    this.ingredientsDistributions = ingredients;
+  public RecipeDto ingredientsDistributions(List<IngredientsDistributionDto> ingredientsDistributions) {
+    this.ingredientsDistributions = ingredientsDistributions;
     return this;
   }
 
-  public RecipeDto addIngredientsItem(IngredientsDistributionDto ingredientsItem) {
+  public RecipeDto addIngredientsDistributionsItem(IngredientsDistributionDto ingredientsDistributionsItem) {
     if (this.ingredientsDistributions == null) {
       this.ingredientsDistributions = new ArrayList<IngredientsDistributionDto>();
     }
-    this.ingredientsDistributions.add(ingredientsItem);
+    this.ingredientsDistributions.add(ingredientsDistributionsItem);
     return this;
   }
 
   /**
-   * Get ingredients
-   * @return ingredients
+   * Get ingredientsDistributions
+   * @return ingredientsDistributions
    **/
       @Valid
     public List<IngredientsDistributionDto> getIngredientsDistributions() {
@@ -315,7 +288,6 @@ public class RecipeDto   {
         Objects.equals(this.media, recipeDto.media) &&
         Objects.equals(this.cookTimeMins, recipeDto.cookTimeMins) &&
         Objects.equals(this.authorId, recipeDto.authorId) &&
-        Objects.equals(this.categories, recipeDto.categories) &&
         Objects.equals(this.prepTimeMins, recipeDto.prepTimeMins) &&
         Objects.equals(this.kilocalories, recipeDto.kilocalories) &&
         Objects.equals(this.proteins, recipeDto.proteins) &&
@@ -327,7 +299,7 @@ public class RecipeDto   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, media, cookTimeMins, authorId, categories, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps);
+    return Objects.hash(name, media, cookTimeMins, authorId, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps);
   }
 
   @Override
@@ -339,13 +311,12 @@ public class RecipeDto   {
     sb.append("    media: ").append(toIndentedString(media)).append("\n");
     sb.append("    cookTimeMins: ").append(toIndentedString(cookTimeMins)).append("\n");
     sb.append("    authorId: ").append(toIndentedString(authorId)).append("\n");
-    sb.append("    categories: ").append(toIndentedString(categories)).append("\n");
     sb.append("    prepTimeMins: ").append(toIndentedString(prepTimeMins)).append("\n");
     sb.append("    kilocalories: ").append(toIndentedString(kilocalories)).append("\n");
     sb.append("    proteins: ").append(toIndentedString(proteins)).append("\n");
     sb.append("    fats: ").append(toIndentedString(fats)).append("\n");
     sb.append("    carbohydrates: ").append(toIndentedString(carbohydrates)).append("\n");
-    sb.append("    ingredients: ").append(toIndentedString(ingredientsDistributions)).append("\n");
+    sb.append("    ingredientsDistributions: ").append(toIndentedString(ingredientsDistributions)).append("\n");
     sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
     sb.append("}");
     return sb.toString();

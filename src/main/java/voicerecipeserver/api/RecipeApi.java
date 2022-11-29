@@ -15,7 +15,7 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Validated
+@Valid
 public interface RecipeApi {
 
     @GetMapping(value = "/api/v1/recipe/{id}", produces = "application/json")

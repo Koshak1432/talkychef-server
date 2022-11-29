@@ -1,5 +1,6 @@
 package voicerecipeserver.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.Optional;
 //todo многопоточность
   
 @RestController
+@CrossOrigin(maxAge = 1440)
 public class RecipeApiController implements RecipeApi {
 
 
@@ -31,10 +33,11 @@ public class RecipeApiController implements RecipeApi {
     private final IngredientsDistributionRepository ingredientsDistributionRepository;
     private final StepRepository stepRepository;
 
-    private final DefaultMapper mapper;
+    private final ModelMapper mapper;
 
+    // TODO не ну это колбасу точно убрать надо
     @Autowired
-    public RecipeApiController(StepRepository stepRepository,RecipeRepository recipeRepository,IngredientRepository ingredientRepository, MeasureUnitRepository measureUnitRepository,IngredientsDistributionRepository ingredientsDistributionRepository, DefaultMapper mapper){
+    public RecipeApiController(StepRepository stepRepository,RecipeRepository recipeRepository,IngredientRepository ingredientRepository, MeasureUnitRepository measureUnitRepository,IngredientsDistributionRepository ingredientsDistributionRepository, ModelMapper mapper){
         this.stepRepository = stepRepository;
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
@@ -79,12 +82,22 @@ public class RecipeApiController implements RecipeApi {
         }
         for(IngredientsDistribution ingredientsDistribution : recipe.getIngredientsDistributions()){
             ingredientsDistribution.setRecipe(recipe);
-            System.out.println(ingredientsDistribution.getIngredient().getName());
+
             //TODO по имени или ID искать?
-            ingredientsDistribution.setIngredient(ingredientRepository.findByName(ingredientsDistribution.getIngredient().getName()).get());
-//TODO сука видите ли неотслеживаемый ингредиент я ему кидаю, гандон, просто пидорас. Почему-то каскад из Recipe на distribution переходит рекурсивно на его поля
-            //TODO проверять unit на наличие в наборе.
-            ingredientsDistribution.setUnit(measureUnitRepository.findByName(ingredientsDistribution.getUnit().getName()).get());
+            Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredientsDistribution.getIngredient().getName());
+            if(ingredientOptional.isEmpty()){
+                ingredientsDistribution.setIngredient(ingredientRepository.save(ingredientsDistribution.getIngredient()));
+            } else {
+                ingredientsDistribution.setIngredient(ingredientOptional.get());
+            }
+            //TODO в идеале бы настроить для recipe save так, чтобы он сохранял measureUnit, ingredient, если их нет в БД. Ибо они уже отмаплены и просто запросы гоняем лишние. Тупо.
+
+            Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findByName(ingredientsDistribution.getUnit().getName());
+            if(measureUnitOptional.isEmpty()){
+                ingredientsDistribution.setUnit(measureUnitRepository.save(ingredientsDistribution.getUnit()));
+            } else {
+                ingredientsDistribution.setUnit(measureUnitOptional.get());
+            }
         }
 
         recipeRepository.save(recipe);

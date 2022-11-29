@@ -8,7 +8,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -25,13 +25,10 @@ public class MeasureUnit {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "units")
-    @ToString.Exclude
-    private Set<MeasureUnitsSet> measureUnitsSets;
 
     @OneToMany(mappedBy="unit")
     @ToString.Exclude
-    private Set<IngredientsDistribution> ingredientsDistributions;
+    private List<IngredientsDistribution> ingredientsDistributions;
 
     @Override
     public boolean equals(Object o) {

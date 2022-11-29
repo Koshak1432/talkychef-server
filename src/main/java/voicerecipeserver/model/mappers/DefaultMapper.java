@@ -17,6 +17,8 @@ public class DefaultMapper extends ModelMapper {
             mapper.skip(Recipe::setId);
         }).implicitMappings();
 
+        //todo проверить игнорирование полей типа Categories при конвертировании из Recipe -> RecipeDto, вдруг заставляет их подтягивать за зря
+
         this.typeMap(IngredientsDistributionDto.class, IngredientsDistribution.class).addMappings(mapper -> {
             mapper.map(IngredientsDistributionDto::getCount, IngredientsDistribution::setMeasureUnitCount);
             mapper.<String>map(src -> src.getName(), (dest, v) -> dest.getIngredient().setName(v));
