@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### security ###
+start.sh
+**/voicerecipe.p12
