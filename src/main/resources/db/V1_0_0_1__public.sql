@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS recipes
     id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name varchar(128) NOT NULL,
     media_id bigint NOT NULL REFERENCES media,
-    author_id bigint REFERENCES users,
+    author_id bigint NOT NULL REFERENCES users,
     cook_time_mins integer NOT NULL ,
     prep_time_mins integer,
     kilocalories integer,
@@ -81,8 +81,8 @@ CREATE TABLE IF NOT EXISTS categories(
 );
 
 CREATE TABLE IF NOT EXISTS categories_distribution(
-    category_id bigint REFERENCES categories,
-    recipe_id bigint REFERENCES recipes,
+    category_id bigint NOT NULL REFERENCES categories ON DELETE CASCADE,
+    recipe_id bigint NOT NULL REFERENCES recipes ON DELETE CASCADE,
     PRIMARY KEY (category_id, recipe_id)
 );
 
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS collections(
 );
 
 CREATE TABLE IF NOT EXISTS collections_distribution(
-    collection_id bigint REFERENCES collections,
-    recipe_id bigint REFERENCES recipes,
+    collection_id bigint NOT NULL REFERENCES collections ON DELETE CASCADE,
+    recipe_id bigint NOT NULL REFERENCES recipes ON DELETE CASCADE,
     PRIMARY KEY (collection_id, recipe_id)
 );
