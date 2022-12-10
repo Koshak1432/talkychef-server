@@ -17,7 +17,7 @@ public class Collection {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(cascade =   {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "collections_distribution",
             joinColumns = @JoinColumn(name = "collection_id"),

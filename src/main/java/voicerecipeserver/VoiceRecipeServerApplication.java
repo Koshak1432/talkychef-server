@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO cross-origin настроить только на сайт. Сейчас всё разрешил.
 // TODO в названиях ингредиентов/единиц измерений запретить спецсимволы и цифры
 // TODO на каждый сценарий добавления тестик бы бахнуть
+// TODO manytomany нужно на set-ах делать. Читай подробнее.
+// TODO эксепшены вообще не обрабатываются нормально, обычно тупо 500 отсылает
 @SpringBootApplication
 public class VoiceRecipeServerApplication {
 
