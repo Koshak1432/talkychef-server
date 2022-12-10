@@ -18,7 +18,7 @@ import java.util.List;
 
 @Validated
 public interface MeasureUnitApi {
-    @PostMapping(value = "/api/v1/muasureunit/", consumes = "application/json")
+    @PostMapping(value = "/api/v1/muasureunit", consumes = "application/json")
     ResponseEntity<IdDto> measureUnitPost(@Valid @RequestBody MeasureUnitDto body) ;
 
     @GetMapping(value = "/api/v1/muasureunit/{id}")

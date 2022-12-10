@@ -18,7 +18,7 @@ import java.util.List;
 @Valid
 public interface IngredientApi {
 
-     @PostMapping(value = "/api/v1/ingredient/", consumes = "application/json")
+     @PostMapping(value = "/api/v1/ingredient", consumes = "application/json")
      ResponseEntity<IdDto> ingredientPost(@RequestBody IngredientDto body) ;
 
      @GetMapping(value = "/api/v1/ingredient/{id}")
