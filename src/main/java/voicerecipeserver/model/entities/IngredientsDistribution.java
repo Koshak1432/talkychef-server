@@ -3,6 +3,7 @@ package voicerecipeserver.model.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,7 +42,7 @@ public class IngredientsDistribution {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IngredientsDistribution that = (IngredientsDistribution) o;
-        return id.getIngredientId() == that.getId().getIngredientId() && id.getRecipeId() == that.getId().getRecipeId();
+        return Objects.equals(id.getIngredientId(), that.getId().getIngredientId()) && Objects.equals(id.getRecipeId(), that.getId().getRecipeId());
     }
 
     @Override

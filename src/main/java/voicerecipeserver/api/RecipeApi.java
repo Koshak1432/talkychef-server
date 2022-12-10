@@ -25,5 +25,5 @@ public interface RecipeApi {
     ResponseEntity<IdDto> recipePost(@Valid @RequestBody RecipeDto recipeDto) throws NotFoundException;
 
     @GetMapping(value = "/api/v1/recipe/search/{name}", produces = "application/json")
-    ResponseEntity<List<RecipeDto>> recipeSearchNameGet(@Size(max=128) @PathVariable("name") String name);
+    ResponseEntity<List<RecipeDto>> recipeSearchNameGet(@Size(max=128) @PathVariable("name") String name) throws NotFoundException;
 }

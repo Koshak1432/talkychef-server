@@ -6,18 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.api.RecipeApi;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.IngredientsDistributionDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import voicerecipeserver.model.dto.StepDto;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.model.mappers.DefaultMapper;
 import voicerecipeserver.respository.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 //todo многопоточность
@@ -83,6 +79,7 @@ public class RecipeApiController implements RecipeApi {
         for(IngredientsDistribution ingredientsDistribution : recipe.getIngredientsDistributions()){
             ingredientsDistribution.setRecipe(recipe);
 
+            ingredientsDistribution.getIngredient().setName(ingredientsDistribution.getIngredient().getName().toLowerCase());
             //TODO по имени или ID искать?
             Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredientsDistribution.getIngredient().getName());
             if(ingredientOptional.isEmpty()){
@@ -108,9 +105,12 @@ public class RecipeApiController implements RecipeApi {
     }
 
 
-    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name){
-        List<Recipe> recipes = recipeRepository.findFirst10ByNameContainingIgnoreCase(name);
+    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name) throws NotFoundException{
+        Optional<List<Recipe>> recipes = recipeRepository.findFirst10ByNameContaining(name);
 
+        if(recipes.isEmpty()){
+            throw  new NotFoundException("Can't find recipes with substr: " + name);
+        }
         List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
 
 
