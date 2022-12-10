@@ -1,12 +1,9 @@
 package voicerecipeserver.model.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -27,5 +24,17 @@ public class Collection {
             inverseJoinColumns = @JoinColumn(name = "recipe_id")
     )
     @ToString.Exclude
-    private List<Recipe> recipes;
+    @Setter(AccessLevel.NONE)
+    private Set<Recipe> recipes;
+
+    public void addRecipe(Recipe recipe){
+        recipes.add(recipe);
+        recipe.getCollections().add(this);
+    }
+
+    public void removeRecipe(Recipe recipe){
+        recipes.add(recipe);
+        recipe.getCollections().remove(this);
+    }
+
 }
