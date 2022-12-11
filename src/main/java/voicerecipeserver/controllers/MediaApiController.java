@@ -48,8 +48,15 @@ public class MediaApiController implements MediaApi {
 
     //    todo кешнуть поддерживаемые типы при инициализации и потом их юзать. Эксепшены кидать при отсутствии типа.
     @Override
-    public ResponseEntity<IdDto> mediaPost(String mimeType, byte[] data) throws InvalidMediaTypeException {
+    public ResponseEntity<IdDto> mediaPost(String contentTypeHeader, byte[] data) throws InvalidMediaTypeException {
 
+        int endOfTypeInd = contentTypeHeader.indexOf(';');
+        String mimeType;
+        if(endOfTypeInd == -1){
+            mimeType = contentTypeHeader;
+        } else {
+             mimeType = contentTypeHeader.substring(0, endOfTypeInd);
+        }
 
         Optional<MediaType> mediaTypeOptional = mediaTypeRepository.findByMimeType(mimeType);
 
