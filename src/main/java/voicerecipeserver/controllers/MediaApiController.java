@@ -41,7 +41,7 @@ public class MediaApiController implements MediaApi {
 
         byte[] data = media.get().getFileData();
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.IMAGE_JPEG);
+        headers.setContentType(org.springframework.http.MediaType.valueOf(media.get().getMediaType().getMimeType()));
         headers.setContentLength(data.length);
         return new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
     }
