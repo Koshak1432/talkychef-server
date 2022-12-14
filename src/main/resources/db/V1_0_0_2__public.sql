@@ -1,5 +1,6 @@
 INSERT INTO media_types( mime_type) VALUES
 ( 'image/jpeg'),
+( 'image/png'),
 ( 'video/webm');
 
 INSERT INTO measure_units(name) VALUES
