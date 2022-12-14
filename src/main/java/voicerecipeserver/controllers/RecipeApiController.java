@@ -43,7 +43,7 @@ public class RecipeApiController implements RecipeApi {
     }
 
     //TODO категории в рецепты добавить
-//TODO удалить тест
+//TODO удалить тест (но пока пусть будет, маппер тестить)
     @PostMapping(value = "test/", consumes = "application/json")
     public ResponseEntity<RecipeDto> test(@Valid @RequestBody RecipeDto recipeDto){
 
@@ -78,8 +78,9 @@ public class RecipeApiController implements RecipeApi {
         }
         for(IngredientsDistribution ingredientsDistribution : recipe.getIngredientsDistributions()){
             ingredientsDistribution.setRecipe(recipe);
-
+            ingredientsDistribution.setId(new IngredientsDistributionKey());
             ingredientsDistribution.getIngredient().setName(ingredientsDistribution.getIngredient().getName().toLowerCase());
+
             //TODO по имени или ID искать?
             Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredientsDistribution.getIngredient().getName());
             if(ingredientOptional.isEmpty()){
@@ -96,12 +97,8 @@ public class RecipeApiController implements RecipeApi {
                 ingredientsDistribution.setUnit(measureUnitOptional.get());
             }
         }
-
         recipeRepository.save(recipe);
-
         return new ResponseEntity<>(new IdDto().id(recipe.getId()), HttpStatus.OK);
-
-//        return implTest(recipeDto);
     }
 
 
