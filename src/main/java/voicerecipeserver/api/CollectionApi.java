@@ -5,10 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
+@Valid
 public interface CollectionApi {
     @PostMapping(value = "/api/v1/collection")
     ResponseEntity<Void> collectionPost(@RequestParam @NotBlank String name);

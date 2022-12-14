@@ -16,14 +16,14 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Validated
+@Valid
 public interface MeasureUnitApi {
-    @PostMapping(value = "/api/v1/muasureunit", consumes = "application/json")
+    @PostMapping(value = "/api/v1/measureunit", consumes = "application/json")
     ResponseEntity<IdDto> measureUnitPost(@Valid @RequestBody MeasureUnitDto body) ;
 
-    @GetMapping(value = "/api/v1/muasureunit/{id}")
+    @GetMapping(value = "/api/v1/measureunit/{id}")
     ResponseEntity<MeasureUnitDto> measureUnitIdGet(@PathVariable("id") @PositiveOrZero Long id) throws NotFoundException;
 
-    @GetMapping(value = "/api/v1/muasureunit/search/{name}", produces = "application/json")
+    @GetMapping(value = "/api/v1/measureunit/search/{name}", produces = "application/json")
     ResponseEntity<List<MeasureUnitDto>> measureUnitSearchNameGet(@Size(max=32) @PathVariable("name") String name);
 }
