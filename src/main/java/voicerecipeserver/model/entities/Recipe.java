@@ -25,10 +25,10 @@ public class Recipe {
     private String name;
 
     @Column(name = "cook_time_mins")
-    private @NotNull Double cookTimeMins;
+    private Integer cookTimeMins;
 
     @Column(name = "prep_time_mins")
-    private Double prepTimeMins;
+    private Integer prepTimeMins;
 
     private Double kilocalories;
 

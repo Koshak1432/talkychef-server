@@ -31,7 +31,7 @@ public class Step {
     private Integer stepNum;
 
     @Column(name = "wait_time_mins")
-    private Double waitTimeMins;
+    private Integer waitTimeMins;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")

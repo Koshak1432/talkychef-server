@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
  * StepDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-11-21T15:54:58.689Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-12-14T05:04:51.177Z[GMT]")
 
 
 public class StepDto   {
@@ -26,7 +26,7 @@ public class StepDto   {
   private Integer stepNum = null;
 
   @JsonProperty("wait_time_mins")
-  private Double waitTimeMins = null;
+  private Integer waitTimeMins = null;
 
   public StepDto media(IdDto media) {
     this.media = media;
@@ -86,7 +86,7 @@ public class StepDto   {
     this.stepNum = stepNum;
   }
 
-  public StepDto waitTimeMins(Double waitTimeMins) {
+  public StepDto waitTimeMins(Integer waitTimeMins) {
     this.waitTimeMins = waitTimeMins;
     return this;
   }
@@ -96,11 +96,11 @@ public class StepDto   {
    * @return waitTimeMins
    **/
   
-    public Double getWaitTimeMins() {
+    public Integer getWaitTimeMins() {
     return waitTimeMins;
   }
 
-  public void setWaitTimeMins(Double waitTimeMins) {
+  public void setWaitTimeMins(Integer waitTimeMins) {
     this.waitTimeMins = waitTimeMins;
   }
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.*;
  * IngredientsDistributionDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-11-21T15:54:58.689Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-12-14T05:04:51.177Z[GMT]")
 
 
 public class IngredientsDistributionDto   {
@@ -93,8 +93,7 @@ public class IngredientsDistributionDto   {
    * Get ingredientId
    * @return ingredientId
    **/
-      @NotNull
-
+  
     public Long getIngredientId() {
     return ingredientId;
   }

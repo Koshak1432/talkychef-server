@@ -16,7 +16,7 @@ import javax.validation.constraints.*;
  * RecipeDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-11-27T07:10:16.229Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-12-14T05:04:51.177Z[GMT]")
 
 
 public class RecipeDto   {
@@ -27,13 +27,13 @@ public class RecipeDto   {
   private IdDto media = null;
 
   @JsonProperty("cook_time_mins")
-  private Double cookTimeMins = null;
+  private Integer cookTimeMins = null;
 
   @JsonProperty("author_id")
-  private Long authorId = null;
+  private String authorId = null;
 
   @JsonProperty("prep_time_mins")
-  private Double prepTimeMins = null;
+  private Integer prepTimeMins = null;
 
   @JsonProperty("kilocalories")
   private Double kilocalories = null;
@@ -94,7 +94,7 @@ public class RecipeDto   {
     this.media = media;
   }
 
-  public RecipeDto cookTimeMins(Double cookTimeMins) {
+  public RecipeDto cookTimeMins(Integer cookTimeMins) {
     this.cookTimeMins = cookTimeMins;
     return this;
   }
@@ -105,15 +105,15 @@ public class RecipeDto   {
    **/
       @NotNull
 
-    public Double getCookTimeMins() {
+    public Integer getCookTimeMins() {
     return cookTimeMins;
   }
 
-  public void setCookTimeMins(Double cookTimeMins) {
+  public void setCookTimeMins(Integer cookTimeMins) {
     this.cookTimeMins = cookTimeMins;
   }
 
-  public RecipeDto authorId(Long authorId) {
+  public RecipeDto authorId(String authorId) {
     this.authorId = authorId;
     return this;
   }
@@ -124,15 +124,15 @@ public class RecipeDto   {
    **/
       @NotNull
 
-    public Long getAuthorId() {
+  @Size(max=32)   public String getAuthorId() {
     return authorId;
   }
 
-  public void setAuthorId(Long authorId) {
+  public void setAuthorId(String authorId) {
     this.authorId = authorId;
   }
 
-  public RecipeDto prepTimeMins(Double prepTimeMins) {
+  public RecipeDto prepTimeMins(Integer prepTimeMins) {
     this.prepTimeMins = prepTimeMins;
     return this;
   }
@@ -142,11 +142,11 @@ public class RecipeDto   {
    * @return prepTimeMins
    **/
   
-    public Double getPrepTimeMins() {
+    public Integer getPrepTimeMins() {
     return prepTimeMins;
   }
 
-  public void setPrepTimeMins(Double prepTimeMins) {
+  public void setPrepTimeMins(Integer prepTimeMins) {
     this.prepTimeMins = prepTimeMins;
   }
 

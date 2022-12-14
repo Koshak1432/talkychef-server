@@ -11,7 +11,7 @@ import javax.validation.constraints.*;
  * CategoryDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-11-27T07:10:16.229Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-12-14T05:04:51.177Z[GMT]")
 
 
 public class CategoryDto   {
