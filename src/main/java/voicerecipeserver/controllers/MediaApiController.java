@@ -14,6 +14,7 @@ import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MediaRepository;
 import voicerecipeserver.respository.MediaTypeRepository;
+import voicerecipeserver.services.MediaService;
 
 import java.util.Optional;
 
@@ -21,57 +22,23 @@ import java.util.Optional;
 @CrossOrigin(maxAge = 1440)
 public class MediaApiController implements MediaApi {
 
-    private final MediaRepository mediaRepository;
-    private final MediaTypeRepository mediaTypeRepository;
+    private final MediaService service;
 
     @Autowired
-    public MediaApiController(MediaRepository mediaRepository, MediaTypeRepository mediaTypeRepository){
-        this.mediaTypeRepository = mediaTypeRepository;
-        this.mediaRepository = mediaRepository;
+    public MediaApiController(MediaService service){
+        this.service = service;
     }
 
-    //TODO тип медиа не проверяется
+
     @Override
-    public ResponseEntity<byte[]> mediaGet(@javax.validation.constraints.PositiveOrZero Long id) throws NotFoundException {
-
-        Optional<Media> media = mediaRepository.findById(id);
-        if(media.isEmpty()) {
-            throw new NotFoundException("media with id" + id);
-        }
-
-        byte[] data = media.get().getFileData();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.valueOf(media.get().getMediaType().getMimeType()));
-        headers.setContentLength(data.length);
-        return new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
+    public ResponseEntity<byte[]> mediaGet(Long id) throws NotFoundException {
+        return service.getMediaById(id);
     }
 
-    //    todo кешнуть поддерживаемые типы при инициализации и потом их юзать. Эксепшены кидать при отсутствии типа.
+
     @Override
     public ResponseEntity<IdDto> mediaPost(String contentTypeHeader, byte[] data) throws InvalidMediaTypeException {
-
-        int endOfTypeInd = contentTypeHeader.indexOf(';');
-        String mimeType;
-        if(endOfTypeInd == -1){
-            mimeType = contentTypeHeader;
-        } else {
-             mimeType = contentTypeHeader.substring(0, endOfTypeInd);
-        }
-
-        Optional<MediaType> mediaTypeOptional = mediaTypeRepository.findByMimeType(mimeType);
-
-        if(mediaTypeOptional.isEmpty()){
-            throw new InvalidMediaTypeException(mimeType);
-        }
-
-        MediaType mediaType = mediaTypeOptional.get();
-        Media media = new Media();
-
-        media.setFileData(data);
-        media.setMediaType(mediaType);
-
-        mediaRepository.save(media);
-        return new ResponseEntity<>(new IdDto().id(media.getId()), HttpStatus.OK);
+        return service.addMedia(contentTypeHeader,data);
     }
 
 

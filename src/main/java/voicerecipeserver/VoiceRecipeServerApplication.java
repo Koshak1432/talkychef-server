@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO manytomany нужно на set-ах делать. Читай подробнее.
 // TODO эксепшены вообще не обрабатываются нормально, обычно тупо 500 отсылает
 // TODO логирование сделать
+//todo многопоточность
 @SpringBootApplication
 public class VoiceRecipeServerApplication {
 
