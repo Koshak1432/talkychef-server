@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import voicerecipeserver.model.dto.Error;
+import voicerecipeserver.model.exceptions.BadRequestException;
+import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -43,6 +45,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({NotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(Exception e){
         return new ResponseEntity<>(new Error().code(404).message(e.getMessage()),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({BadRequestException.class, InvalidMediaTypeException.class})
+    protected ResponseEntity<Object> handleBadRequest(Exception e){
+        return new ResponseEntity<>(new Error().code(400).message(e.getMessage()),HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ConstraintViolationException.class})

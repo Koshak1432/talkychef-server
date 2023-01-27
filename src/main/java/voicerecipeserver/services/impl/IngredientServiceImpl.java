@@ -33,7 +33,7 @@ public class IngredientServiceImpl implements IngredientService {
         Optional<Ingredient> ingredientOptional = ingredientRepository.findById(id);
 
         if(ingredientOptional.isEmpty()){
-            throw new NotFoundException("ingredient with id " + id);
+            throw new NotFoundException("Не удалось найти ингредиент с id: " + id);
         }
 
         Ingredient ingredient = ingredientOptional.get();
@@ -55,7 +55,7 @@ public class IngredientServiceImpl implements IngredientService {
     public ResponseEntity<IdDto> addIngredient(IngredientDto body) {
         Ingredient ingredient = mapper.map(body, Ingredient.class);
         ingredient.setName(ingredient.getName().toLowerCase());
-
+        ingredient.setId(null);
         ingredientRepository.save(ingredient);
 
         return new ResponseEntity<IdDto>(new IdDto().id(ingredient.getId()),HttpStatus.OK);

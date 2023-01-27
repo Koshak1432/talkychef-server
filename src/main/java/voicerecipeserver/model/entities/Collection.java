@@ -17,6 +17,7 @@ public class Collection {
 
     private String name;
 
+    private Integer number;
     @ManyToMany(cascade =   {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "collections_distribution",
@@ -28,13 +29,19 @@ public class Collection {
     private Set<Recipe> recipes;
 
     public void addRecipe(Recipe recipe){
-        recipes.add(recipe);
-        recipe.getCollections().add(this);
+        if(!recipes.contains(recipe)){
+            recipes.add(recipe);
+            recipe.getCollections().add(this);
+            number++;
+        }
     }
 
     public void removeRecipe(Recipe recipe){
-        recipes.add(recipe);
-        recipe.getCollections().remove(this);
+        if(recipes.contains(recipe)){
+            recipes.add(recipe);
+            recipe.getCollections().remove(this);
+            number--;
+        }
     }
 
 }

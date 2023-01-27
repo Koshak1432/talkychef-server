@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
  * StepDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-12-14T05:04:51.177Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-01-22T10:56:17.279Z[GMT]")
 
 
 public class StepDto   {
@@ -37,8 +37,7 @@ public class StepDto   {
    * Get media
    * @return media
    **/
-      @NotNull
-
+  
     @Valid
     public IdDto getMedia() {
     return media;

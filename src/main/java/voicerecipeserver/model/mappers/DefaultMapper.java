@@ -1,46 +1,41 @@
 package voicerecipeserver.model.mappers;
 
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.Provider;
 import org.springframework.stereotype.Component;
-import voicerecipeserver.model.dto.IngredientDto;
+import voicerecipeserver.model.dto.*;
 import voicerecipeserver.model.dto.IngredientsDistributionDto;
-import voicerecipeserver.model.dto.IngredientsDistributionDto;
-import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.entities.Ingredient;
-import voicerecipeserver.model.entities.IngredientsDistribution;
-import voicerecipeserver.model.entities.IngredientsDistributionKey;
-import voicerecipeserver.model.entities.Recipe;
+import voicerecipeserver.model.entities.*;
 
 @Component
 public class DefaultMapper extends ModelMapper {
-    //TODO декомпозици для настроек
+    //TODO декомпозици вообще можно декомпозицию сделать для конструктора
     public DefaultMapper(){
         super();
         this.emptyTypeMap(RecipeDto.class, Recipe.class).addMappings(mapper -> {
-            mapper.skip(Recipe::setId);
+            mapper.skip(Recipe::setAuthor);
+            mapper.map(RecipeDto::getAuthorId, (d, v) -> d.getAuthor().setUid((String)v));
         }).implicitMappings();
 
-        //todo проверить игнорирование полей типа Categories при конвертировании из Recipe -> RecipeDto, вдруг заставляет их подтягивать за зря
+        Converter<String, String> toLowercase =
+                ctx -> ctx.getSource() == null ? null : ctx.getSource().toLowerCase();
+        Converter<Long, IngredientsDistributionKey> clearKey = ctx -> new IngredientsDistributionKey();
 
-        this.typeMap(IngredientsDistributionDto.class, IngredientsDistribution.class).addMappings(mapper -> {
-            mapper.map(src -> new IngredientsDistributionKey(), ((dest, v) -> dest.setId(((IngredientsDistributionKey)v))));
-            mapper.map(src -> null, (dest, v) -> dest.getId().setRecipeId((Long) v));
-            mapper.map(src -> null, (dest, v) -> dest.getId().setIngredientId((Long) v));
-            mapper.map(src -> null, (dest, v) -> dest.getIngredient().setId((Long) v));
+        this.emptyTypeMap(IngredientsDistributionDto.class, IngredientsDistribution.class).addMappings(mapper -> {
+            //ну как бы костыль да, но хз как иначе это было сделать внутри маппера
+            mapper.using(clearKey).map(IngredientsDistributionDto::getIngredientId, IngredientsDistribution::setId);
+            //id в ключе заполнять не надо, иначе hibernate будет искать существующую сущность
+            mapper.<Long>map(src -> null, (dest, v) -> dest.getIngredient().setId(v));
             mapper.map(IngredientsDistributionDto::getCount, IngredientsDistribution::setMeasureUnitCount);
-            mapper.<String>map(src -> src.getName(), (dest, v) -> dest.getIngredient().setName(v));
-        });
-
-
-        this.emptyTypeMap(IngredientDto.class, Ingredient.class).addMappings(mapper -> {
-            mapper.skip(Ingredient::setId);
+            //все ингредиенты в нижнем регистре живут
+            mapper.using(toLowercase).<String>map(IngredientsDistributionDto::getName, (dest, v) -> dest.getIngredient().setName(v));
         }).implicitMappings();
 
         this.typeMap(IngredientsDistribution.class, IngredientsDistributionDto.class).addMappings(mapper -> {
             mapper.map(IngredientsDistribution::getMeasureUnitCount, IngredientsDistributionDto::setCount);
             mapper.map(src -> src.getIngredient().getName(), IngredientsDistributionDto::setName);
         });
-
 
     }
 }
