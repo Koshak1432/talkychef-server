@@ -1,11 +1,18 @@
+#DB
+export DB_NAME=
 export DATASOURCE_URL=
 export DATASOURCE_USERNAME=
 export DATASOURCE_PASSWORD=
 export SCHEMA_NAME=
-
+#SSL
+export ENABLE_SSL=true
 export KEYSTORE_PATH=
 export KEYSTORE_PASSWORD=
 export KEYSTORE_TYPE=
 export KEYSTORE_KEY_PASSWORD=
 export KEYSTORE_KEY_ALIAS=
+#OTHER
+export SERVER_PORT=
+export ENABLE_HTTP2=true
+
 ./gradlew bootRun

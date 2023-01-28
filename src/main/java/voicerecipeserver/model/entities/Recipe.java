@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -70,7 +71,7 @@ public class Recipe {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
-        return getId() == recipe.getId();
+        return Objects.equals(getId(), recipe.getId());
     }
 
     @Override

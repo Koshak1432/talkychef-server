@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
+import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.services.RecipeService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final MeasureUnitRepository measureUnitRepository;
     private final IngredientsDistributionRepository ingredientsDistributionRepository;
     private final StepRepository stepRepository;
+    private UserRepository userRepository;
 
     private final ModelMapper mapper;
 
@@ -38,12 +41,17 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper = mapper;
     }
 
+    @Autowired
+    private void setUserRepository(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
+
     @Override
     public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException {
         Optional<Recipe> recipeOptional = recipeRepository.findById(id);
 
         if(recipeOptional.isEmpty()){
-            throw new NotFoundException("recipe");
+            throw new NotFoundException("Не удалось найти рецепт с id: " + id);
         }
 
         Recipe recipe = recipeOptional.get();
@@ -51,27 +59,46 @@ public class RecipeServiceImpl implements RecipeService {
         return new ResponseEntity<>(recipeDto, HttpStatus.OK);
     }
 
-    //todo проверить, является ли это сохранение одной транзакцией. По идее должно, и висячих распределений, шагов не останется.
     @Override
-    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException {
+    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
 
+        Optional<User> author = userRepository.findByUid(recipe.getAuthor().getUid());
+
+        if(author.isEmpty()) {
+            throw  new NotFoundException("Не удалось найти автора с uid: " + recipe.getAuthor().getUid());
+        } else {
+            recipe.setAuthor(author.get());
+        }
+
+        recipe.setId(null);
+
+        // через маппер можно сделать путем добавления конвертера. Только вот код
+        // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
         for(Step step : recipe.getSteps()){
             step.setRecipe(recipe);
         }
+
+        HashSet<String> ingredientsInRecipe = new HashSet<>();
         for(IngredientsDistribution ingredientsDistribution : recipe.getIngredientsDistributions()){
             ingredientsDistribution.setRecipe(recipe);
-            ingredientsDistribution.setId(new IngredientsDistributionKey());
-            ingredientsDistribution.getIngredient().setName(ingredientsDistribution.getIngredient().getName().toLowerCase());
 
-            //TODO по имени или ID искать?
-            Optional<Ingredient> ingredientOptional = ingredientRepository.findByName(ingredientsDistribution.getIngredient().getName());
-            if(ingredientOptional.isEmpty()){
-                ingredientsDistribution.setIngredient(ingredientRepository.save(ingredientsDistribution.getIngredient()));
+            Ingredient receivedIngredient = ingredientsDistribution.getIngredient();
+            String ingredientName = receivedIngredient.getName();
+
+            if(ingredientsInRecipe.contains(ingredientName)){
+                throw  new BadRequestException("Ингредиент встречается дважды: " + ingredientName);
             } else {
-                ingredientsDistribution.setIngredient(ingredientOptional.get());
+                ingredientsInRecipe.add(receivedIngredient.getName());
             }
-            //TODO в идеале бы настроить для recipe save так, чтобы он сохранял measureUnit, ingredient, если их нет в БД. Ибо они уже отмаплены и просто запросы гоняем лишние. Тупо.
+
+            Optional<Ingredient> ingredientFromRepo = ingredientRepository.findByName(ingredientName);
+            if(ingredientFromRepo.isEmpty()){
+                receivedIngredient.setId(null);
+            } else {
+                ingredientsDistribution.setIngredient(ingredientFromRepo.get());
+            }
+            //TODO в идеале бы настроить для recipe save так, чтобы он сохранял measureUnit, ingredient, если их нет в БД. Хочется убрать лишний find.
 
             Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findByName(ingredientsDistribution.getUnit().getName());
             if(measureUnitOptional.isEmpty()){
@@ -89,9 +116,9 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<List<Recipe>> recipes = recipeRepository.findFirst10ByNameContaining(name);
 
         if(recipes.isEmpty()){
-            throw  new NotFoundException("Can't find recipes with substr: " + name);
+            throw  new NotFoundException("Не удалось найти рецепты с подстрокой: " + name);
         }
-        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
+        List<RecipeDto> recipeDtos = mapper.map(recipes.get(), new TypeToken<List<RecipeDto>>() {}.getType());
 
 
         return new ResponseEntity<>(recipeDtos,HttpStatus.OK);

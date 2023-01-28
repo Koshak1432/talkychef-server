@@ -14,12 +14,15 @@ import javax.validation.constraints.*;
  * CollectionDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-12-14T05:04:51.177Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-01-22T10:56:17.279Z[GMT]")
 
 
 public class CollectionDto   {
   @JsonProperty("name")
   private String name = null;
+
+  @JsonProperty("number")
+  private Integer number = null;
 
   @JsonProperty("recipes")
   @Valid
@@ -42,6 +45,25 @@ public class CollectionDto   {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public CollectionDto number(Integer number) {
+    this.number = number;
+    return this;
+  }
+
+  /**
+   * Get number
+   * @return number
+   **/
+      @NotNull
+
+    public Integer getNumber() {
+    return number;
+  }
+
+  public void setNumber(Integer number) {
+    this.number = number;
   }
 
   public CollectionDto recipes(List<RecipeDto> recipes) {
@@ -79,12 +101,13 @@ public class CollectionDto   {
     }
     CollectionDto collectionDto = (CollectionDto) o;
     return Objects.equals(this.name, collectionDto.name) &&
+        Objects.equals(this.number, collectionDto.number) &&
         Objects.equals(this.recipes, collectionDto.recipes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, recipes);
+    return Objects.hash(name, number, recipes);
   }
 
   @Override
@@ -93,6 +116,7 @@ public class CollectionDto   {
     sb.append("class CollectionDto {\n");
     
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    number: ").append(toIndentedString(number)).append("\n");
     sb.append("    recipes: ").append(toIndentedString(recipes)).append("\n");
     sb.append("}");
     return sb.toString();

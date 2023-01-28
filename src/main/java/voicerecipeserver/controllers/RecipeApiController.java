@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.RecipeApi;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
+import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.RecipeService;
 
@@ -34,7 +35,7 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> recipePost(RecipeDto recipeDto) throws NotFoundException {
+    public ResponseEntity<IdDto> recipePost(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         return service.addRecipe(recipeDto);
     }
 

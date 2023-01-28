@@ -35,6 +35,7 @@ public class CollectionServiceImpl implements CollectionService {
     public ResponseEntity<Void> addCollection(String name) {
         Collection collection = new Collection();
         collection.setName(name);
+        collection.setNumber(0);
         collectionRepository.save(collection);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -44,13 +45,13 @@ public class CollectionServiceImpl implements CollectionService {
         //TODO выглядит как-то слишком дорого, лучше написать свой запрос. Но перед этим проверить, мб все-таки не полностью сет грузит.
         Optional<Collection> collectionOptional = collectionRepository.findByName(collection);
         if(collectionOptional.isEmpty()){
-            throw new NotFoundException("Can't find collection with name: " + collection);
+            throw new NotFoundException("Не удалось найти коллекцию с именем: " + collection);
         }
 
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipe);
 
         if(recipeOptional.isEmpty()){
-            throw new NotFoundException("Can't find recipe with id: " + recipe);
+            throw new NotFoundException("Не удалось найти рецепт с id: " + recipe);
         }
 
         Collection collection1 = collectionOptional.get();
@@ -66,7 +67,7 @@ public class CollectionServiceImpl implements CollectionService {
     public ResponseEntity<CollectionDto> getCollectionByName(String name) throws NotFoundException {
         Optional<Collection> collectionOptional = collectionRepository.findByName(name);
         if(collectionOptional.isEmpty()){
-            throw new NotFoundException("Can't find collection with name: " + name);
+            throw new NotFoundException("Не удалось найти коллекцию с именем: " + name);
         }
 
         CollectionDto collectionDto = new CollectionDto();

@@ -2,6 +2,7 @@ package voicerecipeserver.model.entities;
 
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +19,22 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String uid;
+
+    @Column(name = "display_name")
+    private String displayName;
+
+    private String info;
+
+    @Column(name = "ok_link")
+    private String okLink;
+
+    @Column(name = "tg_link")
+    private String tgLink;
+
+    @Column(name = "vk_link")
+    private String vkLink;
 
     @OneToMany(mappedBy = "author")
     @ToString.Exclude
