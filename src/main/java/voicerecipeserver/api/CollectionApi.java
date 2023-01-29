@@ -1,6 +1,7 @@
 package voicerecipeserver.api;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CollectionDto;
@@ -21,5 +22,5 @@ public interface CollectionApi {
     ResponseEntity<Void> collectionContentPost(@RequestParam @PositiveOrZero Long recipe, @RequestParam @NotBlank String collection) throws NotFoundException;
 
     @GetMapping(value = "/collection/search", produces = "application/json")
-    ResponseEntity<CollectionDto> collectionNameGet(@Size(max=128) @RequestParam("name") @NotBlank String name) throws NotFoundException;
+    ResponseEntity<CollectionDto> collectionNameGet(@Size(max=128) @RequestParam("name") @NotBlank String name, @RequestParam(value = "page", required = false) @PositiveOrZero Integer pageNum) throws NotFoundException;
 }

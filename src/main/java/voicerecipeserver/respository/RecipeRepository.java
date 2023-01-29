@@ -1,7 +1,9 @@
 package voicerecipeserver.respository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.model.entities.Recipe;
 
 import java.util.List;
@@ -9,6 +11,21 @@ import java.util.Optional;
 
 @Repository
 public interface RecipeRepository extends CrudRepository<Recipe, Long> {
-    //todo захардкодил цифру - нехорошо
     Optional<List<Recipe>> findFirst10ByNameContaining(String inline);
+
+    // https://medium.com/swlh/sql-pagination-you-are-probably-doing-it-wrong-d0f2719cc166 - performance issue
+    // вообще хотелось бы этот метод в репозиторий коллекций добавить, но там проблема с конвертацией.
+
+    @Query(value = """
+SELECT * FROM recipes
+WHERE id IN
+(
+	SELECT recipe_id FROM collections_distribution
+	WHERE collection_id=?3
+	ORDER BY recipe_id
+	LIMIT ?1 OFFSET ?2
+)
+""", nativeQuery = true)
+    List<Recipe> findRecipesWithOffsetFromCollectionById(int numRecipes, int offset, long collectionId);
+
 }

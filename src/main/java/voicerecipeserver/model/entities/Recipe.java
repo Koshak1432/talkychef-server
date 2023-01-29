@@ -79,14 +79,4 @@ public class Recipe {
         return getClass().hashCode();
     }
 
-    public void removeStep(Step step){
-        steps.remove(step);
-        step.setRecipe(null);
-    }
-
-    public void addStep(Step step){
-        steps.add(step);
-        step.setRecipe(this);
-    }
-
 }

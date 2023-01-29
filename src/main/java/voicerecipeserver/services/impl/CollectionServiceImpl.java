@@ -1,10 +1,13 @@
 package voicerecipeserver.services.impl;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.Collection;
@@ -14,6 +17,7 @@ import voicerecipeserver.respository.CollectionRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.services.CollectionService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,8 +45,8 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> addRecipeToCollection(Long recipe, String collection) throws NotFoundException {
-        //TODO выглядит как-то слишком дорого, лучше написать свой запрос. Но перед этим проверить, мб все-таки не полностью сет грузит.
         Optional<Collection> collectionOptional = collectionRepository.findByName(collection);
         if(collectionOptional.isEmpty()){
             throw new NotFoundException("Не удалось найти коллекцию с именем: " + collection);
@@ -56,28 +60,36 @@ public class CollectionServiceImpl implements CollectionService {
 
         Collection collection1 = collectionOptional.get();
         Recipe recipe1 = recipeOptional.get();
-        collection1.addRecipe(recipe1);
 
-        collectionRepository.save(collection1);
+        //после этой операции коллекция становится невалидной (да и в рецепте множество коллекций тоже)
+        collectionRepository.addRecipeToCollection(recipe1.getId(), collection1.getId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<CollectionDto> getCollectionByName(String name) throws NotFoundException {
+    public ResponseEntity<CollectionDto> getCollectionPage(String name, Integer pageNum) throws NotFoundException {
         Optional<Collection> collectionOptional = collectionRepository.findByName(name);
+
+        if(null == pageNum){
+            pageNum = 0;
+        }
         if(collectionOptional.isEmpty()){
             throw new NotFoundException("Не удалось найти коллекцию с именем: " + name);
         }
 
-        CollectionDto collectionDto = new CollectionDto();
-        collectionDto.setName(name);
-
         Collection collection = collectionOptional.get();
 
-        for (Recipe recipe : collection.getRecipes()){
-            collectionDto.addRecipesItem(mapper.map(recipe, RecipeDto.class));
-        }
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setName(name);
+        collectionDto.setNumber(collection.getNumber());
+
+        collectionDto.setRecipes(mapper.map(
+                recipeRepository.findRecipesWithOffsetFromCollectionById(Constants.MAX_RECIPES_PER_PAGE, pageNum * Constants.MAX_RECIPES_PER_PAGE, collection.getId()),
+                new TypeToken<List<RecipeDto>>() {}.getType()
+        ));
+
+
         return new ResponseEntity<>(collectionDto, HttpStatus.OK);
     }
 }
