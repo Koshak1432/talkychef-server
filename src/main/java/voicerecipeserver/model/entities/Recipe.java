@@ -78,5 +78,4 @@ public class Recipe {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }
