@@ -9,6 +9,7 @@ import voicerecipeserver.model.entities.Recipe;
 import java.util.List;
 import java.util.Optional;
 
+//todo reformat passing method parameters using named parameters, not indexed(?1, ?2)
 public interface CollectionRepository extends CrudRepository<Collection, Long> {
     Optional<Collection> findByName(String name);
 
