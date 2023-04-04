@@ -19,8 +19,11 @@ public interface CollectionApi {
     ResponseEntity<Void> collectionPost(@RequestParam @NotBlank String name);
 
     @PostMapping(value = "/collection/content")
-    ResponseEntity<Void> collectionContentPost(@RequestParam @PositiveOrZero Long recipe, @RequestParam @NotBlank String collection) throws NotFoundException;
+    ResponseEntity<Void> collectionContentPost(@RequestParam @PositiveOrZero Long recipe,
+                                               @RequestParam @NotBlank String collection) throws NotFoundException;
 
     @GetMapping(value = "/collection/search", produces = "application/json")
-    ResponseEntity<CollectionDto> collectionNameGet(@Size(max=128) @RequestParam("name") @NotBlank String name, @RequestParam(value = "page", required = false) @PositiveOrZero Integer pageNum) throws NotFoundException;
+    ResponseEntity<CollectionDto> collectionNameGet(
+            @Size(max=128) @RequestParam("name") @NotBlank String name,
+            @RequestParam(value = "page", required = false) @PositiveOrZero Integer pageNum) throws NotFoundException;
 }

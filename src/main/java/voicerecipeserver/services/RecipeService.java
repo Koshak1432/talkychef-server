@@ -13,5 +13,5 @@ public interface RecipeService {
 
     ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException;
 
-    ResponseEntity<List<RecipeDto>> searchRecipesByName(String name) throws NotFoundException;
+    ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException;
 }

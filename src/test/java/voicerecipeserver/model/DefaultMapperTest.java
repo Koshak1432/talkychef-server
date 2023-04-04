@@ -3,12 +3,14 @@ package voicerecipeserver.model;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import voicerecipeserver.model.dto.*;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.mappers.DefaultMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,13 +21,14 @@ public class DefaultMapperTest {
     static ModelMapper mapper;
 
     @BeforeAll
-    static public void setup(){
+    static public void setup() {
         mapper = new DefaultMapper();
     }
 
     @Test
-    void map_ingredient_to_ingredientDto(){
-        Ingredient ingredient = Ingredient.builder().id(3L).name("Картоха").ingredientsDistributionList(new ArrayList<>()).build();
+    void map_ingredient_to_ingredientDto() {
+        Ingredient ingredient = Ingredient.builder().id(3L).name("Картоха").ingredientsDistributionList(
+                new ArrayList<>()).build();
 
         IngredientDto ingredientDto = mapper.map(ingredient, IngredientDto.class);
 
@@ -34,7 +37,7 @@ public class DefaultMapperTest {
     }
 
     @Test
-    void map_ingredientDto_to_ingredient(){
+    void map_ingredientDto_to_ingredient() {
         IngredientDto ingredientDto = new IngredientDto().name("Картоха").id(5L);
 
         Ingredient ingredient = mapper.map(ingredientDto, Ingredient.class);
@@ -44,7 +47,7 @@ public class DefaultMapperTest {
     }
 
     @Test
-    void map_ingredientsDistribution_to_ingredientDistributionDto(){
+    void map_ingredientsDistribution_to_ingredientDistributionDto() {
         Ingredient ingredient = Ingredient.builder().id(1L).name("Картоха").build();
         Recipe recipe = new Recipe();
         recipe.setId(2L);
@@ -60,13 +63,8 @@ public class DefaultMapperTest {
         unit.setName("Unit");
         unit.setId(4L);
 
-        IngredientsDistribution distribution = IngredientsDistribution.builder()
-                .id(key)
-                .unit(unit)
-                .ingredient(ingredient)
-                .recipe(recipe)
-                .measureUnitCount(333.0)
-                .build();
+        IngredientsDistribution distribution = IngredientsDistribution.builder().id(key).unit(unit).ingredient(
+                ingredient).recipe(recipe).measureUnitCount(333.0).build();
 
         IngredientsDistributionDto distributionDto = mapper.map(distribution, IngredientsDistributionDto.class);
 
@@ -78,12 +76,9 @@ public class DefaultMapperTest {
     }
 
     @Test
-    void map_ingredientDistributionDto_to_ingredientDistribution_and_check_lowwer_case(){
-        IngredientsDistributionDto distributionDto = new IngredientsDistributionDto()
-                .ingredientId(1L)
-                .count(100.0)
-                .measureUnitName("Pinta")
-                .name("Pivo");
+    void map_ingredientDistributionDto_to_ingredientDistribution_and_check_lower_case() {
+        IngredientsDistributionDto distributionDto = new IngredientsDistributionDto().ingredientId(1L).count(
+                100.0).measureUnitName("Pinta").name("Pivo");
 
         IngredientsDistribution distribution = mapper.map(distributionDto, IngredientsDistribution.class);
 
@@ -125,13 +120,8 @@ public class DefaultMapperTest {
 
     @Test
     void map_step_with_media_to_stepDto() {
-        Step step = Step.builder()
-                .stepNum(0)
-                .description("fsdfsa")
-                .media(Media.builder().id(5L).build())
-                .id(8L)
-                .waitTimeMins(90)
-                .build();
+        Step step = Step.builder().stepNum(0).description("fsdfsa").media(Media.builder().id(5L).build()).id(
+                8L).waitTimeMins(90).build();
 
         StepDto stepDto = mapper.map(step, StepDto.class);
 
@@ -143,11 +133,7 @@ public class DefaultMapperTest {
 
     @Test
     void map_step_without_media_to_stepDto() {
-        Step step = Step.builder()
-                .stepNum(0)
-                .description("fsdfsa")
-                .id(8L)
-                .build();
+        Step step = Step.builder().stepNum(0).description("fsdfsa").id(8L).build();
 
         StepDto stepDto = mapper.map(step, StepDto.class);
 
@@ -159,16 +145,16 @@ public class DefaultMapperTest {
 
 
     @Test
-    void map_recipeDto_with_required_field_to_recipe(){
+    void map_recipeDto_with_required_field_to_recipe() {
         RecipeDto dto = new RecipeDto();
-        dto.name("Re").media(new IdDto().id(1L)).authorId("AFDDE").cookTimeMins(40);
+        dto.name("Re").media(new IdDto().id(1L)).authorId("AFsssDDE").cookTimeMins(40);
 
         Recipe recipe = mapper.map(dto, Recipe.class);
 
-        assertEquals(dto.getName(),recipe.getName());
+        assertEquals(dto.getName(), recipe.getName());
         assertEquals(dto.getAuthorId(), recipe.getAuthor().getUid());
         assertEquals(dto.getCookTimeMins(), recipe.getCookTimeMins());
-        assertEquals(dto.getMedia().getId(),recipe.getMedia().getId());
+        assertEquals(dto.getMedia().getId(), recipe.getMedia().getId());
         assertNull(recipe.getCollections());
         assertNull(recipe.getId());
         assertNull(recipe.getCategories());
@@ -176,7 +162,7 @@ public class DefaultMapperTest {
     }
 
     @Test
-    void map_recipeDto_with_required_field_and_steps_to_recipe(){
+    void map_recipeDto_with_required_field_and_steps_to_recipe() {
         RecipeDto recipeDto = new RecipeDto();
         ArrayList<StepDto> stepDtos = new ArrayList<>();
 
@@ -198,12 +184,12 @@ public class DefaultMapperTest {
 
         assertNotNull(recipe.getSteps());
         List<Step> steps = recipe.getSteps();
-        for(int i = 0; i < stepDtos.size(); i++){
+        for (int i = 0; i < stepDtos.size(); i++) {
             Step step = steps.get(i);
             StepDto stepDto = stepDtos.get(i);
 
             assertNull(step.getRecipe());
-            if(null != stepDto.getMedia()){
+            if (null != stepDto.getMedia()) {
                 assertEquals(step.getMedia().getId(), stepDto.getMedia().getId());
             } else {
                 assertNull(step.getMedia());
@@ -215,7 +201,7 @@ public class DefaultMapperTest {
     }
 
     @Test
-    void map_recipeDto_with_required_field_and_steps_and_ingredients_to_recipe(){
+    void map_recipeDto_with_required_field_and_steps_and_ingredients_to_recipe() {
         RecipeDto recipeDto = new RecipeDto();
         ArrayList<StepDto> stepDtos = new ArrayList<>();
         ArrayList<IngredientsDistributionDto> ingredientsDistDtos = new ArrayList<>();
@@ -224,30 +210,81 @@ public class DefaultMapperTest {
         stepDtos.add(new StepDto().description("Посидеть поготовить").stepNum(2).media(new IdDto().id(2L)));
         stepDtos.add(new StepDto().description("Посидеть поесть").stepNum(3));
 
-        ingredientsDistDtos.add(new IngredientsDistributionDto().name("ing1").ingredientId(1L).count(230.0).measureUnitName("pinta"));
-        ingredientsDistDtos.add(new IngredientsDistributionDto().name("ing2").ingredientId(2L).count(2302.0).measureUnitName("pinta2"));
-        ingredientsDistDtos.add(new IngredientsDistributionDto().name("ing3").ingredientId(3L).count(2340.0).measureUnitName("pinta3"));
+        ingredientsDistDtos.add(
+                new IngredientsDistributionDto().name("ing1").ingredientId(1L).count(230.0).measureUnitName("pinta"));
+        ingredientsDistDtos.add(
+                new IngredientsDistributionDto().name("ing2").ingredientId(2L).count(2302.0).measureUnitName("pinta2"));
+        ingredientsDistDtos.add(
+                new IngredientsDistributionDto().name("ing3").ingredientId(3L).count(2340.0).measureUnitName("pinta3"));
 
-        recipeDto.name("Ro").media(new IdDto().id(1L)).authorId("AFDSDE").cookTimeMins(40).steps(stepDtos).setIngredientsDistributions(ingredientsDistDtos);
+        recipeDto.name("Ro").media(new IdDto().id(1L)).authorId("AFDSDE").cookTimeMins(40).steps(
+                stepDtos).setIngredientsDistributions(ingredientsDistDtos);
 
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
 
         assertNotNull(recipe.getIngredientsDistributions());
         assertEquals(recipe.getIngredientsDistributions().size(), ingredientsDistDtos.size());
 
-         List<IngredientsDistribution> distributions = recipe.getIngredientsDistributions();
+        List<IngredientsDistribution> distributions = recipe.getIngredientsDistributions();
 
-        for (int i = 0, max = distributions.size(); i < max; i ++){
+        for (int i = 0, max = distributions.size(); i < max; i++) {
             IngredientsDistribution distribution = distributions.get(i);
             IngredientsDistributionDto distributionDto = ingredientsDistDtos.get(i);
 
             assertNull(distribution.getRecipe());
-            assertEquals(distributionDto.getMeasureUnitName(),distribution.getUnit().getName());
+            assertEquals(distributionDto.getMeasureUnitName(), distribution.getUnit().getName());
             assertEquals(distributionDto.getName(), distribution.getIngredient().getName());
             assertEquals(distributionDto.getCount(), distribution.getMeasureUnitCount());
             assertNull(distribution.getIngredient().getId());
             assertNull(distribution.getId().getRecipeId());
             assertNull(distribution.getId().getIngredientId());
+        }
+    }
+
+
+
+    @Test
+    void map_recipe_to_recipeDto() {
+        Recipe recipe = new Recipe();
+        recipe.setName("name123");
+        recipe.setAuthor(new User(2L, "author", null, null, null, null, null, null));
+        recipe.setCookTimeMins(4044);
+        recipe.setMedia(new Media(11L, null, null, null, null));
+
+        RecipeDto dto = mapper.map(recipe, RecipeDto.class);
+        assertEquals(recipe.getName(), dto.getName());
+        assertEquals(recipe.getAuthor().getId(), Integer.parseInt(dto.getAuthorId()));
+        assertEquals(recipe.getCookTimeMins(), dto.getCookTimeMins());
+        assertEquals(recipe.getMedia().getId(), dto.getMedia().getId());
+    }
+
+    @Test
+    void map_recipe_list_to_dto_list() {
+        RecipeDto recipeDto1 = new RecipeDto();
+        recipeDto1.name("dto1").media(new IdDto().id(1L)).authorId("author1").cookTimeMins(40);
+        RecipeDto recipeDto2 = new RecipeDto();
+        recipeDto2.name("dto2").media(new IdDto().id(2L)).authorId("author2").cookTimeMins(50);
+
+        Recipe recipe1 = mapper.map(recipeDto1, Recipe.class);
+        Recipe recipe2 = mapper.map(recipeDto2, Recipe.class);
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(recipe1);
+        recipes.add(recipe2);
+
+//        List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
+        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
+
+        assertEquals(2, recipeDtos.size());
+
+        for (int i = 0; i < recipes.size(); ++i) {
+            assertNotNull(recipeDtos.get(i));
+            assertEquals(recipes.get(i).getName(), recipeDtos.get(i).getName());
+            assertEquals(recipes.get(i).getCookTimeMins(), recipeDtos.get(i).getCookTimeMins());
+            assertEquals(recipes.get(i).getMedia().getId(), recipeDtos.get(i).getMedia().getId());
+            assertNull(recipes.get(i).getCollections());
+            assertNull(recipes.get(i).getId());
+            assertNull(recipes.get(i).getCategories());
+            assertNull(recipes.get(i).getSteps());
         }
     }
 }
