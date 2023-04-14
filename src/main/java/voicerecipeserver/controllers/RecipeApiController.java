@@ -38,6 +38,11 @@ public class RecipeApiController implements RecipeApi {
         return service.addRecipe(recipeDto);
     }
 
+    @Override
+    public ResponseEntity<IdDto> recipeUpdate(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
+        return service.updateRecipe(recipeDto, id);
+    }
+
     public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit) throws NotFoundException {
         return service.searchRecipesByName(name, limit);
     }
