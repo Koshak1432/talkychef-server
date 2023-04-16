@@ -14,9 +14,7 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.services.RecipeService;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -26,20 +24,22 @@ public class RecipeServiceImpl implements RecipeService {
     private final MeasureUnitRepository measureUnitRepository;
     private final IngredientsDistributionRepository ingredientsDistributionRepository;
     private final StepRepository stepRepository;
+    private final MediaRepository mediaRepository;
     private UserRepository userRepository;
-
     private final ModelMapper mapper;
 
-    // TODO не ну это колбасу точно убрать надо
+    // TODO не ну это колбасу точно убрать надо, мб по-другому внедрить
     @Autowired
     public RecipeServiceImpl(StepRepository stepRepository, RecipeRepository recipeRepository,
                              IngredientRepository ingredientRepository, MeasureUnitRepository measureUnitRepository,
-                             IngredientsDistributionRepository ingredientsDistributionRepository, ModelMapper mapper) {
+                             IngredientsDistributionRepository ingredientsDistributionRepository, MediaRepository mediaRepository,
+                             ModelMapper mapper) {
         this.stepRepository = stepRepository;
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.ingredientsDistributionRepository = ingredientsDistributionRepository;
+        this.mediaRepository = mediaRepository;
         this.mapper = mapper;
     }
 
@@ -69,7 +69,7 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
 
-        setAuthor(recipe);
+        setAuthorTo(recipe);
         recipe.setId(null);
 
         // через маппер можно сделать путем добавления конвертера. Только вот код
@@ -83,7 +83,7 @@ public class RecipeServiceImpl implements RecipeService {
         return new ResponseEntity<>(new IdDto().id(recipe.getId()), HttpStatus.OK);
     }
 
-    private void setAuthor(Recipe recipe) throws NotFoundException {
+    private void setAuthorTo(Recipe recipe) throws NotFoundException {
         Optional<User> author = userRepository.findByUid(recipe.getAuthor().getUid());
 
         if (author.isEmpty()) {
@@ -109,6 +109,7 @@ public class RecipeServiceImpl implements RecipeService {
             Optional<Ingredient> ingredientFromRepo = ingredientRepository.findByName(ingredientName);
             if (ingredientFromRepo.isEmpty()) {
                 receivedIngredient.setId(null);
+                ingredientRepository.save(receivedIngredient);
             } else {
                 ingredientsDistribution.setIngredient(ingredientFromRepo.get());
             }
@@ -130,23 +131,48 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
-        Recipe oldRecipe = findRecipe(id);
+        int defaultMediaId = 172;
+        Recipe oldRecipe = findRecipe(id); // если обновлять старый и его сохранять, а не новый, мб заработает
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-        //todo need to set author id to the new Recipe?
-        // вытащить с шагов медиа и проверить, есть ли они в бд
-        // по идее, можно это всё в цикле провернуть, добавлять в сет существующие
-        HashSet<Long> oldRecipeMedia = new HashSet<>();
-        HashSet<Long> newRecipeMedia = new HashSet<>();
-        for (Step step : oldRecipe.getSteps()) {
-            oldRecipeMedia.add(step.getMedia().getId());
+//        newRecipe.getAuthor().setId(oldRecipe.getAuthor().getId());
+        setAuthorTo(newRecipe);
+
+        // iterate over old steps and map new step to old step??
+        // or delete steps
+        List<Step> oldRecipes = oldRecipe.getSteps();
+        // reuse of old steps
+        for (int i = 0; i < Math.min(oldRecipe.getSteps().size(), newRecipe.getSteps().size()); ++i) {
+            newRecipe.getSteps().get(i).setId(oldRecipes.get(i).getId());
         }
+
         for (Step step : newRecipe.getSteps()) {
-            newRecipeMedia.add(step.getMedia().getId());
+            step.setRecipe(newRecipe);
         }
 
+        setDistribution(newRecipe);
 
-        // todo current task
-        return null;
+        Set<Long> oldRecipeMedia = getRecipeMedia(oldRecipe);
+        Set<Long> newRecipeMedia = getRecipeMedia(newRecipe);
+        // media to delete
+        Set<Long> notUsedMedia = new HashSet<>();
+        for (Long mediaId : oldRecipeMedia) {
+            if (!newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
+                notUsedMedia.add(mediaId);
+            }
+        }
+
+        recipeRepository.save(newRecipe);
+        mediaRepository.deleteAllById(notUsedMedia);
+        return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
+    }
+
+    private Set<Long> getRecipeMedia(Recipe recipe) {
+        Set<Long> recipeMedia = new HashSet<>();
+        recipeMedia.add(recipe.getMedia().getId());
+        for (Step step : recipe.getSteps()) {
+            recipeMedia.add(step.getMedia().getId());
+        }
+        return recipeMedia;
     }
 
 
