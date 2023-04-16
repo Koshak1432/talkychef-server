@@ -106,12 +106,13 @@ public class RecipeServiceImpl implements RecipeService {
             }
             ingredientsInRecipe.add(receivedIngredient.getName());
 
+
             Optional<Ingredient> ingredientFromRepo = ingredientRepository.findByName(ingredientName);
             if (ingredientFromRepo.isEmpty()) {
-                receivedIngredient.setId(null);
-                ingredientRepository.save(receivedIngredient);
+                ingredientsDistribution.setIngredient(ingredientRepository.save(receivedIngredient));
             } else {
                 ingredientsDistribution.setIngredient(ingredientFromRepo.get());
+                ingredientsDistribution.setId(new IngredientsDistributionKey(recipe.getId(), ingredientFromRepo.get().getId()));
             }
             //TODO в идеале бы настроить для recipe save так, чтобы он сохранял measureUnit, ingredient, если их нет
             // в БД. Хочется убрать лишний find.
@@ -134,6 +135,7 @@ public class RecipeServiceImpl implements RecipeService {
         int defaultMediaId = 172;
         Recipe oldRecipe = findRecipe(id); // если обновлять старый и его сохранять, а не новый, мб заработает
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
+        newRecipe.setId(id);
 //        newRecipe.getAuthor().setId(oldRecipe.getAuthor().getId());
         setAuthorTo(newRecipe);
 
