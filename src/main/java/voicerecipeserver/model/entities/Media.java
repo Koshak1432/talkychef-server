@@ -33,11 +33,11 @@ public class Media {
     @NotNull
     private byte[] fileData;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="media")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="media", orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Recipe> recipes;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="media")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="media", orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Step> steps;
 
