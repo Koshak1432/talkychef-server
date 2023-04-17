@@ -182,7 +182,10 @@ public class RecipeServiceImpl implements RecipeService {
         Set<Long> recipeMedia = new HashSet<>();
         recipeMedia.add(recipe.getMedia().getId());
         for (Step step : recipe.getSteps()) {
-            recipeMedia.add(step.getMedia().getId());
+            Media media = step.getMedia();
+            if (media != null) {
+                recipeMedia.add(media.getId());
+            }
         }
         return recipeMedia;
     }
