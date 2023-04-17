@@ -1,5 +1,6 @@
 package voicerecipeserver.services.impl;
 
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
-import voicerecipeserver.model.entities.Collection;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
@@ -42,6 +42,8 @@ public class RecipeServiceImpl implements RecipeService {
         this.ingredientsDistributionRepository = ingredientsDistributionRepository;
         this.mediaRepository = mediaRepository;
         this.mapper = mapper;
+        this.mapper.typeMap(Recipe.class, RecipeDto.class)
+                .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
     }
 
     @Autowired
@@ -133,89 +135,50 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
-        int defaultMediaId = 172;
         Recipe oldRecipe = findRecipe(id);
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
         newRecipe.setId(id);
         setAuthorTo(newRecipe);
+        setSteps(oldRecipe, newRecipe);
+        setDistribution(newRecipe);
 
-//        Set<Long> stepsIdToDelete = new HashSet<>();
+        Set<Long> unusedMediaIds = getUnusedMediaIds(oldRecipe, newRecipe);
+
+        recipeRepository.save(newRecipe);
+        mediaRepository.deleteAllById(unusedMediaIds);
+        return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
+    }
+
+    private static Set<Long> getUnusedMediaIds(Recipe oldRecipe, Recipe newRecipe) {
+        int defaultMediaId = 172;
+        Set<Long> oldRecipeMedia = getRecipeMedia(oldRecipe);
+        Set<Long> newRecipeMedia = getRecipeMedia(newRecipe);
+        Set<Long> unusedMedia = new HashSet<>();
+        for (Long mediaId : oldRecipeMedia) {
+            if (!newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
+                unusedMedia.add(mediaId);
+            }
+        }
+        return unusedMedia;
+    }
+
+    private static void setSteps(Recipe oldRecipe, Recipe newRecipe) {
         List<Step> oldSteps = oldRecipe.getSteps();
         List<Step> newSteps = newRecipe.getSteps();
         oldSteps.sort(Comparator.comparingInt(Step::getStepNum));
         newSteps.sort(Comparator.comparingInt(Step::getStepNum));
 
-        // need to search by step_num in step
-         if (oldSteps.size() <= newSteps.size()) {
-            for (int i = 0; i < oldSteps.size(); ++i) {
-                Step newStep = newSteps.get(i);
+        // rest of the oldSteps will be deleted automatically because of orphanRemoval = true
+        for (int i = 0; i < newSteps.size(); ++i) {
+            Step newStep = newSteps.get(i);
+            if (i < oldSteps.size()) {
                 newStep.setId(oldSteps.get(i).getId());
-                newStep.setRecipe(newRecipe);
             }
-            for (int i = oldSteps.size(); i < newSteps.size(); ++i) {
-                Step newStep = newSteps.get(i);
-                newStep.setId(null);
-                newStep.setRecipe(newRecipe);
-            }
-        } else {
-            for (int i = 0; i < newSteps.size(); ++i) {
-                Step newStep = newSteps.get(i);
-                newStep.setId(oldSteps.get(i).getId());
-                newStep.setRecipe(newRecipe);
-            }
-            // deletes automatically?????
-            for (int i = newRecipe.getSteps().size(); i < oldSteps.size(); ++i) {
-//                stepsIdToDelete.add(oldSteps.get(i).getId());
-            }
+            newStep.setRecipe(newRecipe);
         }
-
-//        List<Step> oldSteps = oldRecipe.getSteps();
-//        List<Step> newSteps = newRecipe.getSteps();
-//        int oldSize = oldSteps.size();
-//        int count = 0;
-//        for (Step step : newRecipe.getSteps()) {
-//            if (count <= oldSize) {
-//                stepRepository.findById(step.getId()).ifPresent(stepFromRepo -> {
-//                    step.setId(stepFromRepo.getId());
-//                });
-//            }
-//            step.setRecipe(newRecipe);
-//            ++count;
-//        }
-//        Set<Long> stepsIdToDelete = new HashSet<>();
-//        for (int i = count; i < oldSize; ++i) {
-//            stepsIdToDelete.add(oldSteps.get(i).getId());
-//        }
-
-//        for (int i = 0; i < newRecipe.getSteps().size(); ++i) {
-//            Step step = newRecipe.getSteps().get(i);
-//            step.setRecipe(newRecipe);
-//            stepRepository.save(step);
-//        }
-//        for (Step step : newRecipe.getSteps()) {
-//            step.setRecipe(newRecipe);
-//        }
-
-        setDistribution(newRecipe);
-
-        Set<Long> oldRecipeMedia = getRecipeMedia(oldRecipe);
-        Set<Long> newRecipeMedia = getRecipeMedia(newRecipe);
-        // media to delete
-        // todo dosnt work
-        Set<Long> notUsedMedia = new HashSet<>();
-        for (Long mediaId : oldRecipeMedia) {
-            if (!newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
-                notUsedMedia.add(mediaId);
-            }
-        }
-
-        recipeRepository.save(newRecipe);
-//        stepRepository.deleteAllById(stepsIdToDelete);
-        mediaRepository.deleteAllById(notUsedMedia);
-        return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
     }
 
-    private Set<Long> getRecipeMedia(Recipe recipe) {
+    private static Set<Long> getRecipeMedia(Recipe recipe) {
         Set<Long> recipeMedia = new HashSet<>();
         recipeMedia.add(recipe.getMedia().getId());
         for (Step step : recipe.getSteps()) {
