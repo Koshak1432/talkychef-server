@@ -15,8 +15,11 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     @Query(value = """
         SELECT * FROM recipes
-        WHERE name ILIKE %:namePart%
-        ORDER BY name DESC
+        WHERE name ILIKE :namePart || '%'
+        UNION
+        SELECT * FROM recipes
+        WHERE name ILIKE '% ' || :namePart || '%'
+        ORDER BY name
         LIMIT CASE WHEN (:limit > 0) THEN :limit END
 """, nativeQuery = true)
     List<Recipe> findByNameContaining(@Param("namePart") String inline, @Param("limit") Integer limit);
