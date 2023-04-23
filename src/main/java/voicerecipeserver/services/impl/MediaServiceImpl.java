@@ -23,7 +23,7 @@ public class MediaServiceImpl implements MediaService {
     private final MediaTypeRepository mediaTypeRepository;
 
     @Autowired
-    public MediaServiceImpl(MediaRepository mediaRepository, MediaTypeRepository mediaTypeRepository){
+    public MediaServiceImpl(MediaRepository mediaRepository, MediaTypeRepository mediaTypeRepository) {
         this.mediaTypeRepository = mediaTypeRepository;
         this.mediaRepository = mediaRepository;
     }
@@ -32,7 +32,7 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public ResponseEntity<byte[]> getMediaById(Long id) throws NotFoundException {
         Optional<Media> media = mediaRepository.findById(id);
-        if(media.isEmpty()) {
+        if (media.isEmpty()) {
             throw new NotFoundException("Не удалось найти медиа с id: " + id);
         }
 
@@ -40,7 +40,7 @@ public class MediaServiceImpl implements MediaService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(org.springframework.http.MediaType.valueOf(media.get().getMediaType().getMimeType()));
         headers.setContentLength(data.length);
-        return new ResponseEntity<byte[]>(data, headers, HttpStatus.OK);
+        return new ResponseEntity<>(data, headers, HttpStatus.OK);
     }
 
 
@@ -49,7 +49,7 @@ public class MediaServiceImpl implements MediaService {
     public ResponseEntity<IdDto> addMedia(String contentTypeHeader, byte[] data) throws InvalidMediaTypeException {
         int endOfTypeInd = contentTypeHeader.indexOf(';');
         String mimeType;
-        if(endOfTypeInd == -1){
+        if (endOfTypeInd == -1) {
             mimeType = contentTypeHeader;
         } else {
             mimeType = contentTypeHeader.substring(0, endOfTypeInd);
@@ -57,7 +57,7 @@ public class MediaServiceImpl implements MediaService {
 
         Optional<MediaType> mediaTypeOptional = mediaTypeRepository.findByMimeType(mimeType);
 
-        if(mediaTypeOptional.isEmpty()){
+        if (mediaTypeOptional.isEmpty()) {
             throw new InvalidMediaTypeException(mimeType);
         }
 

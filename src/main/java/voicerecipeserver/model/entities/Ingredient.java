@@ -23,7 +23,7 @@ public class Ingredient {
     private String name;
 
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, orphanRemoval = true)
     @ToString.Exclude
     private List<IngredientsDistribution> ingredientsDistributionList;
 

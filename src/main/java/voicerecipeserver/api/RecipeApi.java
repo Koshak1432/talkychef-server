@@ -24,6 +24,10 @@ public interface RecipeApi {
     @PostMapping(value = "/recipe", consumes = "application/json")
     ResponseEntity<IdDto> recipePost(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException;
 
+    @PutMapping(value = "/recipe/{id}", consumes = "application/json")
+    ResponseEntity<IdDto> recipeUpdate(@RequestBody RecipeDto recipeDto, @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id)
+            throws NotFoundException, BadRequestException;
+
     @GetMapping(value = "/recipe/search/{name}", produces = "application/json")
     ResponseEntity<List<RecipeDto>> recipeSearchNameGet(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
