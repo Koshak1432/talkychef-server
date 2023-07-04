@@ -3,7 +3,6 @@ package voicerecipeserver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-// TODO Каскадное удаление нужно сделать для картинок. Ибо в БД сейчас картинки не дропаются, если шаг был удален. Мб через сервак это сделать.
 // TODO в бд холостое увеличение ID в сиквенсах происходит при неудачной попытке вставить значения
 // TODO тригеров сделать для дропа ненужных картинок, сетов единиц и т.д.
 // TODO проверить генерацию последовательностей для каждой таблицы
@@ -14,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO manytomany нужно на set-ах делать. Читай подробнее.
 // TODO эксепшены вообще не обрабатываются нормально, обычно тупо 500 отсылает
 // TODO логирование сделать
-//todo многопоточность
+// TODO многопоточность
 @SpringBootApplication
 public class VoiceRecipeServerApplication {
 

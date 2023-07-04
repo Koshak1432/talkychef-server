@@ -2,7 +2,6 @@ package voicerecipeserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.RecipeApi;
@@ -12,14 +11,12 @@ import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.RecipeService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 //TODO категории в рецепты добавить
 
-@RestController
 @CrossOrigin(maxAge = 1440)
+@RestController
 public class RecipeApiController implements RecipeApi {
     private final RecipeService service;
 

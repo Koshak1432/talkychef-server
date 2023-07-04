@@ -33,8 +33,8 @@ public class RecipeServiceImpl implements RecipeService {
     @Autowired
     public RecipeServiceImpl(StepRepository stepRepository, RecipeRepository recipeRepository,
                              IngredientRepository ingredientRepository, MeasureUnitRepository measureUnitRepository,
-                             IngredientsDistributionRepository ingredientsDistributionRepository, MediaRepository mediaRepository,
-                             ModelMapper mapper) {
+                             IngredientsDistributionRepository ingredientsDistributionRepository,
+                             MediaRepository mediaRepository, ModelMapper mapper) {
         this.stepRepository = stepRepository;
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
@@ -42,8 +42,8 @@ public class RecipeServiceImpl implements RecipeService {
         this.ingredientsDistributionRepository = ingredientsDistributionRepository;
         this.mediaRepository = mediaRepository;
         this.mapper = mapper;
-        this.mapper.typeMap(Recipe.class, RecipeDto.class)
-                .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
+        this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
+                m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
     }
 
     @Autowired
@@ -115,7 +115,8 @@ public class RecipeServiceImpl implements RecipeService {
                 ingredientsDistribution.setIngredient(ingredientRepository.save(receivedIngredient));
             } else {
                 ingredientsDistribution.setIngredient(ingredientFromRepo.get());
-                ingredientsDistribution.setId(new IngredientsDistributionKey(recipe.getId(), ingredientFromRepo.get().getId()));
+                ingredientsDistribution.setId(
+                        new IngredientsDistributionKey(recipe.getId(), ingredientFromRepo.get().getId()));
             }
             //TODO в идеале бы настроить для recipe save так, чтобы он сохранял measureUnit, ingredient, если их нет
             // в БД. Хочется убрать лишний find.
@@ -125,7 +126,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void setMeasureUnit(IngredientsDistribution ingredientsDistribution) {
-        Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findByName(ingredientsDistribution.getUnit().getName());
+        Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findByName(
+                ingredientsDistribution.getUnit().getName());
         if (measureUnitOptional.isEmpty()) {
             ingredientsDistribution.setUnit(measureUnitRepository.save(ingredientsDistribution.getUnit()));
         } else {
@@ -134,7 +136,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException,
+            BadRequestException {
         Recipe oldRecipe = findRecipe(id);
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
         newRecipe.setId(id);
@@ -155,7 +158,7 @@ public class RecipeServiceImpl implements RecipeService {
         Set<Long> newRecipeMedia = getRecipeMedia(newRecipe);
         Set<Long> unusedMedia = new HashSet<>();
         for (Long mediaId : oldRecipeMedia) {
-            if (!newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
+            if (! newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
                 unusedMedia.add(mediaId);
             }
         }
@@ -169,7 +172,7 @@ public class RecipeServiceImpl implements RecipeService {
         newSteps.sort(Comparator.comparingInt(Step::getStepNum));
 
         // rest of the oldSteps will be deleted automatically because of orphanRemoval = true
-        for (int i = 0; i < newSteps.size(); ++i) {
+        for (int i = 0; i < newSteps.size(); ++ i) {
             Step newStep = newSteps.get(i);
             if (i < oldSteps.size()) {
                 newStep.setId(oldSteps.get(i).getId());
