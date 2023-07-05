@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.IdDto;
+import voicerecipeserver.model.dto.MarksDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
@@ -32,4 +33,21 @@ public interface RecipeApi {
     ResponseEntity<List<RecipeDto>> recipeSearchNameGet(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws NotFoundException;
+
+
+    @PostMapping(value = "/recipe/{id}/mark", produces = {"application/json"},
+            consumes = {"application/json"})
+    ResponseEntity<IdDto> recipeIdMarkPost(@RequestBody MarksDto mark) throws BadRequestException, NotFoundException;
+
+    @GetMapping(value = "/recipe/search/marks",
+            produces = {"application/json"})
+    ResponseEntity<List<RecipeDto>> recipeSearchMarksGet(@RequestParam(value = "limit", required = false) Integer limit);
+
+    @PutMapping(value = "/recipe/{id}/mark/{mark_id}", produces = {"application/json"},
+            consumes = {"application/json"})
+    ResponseEntity<MarksDto> recipeIdMarkPut(@RequestBody MarksDto mark, @PathVariable("mark_id") @PositiveOrZero(message = "mark id must be not negative") Long id) throws BadRequestException;
+
+
+
+
 }

@@ -29,9 +29,13 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.5'
     testImplementation 'com.h2database:h2:2.1.214'
+    testImplementation 'com.h2database:h2:2.1.214'
+
 
 }
+
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+

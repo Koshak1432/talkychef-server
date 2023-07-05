@@ -1,16 +1,14 @@
 package voicerecipeserver.model.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.IngredientsDistributionDto;
-import voicerecipeserver.model.dto.StepDto;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * RecipeDto
@@ -58,6 +56,11 @@ public class RecipeDto   {
   @Valid
   private List<StepDto> steps = null;
 
+  @JsonProperty("mark")
+  private Double mark = null;
+
+  @JsonProperty("user_mark")
+  private Integer userMark = null;
   public RecipeDto name(String name) {
     this.name = name;
     return this;
@@ -143,9 +146,9 @@ public class RecipeDto   {
    * Get authorId
    * @return authorId
    **/
-      @NotNull
+  @NotNull
 
-  @Size(max=32)   public String getAuthorId() {
+  @Size(max = 32)   public String getAuthorId() {
     return authorId;
   }
 
@@ -295,6 +298,42 @@ public class RecipeDto   {
     this.steps = steps;
   }
 
+
+  public RecipeDto mark(Double mark) {
+    this.mark = mark;
+    return this;
+  }
+
+  /**
+   * Get mark
+   * @return mark
+   **/
+
+  public Double getMark() {
+    return mark;
+  }
+
+  public void setMark(Double mark) {
+    this.mark = mark;
+  }
+
+  public RecipeDto userMark(Integer userMark) {
+    this.userMark = userMark;
+    return this;
+  }
+
+  /**
+   * Get userMark
+   * @return userMark
+   **/
+
+  public Integer getUserMark() {
+    return userMark;
+  }
+
+  public void setUserMark(Integer userMark) {
+    this.userMark = userMark;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {

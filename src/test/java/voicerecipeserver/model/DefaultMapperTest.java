@@ -258,6 +258,19 @@ public class DefaultMapperTest {
         assertEquals(recipe.getMedia().getId(), dto.getMedia().getId());
     }
 
+//    @Test
+//    void map_marks_to_marksDto() {
+//        Ingredient ingredient = Ingredient.builder().id(3L).name("Картоха").ingredientsDistributionList(
+//                new ArrayList<>()).build();
+//        Marks mark = new Marks();
+//        mark.mark(3).
+//        IngredientDto ingredientDto = mapper.map(ingredient, IngredientDto.class);
+//
+//        assertEquals(ingredient.getId(), ingredientDto.getId());
+//        assertEquals(ingredient.getName(), ingredientDto.getName());
+//    }
+
+
     @Test
     void map_recipe_list_to_dto_list() {
         RecipeDto recipeDto1 = new RecipeDto();
