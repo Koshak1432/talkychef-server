@@ -2,9 +2,9 @@ package voicerecipeserver.model.entities;
 
 
 import lombok.*;
-import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -39,4 +39,9 @@ public class User {
     @OneToMany(mappedBy = "author")
     @ToString.Exclude
     private List<Recipe> recipes;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
 }
