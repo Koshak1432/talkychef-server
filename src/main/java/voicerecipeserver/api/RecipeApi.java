@@ -41,21 +41,15 @@ public interface RecipeApi {
             NotFoundException;
 
 
-    @PostMapping(value = "/recipe/{id}/comment", consumes = "application/json")
-    ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto,
-                                      @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
-            NotFoundException, BadRequestException;
+    @PostMapping(value = "/recipe/comment", consumes = "application/json")
+    ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto) throws NotFoundException, BadRequestException;
 
     // TODO мб следует ещё один эксепшн с другим кодом создать, чтобы различать not found recipe и not found comment
     // или же просто говорить что всё ок(плохо)
 
-    @PutMapping(value = "/recipe/{recipe_id}/comment/{comment_id}", consumes = "application/json")
-    ResponseEntity<IdDto> commentUpdate(@RequestBody CommentDto commentDto,
-                                        @PathVariable("recipe_id") @PositiveOrZero(message = "recipe id must be not " +
-                                                "negative") Long recipeId,
-                                        @PathVariable("comment_id") @PositiveOrZero(message = "comment id must be not" +
-                                                " negative") Long commentId) throws
-            NotFoundException, BadRequestException;
+    @PutMapping(value = "/recipe/comment", consumes = "application/json")
+    ResponseEntity<IdDto> commentUpdate(@RequestBody CommentDto commentDto) throws NotFoundException,
+            BadRequestException;
 
     @PostMapping(value = "/recipe/{recipe_id}/comment/{comment_id}", consumes = "application/json")
     ResponseEntity<Void> commentDelete(

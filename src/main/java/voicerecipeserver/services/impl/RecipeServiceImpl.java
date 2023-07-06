@@ -28,6 +28,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final StepRepository stepRepository;
     private final MediaRepository mediaRepository;
     private UserRepository userRepository;
+    private CommentRepository commentRepository;
     private final ModelMapper mapper;
 
     // TODO не ну это колбасу точно убрать надо, мб по-другому внедрить
@@ -35,14 +36,16 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeServiceImpl(StepRepository stepRepository, RecipeRepository recipeRepository,
                              IngredientRepository ingredientRepository, MeasureUnitRepository measureUnitRepository,
                              IngredientsDistributionRepository ingredientsDistributionRepository,
-                             MediaRepository mediaRepository, ModelMapper mapper) {
+                             MediaRepository mediaRepository, CommentRepository commentRepository, ModelMapper mapper) {
         this.stepRepository = stepRepository;
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.ingredientsDistributionRepository = ingredientsDistributionRepository;
         this.mediaRepository = mediaRepository;
+        this.commentRepository = commentRepository;
         this.mapper = mapper;
+
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
     }
@@ -61,11 +64,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     private Recipe findRecipe(Long id) throws NotFoundException {
         Optional<Recipe> recipeOptional = recipeRepository.findById(id);
-
         if (recipeOptional.isEmpty()) {
             throw new NotFoundException("Не удалось найти рецепт с id: " + id);
         }
-
         return recipeOptional.get();
     }
 
@@ -194,6 +195,14 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeMedia;
     }
 
+    User findUser(String userUid) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findByUid(userUid);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти пользователя с UID: " + userUid);
+        }
+        return userOptional.get();
+    }
+
     @Override
     public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException {
         if (limit == null) {
@@ -210,16 +219,19 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> postComment(CommentDto commentDto, Long id) throws NotFoundException,
-            BadRequestException {
+    public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException, BadRequestException {
         Comment comment = mapper.map(commentDto, Comment.class);
-        return null;
-//        return new ResponseEntity<>(new IdDto().id(), HttpStatus.OK);
+        // todo найти юзера и рецепт, добавить к ним этот комментарий, потому что сам он не добавится
+        User user = findUser(commentDto.getUserUid());
+        Recipe recipe = findRecipe(commentDto.getRecipeId());
+        user.getComments().add(comment);
+        recipe.getComments().add(comment);
+        Comment savedComment = commentRepository.save(comment);
+        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<IdDto> updateComment(CommentDto commentDto, Long recipeId, Long commentId) throws
-            NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException, BadRequestException {
         return null;
     }
 

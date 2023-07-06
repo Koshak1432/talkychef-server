@@ -37,7 +37,8 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> recipeUpdate(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> recipeUpdate(RecipeDto recipeDto, Long id) throws NotFoundException,
+            BadRequestException {
         return service.updateRecipe(recipeDto, id);
     }
 
@@ -46,15 +47,13 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> commentPost(CommentDto commentDto, Long id) throws NotFoundException,
-            BadRequestException {
-        return service.postComment(commentDto, id);
+    public ResponseEntity<IdDto> commentPost(CommentDto commentDto) throws NotFoundException, BadRequestException {
+        return service.postComment(commentDto);
     }
 
     @Override
-    public ResponseEntity<IdDto> commentUpdate(CommentDto commentDto, Long recipeId, Long commentId) throws
-            NotFoundException, BadRequestException {
-        return service.updateComment(commentDto, recipeId, commentId);
+    public ResponseEntity<IdDto> commentUpdate(CommentDto commentDto) throws NotFoundException, BadRequestException {
+        return service.updateComment(commentDto);
     }
 
     @Override

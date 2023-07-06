@@ -18,10 +18,9 @@ public interface RecipeService {
 
     ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException;
 
-    ResponseEntity<IdDto> postComment(CommentDto commentDto, Long id) throws NotFoundException, BadRequestException;
+    ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException, BadRequestException;
 
-    ResponseEntity<IdDto> updateComment(CommentDto commentDto, Long recipeId, Long commentId) throws NotFoundException,
-            BadRequestException;
+    ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException, BadRequestException;
 
     ResponseEntity<Void> deleteComment(Long recipeId, Long commentId) throws NotFoundException, BadRequestException;
 }

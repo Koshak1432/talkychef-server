@@ -176,21 +176,19 @@ public class DefaultMapperTest {
         System.out.println(comment.getUser().getUid());
     }
 
-//    @Test
-//    void map_comment_to_commentDto() {
-//        User user = new User(10L, "dsfaadf2UID", "kek", null, null, null, null, null, null);
-//        Recipe recipe = new Recipe();
-//        recipe.setAuthor(user);
-//        Comment comment = new Comment(1L, );
-//        CommentDto dto = new CommentDto();
-//        dto.id(1L).recipeId(2L).userUid("ASDASXVCKD123sdfd").content("Очень классно мне понравилось");
-//        Comment comment = mapper.map(dto, Comment.class);
-//
-//        assertEquals(dto.getId(), comment.getId());
-//        assertEquals(dto.getUserUid(), comment.getUser().getUid());
-//        assertEquals(dto.getRecipeId(), comment.getRecipe().getId());
-//        assertEquals(dto.getContent(), comment.getContent());
-//    }
+    @Test
+    void map_comment_to_commentDto() {
+        User user = new User(10L, "dsfaadf2UID", "kek", null, null, null, null, null, null);
+        Recipe recipe = new Recipe();
+        recipe.setId(25L);
+        Comment comment = new Comment(1L, recipe, user, null, "Очень густо");
+        CommentDto dto = mapper.map(comment, CommentDto.class);
+
+        assertEquals(dto.getId(), comment.getId());
+        assertEquals(dto.getUserUid(), comment.getUser().getUid());
+        assertEquals(dto.getRecipeId(), comment.getRecipe().getId());
+        assertEquals(dto.getContent(), comment.getContent());
+    }
 
     @Test
     void map_recipeDto_with_required_field_and_steps_to_recipe() {
