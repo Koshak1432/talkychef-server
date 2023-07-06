@@ -7,6 +7,7 @@ import org.modelmapper.TypeToken;
 import voicerecipeserver.model.dto.*;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.mappers.DefaultMapper;
+import voicerecipeserver.respository.MarksRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -247,13 +248,29 @@ public class DefaultMapperTest {
         markDto.mark((short) 3).id(1L).recipeId(1L).userUid("asdfadfsadfshafjsh");
         mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
-                    m.map(src -> src.getUser().getUid(), MarkDto::setUserId);
+                    m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
                     m.map(src -> src.getRecipe().getId(), MarkDto::setRecipeId);
                 });
         Mark mark = mapper.map(markDto, Mark.class);
-//        assertEquals(marks.getId(), marksDto.getId());
-//        assertEquals(marks.getUser().getUid(), marksDto.getUserId());
+        assertEquals(mark.getId(), markDto.getId());
+        assertEquals(mark.getUser().getUid(), markDto.getUserUid());
     }
+
+//    @Test
+//    void saving_marks() {
+//        Mark mark = new Mark();
+//        mark.setUser(new User(1L, "author1", null, null, null, null, null, null, null));
+//        Recipe recipe = new Recipe();
+//        recipe.setName("name123");
+//        recipe.setAuthor(new User(2L, "author2", null, null, null, null, null, null, null));
+//        recipe.setCookTimeMins(4044);
+//        recipe.setMedia(new Media(11L, null, null, null, null));
+//        mark.setRecipe(recipe);
+//        MarksRepository marksRepository;
+//        marksRepository.save(mark);
+//
+
+//    }
 
     @Test
     void map_recipeDto_with_required_field_to_recipe() {

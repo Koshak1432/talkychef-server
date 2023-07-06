@@ -3,6 +3,7 @@ package voicerecipeserver.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.RecipeApi;
 import voicerecipeserver.model.dto.IdDto;
@@ -46,22 +47,27 @@ public class RecipeApiController implements RecipeApi {
     }
 
 
-
     @Override
     public ResponseEntity<IdDto> recipeIdMarkPost(MarkDto mark) throws BadRequestException, NotFoundException {
-        System.out.println("THERE");
         return service.addRecipeMark(mark);
     }
 
     @Override
     public ResponseEntity<List<RecipeDto>> recipeSearchMarksGet(Integer limit) {
         return null; //todo метод вывода всех оценок от одногопользователя
+        //todo delete marks
     }
 
     @Override
-    public ResponseEntity<MarkDto> recipeIdMarkPut(MarkDto mark, Long id) throws BadRequestException {
-        return service.UpdateRecipeMark(mark, id);
+    public ResponseEntity<IdDto> recipeIdMarkPut(MarkDto mark) throws BadRequestException, NotFoundException {
+        return service.UpdateRecipeMark(mark);
+    }
+
+    @Override
+    public ResponseEntity<Void> recipeIdMarkDelete(Long id) {
+         return service.DeleteRecipeMark(id);
 
     }
+
 
 }

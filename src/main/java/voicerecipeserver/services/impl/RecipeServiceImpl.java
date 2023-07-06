@@ -1,5 +1,6 @@
 package voicerecipeserver.services.impl;
 
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +50,10 @@ public class RecipeServiceImpl implements RecipeService {
                 .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
         this.mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
-                    m.map(src -> src.getUser().getUid(), MarkDto::setUserId);
+                    m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
                     m.map(src -> src.getRecipe().getId(), MarkDto::setRecipeId);
                 });
+
     }
 
     @Autowired
@@ -79,7 +81,6 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
-
         setAuthorTo(recipe);
         recipe.setId(null);
 
@@ -92,6 +93,16 @@ public class RecipeServiceImpl implements RecipeService {
         setDistribution(recipe);
         recipeRepository.save(recipe);
         return new ResponseEntity<>(new IdDto().id(recipe.getId()), HttpStatus.OK);
+    }
+
+    private void setRecipeTo(Mark mark) throws NotFoundException {
+        Optional<Recipe> recipe = recipeRepository.findById(mark.getRecipe().getId());
+
+        if (recipe.isEmpty()) {
+            throw new NotFoundException("Не удалось найти рецепт с шid: " + mark.getRecipe().getId());
+        } else {
+            mark.setRecipe(recipe.get());
+        }
     }
 
     @Override
@@ -122,22 +133,42 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException {
-        System.out.println("ALIVE");
         Mark mark = mapper.map(markDto, Mark.class);
-        System.out.println("HERE");
+        System.out.println(mark);
+        System.out.println(markDto);
+        System.out.println(mark.getUser());
+        System.out.println(mark.getRecipe());
+
         setRecipeTo(mark);
         setAuthorTo(mark);
-
-
         mark.setId(null);
-
         marksRepository.save(mark);
         return new ResponseEntity<>(new IdDto().id(mark.getId()), HttpStatus.OK);
     }
 
+    private Mark findMark(Long id) throws NotFoundException {
+        Optional<Mark> markOptional = marksRepository.findById(id);
+        if (markOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти оценку с id: " + id);
+        }
+        return markOptional.get();
+    }
+
+
     @Override
-    public ResponseEntity<MarkDto> UpdateRecipeMark(MarkDto mark, Long id) {
-        return null;
+    public ResponseEntity<IdDto> UpdateRecipeMark(MarkDto markDto) throws NotFoundException {
+        Mark oldMark = findMark(markDto.getId());
+        Mark newMark = mapper.map(markDto, Mark.class);
+        newMark.setId(markDto.getId());
+        setAuthorTo(newMark);
+        marksRepository.save(newMark);
+        return new ResponseEntity<>(new IdDto().id(newMark.getId()), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> DeleteRecipeMark(Long id) {
+        marksRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private void setAuthorTo(Mark mark) throws NotFoundException {
@@ -150,15 +181,6 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private void setRecipeTo(Mark mark) throws NotFoundException {
-        Optional<Recipe> recipe = recipeRepository.findById(mark.getRecipe().getId());
-
-        if (recipe.isEmpty()) {
-            throw new NotFoundException("Не удалось найти автора с uid: " + mark.getUser().getUid());
-        } else {
-            mark.setRecipe(recipe.get());
-        }
-    }
 
 
     private void setDistribution(Recipe recipe) throws BadRequestException {

@@ -42,11 +42,7 @@ public class User {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Mark> marks = new ArrayList<>();
-
-//    @ToString.Exclude
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Markss> user;
+    private List<Mark> marks;
 
 
 

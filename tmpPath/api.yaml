@@ -12,12 +12,12 @@ servers:
   - url: 185.128.106.56:8080/api/v1
 paths:
   /recipe/{id}:
-      get:
-        tags:
-          - Возможные
-        summary: Поиск рецепта.
-        description: Возвращает рецепт со всеми потрахами.
-        parameters:
+    get:
+      tags:
+        - Возможные
+      summary: Поиск рецепта.
+      description: Возвращает рецепт со всеми потрахами.
+      parameters:
         - description: Идентификатор рецепта.
           in: path
           name: id
@@ -26,100 +26,100 @@ paths:
             type: integer
             format: int64
           example: 1234
-        responses:
-          "200":
-            description: Информация о рецепте.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/RecipeDto'
-             
-          "400":
-            description: Некорректный формат запроса.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
-          "404":
-            description: Рецепт не найден.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Recipe not found"
-                      }
-      put:
-        tags:
-          - Необходимые
-        summary: Обновить рецепт.
-        description: Обновляет рецепт. Структура как в добавлении рецепта.
-        parameters:
-        - description: Идентификатор рецепта.
-          in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1234
-        requestBody:
+      responses:
+        "200":
+          description: Информация о рецепте.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipeDto'
-        responses:
-          "200":
-            description: Рецепт был обновлён.
-            content: 
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/IdDto'
-          "400":
-            description: Некорректный формат запроса или данные неверны.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
-          "404":
-            description: Рецепт не найден.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Recipe not found"
-                      }
+
+        "400":
+          description: Некорректный формат запроса.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+        "404":
+          description: Рецепт не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Recipe not found"
+                    }
+    put:
+      tags:
+        - Необходимые
+      summary: Обновить рецепт.
+      description: Обновляет рецепт. Структура как в добавлении рецепта.
+      parameters:
+        - description: Идентификатор рецепта.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1234
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeDto'
+      responses:
+        "200":
+          description: Рецепт был обновлён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDto'
+        "400":
+          description: Некорректный формат запроса или данные неверны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+        "404":
+          description: Рецепт не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Recipe not found"
+                    }
 
   /recipe/search/{name}:
-      get:
-        tags:
-          - Необходимые
-        summary: Поиск рецептов.
-        description: Возвращает массив рецептов, количество определяется сервером. НЕ может вернуть пустой массив (вернет 404). Планируется использовать поиск подстроки.
-        parameters:
+    get:
+      tags:
+        - Необходимые
+      summary: Поиск рецептов.
+      description: Возвращает массив рецептов, количество определяется сервером. НЕ может вернуть пустой массив (вернет 404). Планируется использовать поиск подстроки.
+      parameters:
         - description: Первые буквы, по которым идет поиск рецепта.
           in: path
           name: name
@@ -135,80 +135,80 @@ paths:
           schema:
             type: integer
           example: 5
-        responses:
-          "200":
-            description: Рецепты, в названии которых есть вхождение name.
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/RecipeDto'
-             
-          "400":
-            description: Некорректный формат запроса.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
-          "404":
-            description: Рецепт не найден.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 404,
-                        "message": "Recipe not found"
-                      }
-  /recipe:
-      post:
-        tags:
-          - Необходимые
-        summary: Добавить рецепт.
-        description: Добавляет рецепт. Для рецепта медиа обязательно, для шагов - нет. Если указанных единиц измерения и ингредиентов нет, они добавляются сервером. Единицы измерения и ингредиенты хранятся в нижнем регистре вне зависимости от переданного вида.
-        requestBody:
+      responses:
+        "200":
+          description: Рецепты, в названии которых есть вхождение name.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipeDto'
-        responses:
-          "200":
-            description: Рецепт был добавлен.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/IdDto'
-          "400":
-            description: Некорректный формат запроса или данные неверны.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipeDto'
+
+        "400":
+          description: Некорректный формат запроса.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+        "404":
+          description: Рецепт не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 404,
+                      "message": "Recipe not found"
+                    }
+  /recipe:
+    post:
+      tags:
+        - Необходимые
+      summary: Добавить рецепт.
+      description: Добавляет рецепт. Для рецепта медиа обязательно, для шагов - нет. Если указанных единиц измерения и ингредиентов нет, они добавляются сервером. Единицы измерения и ингредиенты хранятся в нижнем регистре вне зависимости от переданного вида.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeDto'
+      responses:
+        "200":
+          description: Рецепт был добавлен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDto'
+        "400":
+          description: Некорректный формат запроса или данные неверны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
   /media/{id}:
-      get:
-        tags:
-          - Необходимые
-        summary: Поиск медиа.
-        description: Возвращает медиа. В теле содержится бинарник, MIME тип указывается в хедере http ответа.
-        parameters:
+    get:
+      tags:
+        - Необходимые
+      summary: Поиск медиа.
+      description: Возвращает медиа. В теле содержится бинарник, MIME тип указывается в хедере http ответа.
+      parameters:
         - description: Идентификатор медиа.
           in: path
           name: id
@@ -217,50 +217,9 @@ paths:
             type: integer
             format: int64
           example: 1234
-        responses:
-          "200":
-            description: Медиа.
-            content:
-              video:
-                schema:
-                  $ref: '#/components/schemas/MediaRaw'
-              image:
-                schema:
-                  $ref: '#/components/schemas/MediaRaw'
-             
-          "400":
-            description: Некорректный формат запроса.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
-          "404":
-            description: Медиа не найдено.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Media not found"
-                      }
-  /media:
-      post:
-        tags:
-          - Необходимые
-        summary: Добавить медиа.
-        description: В хедере данного запроса необходимо указать ContentType в соответствии с RFC6838, ContentLength, а в тело положить сам бинарник.
-        requestBody:
+      responses:
+        "200":
+          description: Медиа.
           content:
             video:
               schema:
@@ -268,98 +227,139 @@ paths:
             image:
               schema:
                 $ref: '#/components/schemas/MediaRaw'
-        responses:
-          "200":
-            description: Медиа было добавлено. Возвращает идентификатор добавленного медиа.
-            content:
-              applictation/json:
-                schema:
-                  $ref: '#/components/schemas/IdDto'
-          "400":
-            description: Некорректный формат запроса или данные неверны.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
+
+        "400":
+          description: Некорректный формат запроса.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+        "404":
+          description: Медиа не найдено.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Media not found"
+                    }
+  /media:
+    post:
+      tags:
+        - Необходимые
+      summary: Добавить медиа.
+      description: В хедере данного запроса необходимо указать ContentType в соответствии с RFC6838, ContentLength, а в тело положить сам бинарник.
+      requestBody:
+        content:
+          video:
+            schema:
+              $ref: '#/components/schemas/MediaRaw'
+          image:
+            schema:
+              $ref: '#/components/schemas/MediaRaw'
+      responses:
+        "200":
+          description: Медиа было добавлено. Возвращает идентификатор добавленного медиа.
+          content:
+            applictation/json:
+              schema:
+                $ref: '#/components/schemas/IdDto'
+        "400":
+          description: Некорректный формат запроса или данные неверны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
   /collection:
-      post:
-        tags:
-          - Необходимые
-        summary: Добавить коллекцию.
-        parameters:
-          - in: query
-            name: 'name'
-            required: true
-            schema:
-              type: string
-              maxLength: 128
-            description: Имя для новой коллекции. Должно быть уникальным. Не забываем про RFC1866.
-        responses:
-          "200":
-            description: Коллекция была добавлена.
-          "400":
-            description: Некорректный формат запроса или данные неверны.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
+    post:
+      tags:
+        - Необходимые
+      summary: Добавить коллекцию.
+      parameters:
+        - in: query
+          name: 'name'
+          required: true
+          schema:
+            type: string
+            maxLength: 128
+          description: Имя для новой коллекции. Должно быть уникальным. Не забываем про RFC1866.
+      responses:
+        "200":
+          description: Коллекция была добавлена.
+        "400":
+          description: Некорректный формат запроса или данные неверны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
   /collection/content:
-      post:
-        tags:
-          - Необходимые
-        summary: Связать коллекцию и рецепт.
-        parameters:
-          - in: query
-            name: 'collection'
-            required: true
-            schema:
-              type: string
-              maxLength: 128
-            description: Имя существующей коллекции. Не забываем про RFC1866.
-          - in: query
-            name: 'recipe'
-            required: true
-            schema:
-              type: integer
-              format: int64
-            description: Id существующего рецепта. Не забываем про RFC1866.
-        responses:
-          "200":
-            description: Рецепт был добавлен в коллекцию.
-          "400":
-            description: Некорректный формат запроса или данные неверны.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
+    post:
+      tags:
+        - Необходимые
+      summary: Связать коллекцию и рецепт.
+      parameters:
+        - in: query
+          name: 'collection'
+          required: true
+          schema:
+            type: string
+            maxLength: 128
+          description: Имя существующей коллекции. Не забываем про RFC1866.
+        - in: query
+          name: 'recipe'
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Id существующего рецепта. Не забываем про RFC1866.
+      responses:
+        "200":
+          description: Рецепт был добавлен в коллекцию.
+        "400":
+          description: Некорректный формат запроса или данные неверны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
   /collection/search:
-      get:
-        tags:
-          - Необходимые
-        summary: Поиск коллекции.
-        description: Возвращает CollectionDto(название + количество рецептов + массив рецептов). Коллекция может оказаться пустой. Размер страницы - 10 рецептов.
-        parameters:
+    get:
+      tags:
+        - Необходимые
+      summary: Поиск коллекции.
+      description: Возвращает CollectionDto(название + количество рецептов + массив рецептов). Коллекция может оказаться пустой. Размер страницы - 10 рецептов.
+      parameters:
         - description: Имя существующей коллекции. Не забываем про RFC1866.
           in: query
           name: name
@@ -376,141 +376,47 @@ paths:
             type: integer
             format: int32
           example: 0
-        responses:
-          "200":
-            description: Возвращает название коллекции и массив рецептов.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/CollectionDto'
-             
-          "400":
-            description: Некорректный формат запроса.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
-          "404":
-            description: Коллекция с данным именем не найдена.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Collection not found"
-                      }
-  /recipe/{id}/mark:
-      post:
-        tags:
-          - Возможные
-        summary: Добавить оценку рецепта.
-        description: Добавляет оценку рецепту.
-        parameters:
-        - description: Идентификатор рецепта.
-          in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        requestBody:
+      responses:
+        "200":
+          description: Возвращает название коллекции и массив рецептов.
           content:
             application/json:
               schema:
-                type: integer
-                format: int64
+                $ref: '#/components/schemas/CollectionDto'
+
+        "400":
+          description: Некорректный формат запроса.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
               examples:
-                  response:
-                    value: |-
-                      {
-                        "id": 5
-                      }
-        responses:
-          "200":
-            description: Оценка была успешно поставлена.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/IdDto'
-          "400":
-            description: Некорректный формат запроса или данные неверны.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }                    
-      put:
-        tags:
-          - Возможные
-        summary: Обновить оценку рецепта.
-        parameters:
-        - description: Идентификатор рецепта.
-          in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        requestBody:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+        "404":
+          description: Коллекция с данным именем не найдена.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MarksDto'
-        responses:
-          "200":
-            description: Оценка была обновлена.
-            content: 
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/IdDto'
-          "400":
-            description: Некорректный формат запроса или данные неверны.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
-          "404":
-            description: Рецепт не найден.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Recipe not found"
-                      }
-      delete:
-        tags:
-          - Возможные
-        summary: Удалить оценку рецепта.
-        parameters:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Collection not found"
+                    }
+  /recipe/{id}/mark:
+    post:
+      tags:
+        - Возможные
+      summary: Добавить оценку рецепта.
+      description: Добавляет оценку рецепту.
+      parameters:
         - description: Идентификатор рецепта.
           in: path
           name: id
@@ -518,91 +424,186 @@ paths:
           schema:
             type: integer
             format: int64
-        responses:
-          "200":
-            description: Оценка была Удалена.
-            content: 
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/IdDto'
-          "400":
-            description: Некорректный формат запроса или данные неверны.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
-          "404":
-            description: Рецепт не найден.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Recipe not found"
-                      }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int64
+            examples:
+              response:
+                value: |-
+                  {
+                    "id": 5
+                  }
+      responses:
+        "200":
+          description: Оценка была успешно поставлена.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDto'
+        "400":
+          description: Некорректный формат запроса или данные неверны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+  /mark/{id}:
+    put:
+      tags:
+        - Возможные
+      summary: Обновить оценку рецепта.
+      parameters:
+        - description: Идентификатор рецепта.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarksDto'
+      responses:
+        "200":
+          description: Оценка была обновлена.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDto'
+        "400":
+          description: Некорректный формат запроса или данные неверны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+        "404":
+          description: Рецепт не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Recipe not found"
+                    }
+    delete:
+      tags:
+        - Возможные
+      summary: Удалить оценку рецепта.
+      parameters:
+        - description: Идентификатор рецепта.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Оценка была Удалена.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDto'
+        "400":
+          description: Некорректный формат запроса или данные неверны.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+        "404":
+          description: Рецепт не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Recipe not found"
+                    }
 
   /recipe/search/marks:
-      get:
-        tags:
-          - Необходимые
-        summary: Поиск всех оценок пользователя.
-        description: Возвращает массив оцененных рецептов, количество определяется сервером. НЕ может вернуть пустой массив (вернет 404).
-        parameters:
-          - description: Лимит количества возвращаемых рецептов. Должен быть больше нуля.
-            in: query
-            name: limit
-            required: false
-            schema:
-               type: integer
-               example: 5
-        responses:
-          "200":
-            description: Рецепты, которые пользователь оценил.
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/RecipeDto'
-             
-          "400":
-            description: Некорректный формат запроса.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 400,
-                        "message": "Validation Failed"
-                      }
-          "404":
-            description: Рецепт не найден.
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "code": 404,
-                        "message": "Recipe not found"
-                      }
-             
+    get:
+      tags:
+        - Необходимые
+      summary: Поиск всех оценок пользователя.
+      description: Возвращает массив оцененных рецептов, количество определяется сервером. НЕ может вернуть пустой массив (вернет 404).
+      parameters:
+        - description: Лимит количества возвращаемых рецептов. Должен быть больше нуля.
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            example: 5
+      responses:
+        "200":
+          description: Рецепты, которые пользователь оценил.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipeDto'
+
+        "400":
+          description: Некорректный формат запроса.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation Failed"
+                    }
+        "404":
+          description: Рецепт не найден.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 404,
+                      "message": "Recipe not found"
+                    }
+
 
 
 components:
@@ -625,7 +626,7 @@ components:
           format: int64
           example: 30
         media:
-            $ref: '#/components/schemas/IdDto'
+          $ref: '#/components/schemas/IdDto'
         cook_time_mins:
           type: integer
           format: int32
@@ -712,10 +713,10 @@ components:
           nullable: false
           example: 5234653
     MediaRaw:
-        type: string
-        format: binary
-        nullable: false
-        example: '*типа бинарник*'
+      type: string
+      format: binary
+      nullable: false
+      example: '*типа бинарник*'
     Error:
       required:
         - code
@@ -822,13 +823,14 @@ components:
           nullable: false
           example: AFEEF463FEDFFEDD
         recipe_id:
-            $ref: '#/components/schemas/IdDto'
+          type: integer
+          format: int64
+          example: 30
         mark:
           type: integer
           format: int32
           nullable: true
           example: 5
-      
 
 
 

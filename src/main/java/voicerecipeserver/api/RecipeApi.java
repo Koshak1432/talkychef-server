@@ -10,6 +10,7 @@ import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
+import javax.persistence.Id;
 import javax.validation.constraints.*;
 import java.util.List;
 
@@ -42,11 +43,12 @@ public interface RecipeApi {
             produces = {"application/json"})
     ResponseEntity<List<RecipeDto>> recipeSearchMarksGet(@RequestParam(value = "limit", required = false) Integer limit);
 
-    @PutMapping(value = "/recipe/{id}/mark/{mark_id}", produces = {"application/json"},
+    @PutMapping(value = "/mark/{id}", produces = {"application/json"},
             consumes = {"application/json"})
-    ResponseEntity<MarkDto> recipeIdMarkPut(@RequestBody MarkDto mark, @PathVariable("mark_id") @PositiveOrZero(message = "mark id must be not negative") Long id) throws BadRequestException;
+    ResponseEntity<IdDto> recipeIdMarkPut(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
 
-
-
+    @DeleteMapping(value = "/mark/{id}",
+            produces = {"application/json"})
+    ResponseEntity<Void> recipeIdMarkDelete(@PathVariable("id") Long id);
 
 }

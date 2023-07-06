@@ -1,9 +1,8 @@
-package voicerecipeserver.model.entities;
 
+package voicerecipeserver.model.entities;
 
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -12,10 +11,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 @ToString
 @Entity
-@Validated
 @Table(name = "marks")
 public class Mark {
     @Id
@@ -23,28 +20,33 @@ public class Mark {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id")
+    @ToString.Exclude
+    private Recipe recipe;
+
 
     @Column(name = "mark")
     private Short mark;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-@ToString.Exclude
-    @JoinColumn(name = "recipe_id")
-    private Recipe recipe;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
-
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Override
     public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
+        if (thisEffectiveClass != oEffectiveClass) {
+            return false;
+        }
         Mark mark = (Mark) o;
         return getId() != null && Objects.equals(getId(), mark.getId());
     }
@@ -54,3 +56,5 @@ public class Mark {
         return getClass().hashCode();
     }
 }
+
+

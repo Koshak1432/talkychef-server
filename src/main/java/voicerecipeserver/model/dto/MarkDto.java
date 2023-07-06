@@ -1,18 +1,18 @@
 package voicerecipeserver.model.dto;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Objects;
+import javax.validation.constraints.*;
 
 /**
- * MarksDto
+ * CommmentDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-05T07:25:54.097643084Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-05T10:23" +
+        ":47.949525164Z[GMT]")
 
 
 public class MarkDto {
@@ -38,7 +38,7 @@ public class MarkDto {
      *
      * @return id
      **/
-
+    @NotNull
     public Long getId() {
         return id;
     }
@@ -47,26 +47,24 @@ public class MarkDto {
         this.id = id;
     }
 
-
-    public MarkDto userUid(String authorId) {
-        this.userUid = authorId;
+    public MarkDto userUid(String userUid) {
+        this.userUid = userUid;
         return this;
     }
 
     /**
-     * Get user
+     * Get userUid
      *
-     * @return user
+     * @return userUid
      **/
-
     @NotNull
-    @Size(max = 32)
-    public String getUserId() {
+
+    public String getUserUid() {
         return userUid;
     }
 
-    public void setUserId(String author) {
-        this.userUid = author;
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
     }
 
     public MarkDto recipeId(Long recipeId) {
@@ -79,7 +77,8 @@ public class MarkDto {
      *
      * @return recipeId
      **/
-    @Valid
+    @NotNull
+
     public Long getRecipeId() {
         return recipeId;
     }
@@ -98,6 +97,7 @@ public class MarkDto {
      *
      * @return mark
      **/
+    @NotNull
 
     public Short getMark() {
         return mark;
@@ -117,10 +117,9 @@ public class MarkDto {
             return false;
         }
         MarkDto markDto = (MarkDto) o;
-        return Objects.equals(this.id, markDto.id) &&
-                Objects.equals(this.userUid, markDto.userUid) &&
-                Objects.equals(this.recipeId, markDto.recipeId) &&
-                Objects.equals(this.mark, markDto.mark);
+        return Objects.equals(this.id, markDto.id) && Objects.equals(this.userUid,
+                                                                        markDto.userUid) && Objects.equals(
+                this.recipeId, markDto.recipeId) && Objects.equals(this.mark, markDto.mark);
     }
 
     @Override
@@ -131,10 +130,10 @@ public class MarkDto {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class MarksDto {\n");
+        sb.append("class CommmentDto {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    author: ").append(toIndentedString(userUid)).append("\n");
+        sb.append("    userUid: ").append(toIndentedString(userUid)).append("\n");
         sb.append("    recipeId: ").append(toIndentedString(recipeId)).append("\n");
         sb.append("    mark: ").append(toIndentedString(mark)).append("\n");
         sb.append("}");
@@ -152,3 +151,6 @@ public class MarkDto {
         return o.toString().replace("\n", "\n    ");
     }
 }
+
+
+
