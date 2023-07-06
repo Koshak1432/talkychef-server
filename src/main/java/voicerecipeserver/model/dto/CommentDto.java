@@ -3,10 +3,8 @@ package voicerecipeserver.model.dto;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -17,7 +15,7 @@ import javax.validation.constraints.*;
         ":47.949525164Z[GMT]")
 
 
-public class CommmentDto {
+public class CommentDto {
     @JsonProperty("id")
     private Long id = null;
 
@@ -30,7 +28,7 @@ public class CommmentDto {
     @JsonProperty("content")
     private String content = null;
 
-    public CommmentDto id(Long id) {
+    public CommentDto id(Long id) {
         this.id = id;
         return this;
     }
@@ -49,7 +47,7 @@ public class CommmentDto {
         this.id = id;
     }
 
-    public CommmentDto userUid(String userUid) {
+    public CommentDto userUid(String userUid) {
         this.userUid = userUid;
         return this;
     }
@@ -69,7 +67,7 @@ public class CommmentDto {
         this.userUid = userUid;
     }
 
-    public CommmentDto recipeId(Long recipeId) {
+    public CommentDto recipeId(Long recipeId) {
         this.recipeId = recipeId;
         return this;
     }
@@ -89,7 +87,7 @@ public class CommmentDto {
         this.recipeId = recipeId;
     }
 
-    public CommmentDto content(String content) {
+    public CommentDto content(String content) {
         this.content = content;
         return this;
     }
@@ -118,10 +116,10 @@ public class CommmentDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CommmentDto commmentDto = (CommmentDto) o;
-        return Objects.equals(this.id, commmentDto.id) && Objects.equals(this.userUid,
-                                                                         commmentDto.userUid) && Objects.equals(
-                this.recipeId, commmentDto.recipeId) && Objects.equals(this.content, commmentDto.content);
+        CommentDto commentDto = (CommentDto) o;
+        return Objects.equals(this.id, commentDto.id) && Objects.equals(this.userUid,
+                                                                        commentDto.userUid) && Objects.equals(
+                this.recipeId, commentDto.recipeId) && Objects.equals(this.content, commentDto.content);
     }
 
     @Override

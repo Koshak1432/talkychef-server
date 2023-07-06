@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.RecipeApi;
+import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
@@ -42,5 +43,23 @@ public class RecipeApiController implements RecipeApi {
 
     public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit) throws NotFoundException {
         return service.searchRecipesByName(name, limit);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> commentPost(CommentDto commentDto, Long id) throws NotFoundException,
+            BadRequestException {
+        return service.postComment(commentDto, id);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> commentUpdate(CommentDto commentDto, Long recipeId, Long commentId) throws
+            NotFoundException, BadRequestException {
+        return service.updateComment(commentDto, recipeId, commentId);
+    }
+
+    @Override
+    public ResponseEntity<Void> commentDelete(Long recipeId, Long commentId) throws NotFoundException,
+            BadRequestException {
+        return service.deleteComment(recipeId, commentId);
     }
 }

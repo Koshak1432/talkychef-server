@@ -49,8 +49,6 @@ public class Recipe {
     @ToString.Exclude
     private List<IngredientsDistribution> ingredientsDistributions;
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_id")
     @ToString.Exclude

@@ -1,9 +1,6 @@
 package voicerecipeserver.model.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
@@ -11,6 +8,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -22,12 +20,14 @@ public class Comment {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")
+    @ToString.Exclude
     private Recipe recipe;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_uid")
+    @ToString.Exclude
     private User user;
 
     @Temporal(TemporalType.TIMESTAMP)

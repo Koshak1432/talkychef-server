@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
@@ -193,7 +194,6 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeMedia;
     }
 
-
     @Override
     public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException {
         if (limit == null) {
@@ -207,5 +207,25 @@ public class RecipeServiceImpl implements RecipeService {
         List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
 
         return new ResponseEntity<>(recipeDtos, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> postComment(CommentDto commentDto, Long id) throws NotFoundException,
+            BadRequestException {
+        Comment comment = mapper.map(commentDto, Comment.class);
+        return null;
+//        return new ResponseEntity<>(new IdDto().id(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> updateComment(CommentDto commentDto, Long recipeId, Long commentId) throws
+            NotFoundException, BadRequestException {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteComment(Long recipeId, Long commentId) throws NotFoundException,
+            BadRequestException {
+        return null;
     }
 }
