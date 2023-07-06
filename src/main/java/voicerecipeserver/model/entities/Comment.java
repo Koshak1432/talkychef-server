@@ -26,7 +26,7 @@ public class Comment {
     private Recipe recipe;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_uid")
+    @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
 

@@ -22,5 +22,5 @@ public interface RecipeService {
 
     ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException, BadRequestException;
 
-    ResponseEntity<Void> deleteComment(Long recipeId, Long commentId) throws NotFoundException, BadRequestException;
+    ResponseEntity<Void> deleteComment(Long commentId);
 }

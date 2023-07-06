@@ -57,8 +57,7 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<Void> commentDelete(Long recipeId, Long commentId) throws NotFoundException,
-            BadRequestException {
-        return service.deleteComment(recipeId, commentId);
+    public ResponseEntity<Void> commentDelete(Long commentId) {
+        return service.deleteComment(commentId);
     }
 }
