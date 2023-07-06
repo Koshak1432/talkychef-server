@@ -2,7 +2,7 @@ package voicerecipeserver.services;
 
 import org.springframework.http.ResponseEntity;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarksDto;
+import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
@@ -18,7 +18,7 @@ public interface RecipeService {
 
     ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException;
 
-    ResponseEntity<IdDto> addRecipeMark(MarksDto mark) throws NotFoundException;
+    ResponseEntity<IdDto> addRecipeMark(MarkDto mark) throws NotFoundException;
 
-    ResponseEntity<MarksDto> UpdateRecipeMark(MarksDto mark, Long id);
+    ResponseEntity<MarkDto> UpdateRecipeMark(MarkDto mark, Long id);
 }

@@ -442,14 +442,7 @@ paths:
             content:
               application/json:
                 schema:
-                  type: integer
-                  format: int64
-                examples:
-                  response:
-                    value: |-
-                      {
-                        "id": 5
-                      }
+                  $ref: '#/components/schemas/IdDto'
           "400":
             description: Некорректный формат запроса или данные неверны.
             content:
@@ -465,7 +458,7 @@ paths:
                       }                    
       put:
         tags:
-          - Необходимые
+          - Возможные
         summary: Обновить оценку рецепта.
         parameters:
         - description: Идентификатор рецепта.
@@ -482,18 +475,56 @@ paths:
                 $ref: '#/components/schemas/MarksDto'
         responses:
           "200":
-            description: Оценкка была обновлена.
+            description: Оценка была обновлена.
             content: 
               application/json:
                 schema:
-                 type: integer
-                 format: int64
+                  $ref: '#/components/schemas/IdDto'
+          "400":
+            description: Некорректный формат запроса или данные неверны.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
                 examples:
                   response:
                     value: |-
                       {
-                        "id": 5
+                        "code": 400,
+                        "message": "Validation Failed"
                       }
+          "404":
+            description: Рецепт не найден.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+                examples:
+                  response:
+                    value: |-
+                      {
+                        "code": 400,
+                        "message": "Recipe not found"
+                      }
+      delete:
+        tags:
+          - Возможные
+        summary: Удалить оценку рецепта.
+        parameters:
+        - description: Идентификатор рецепта.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        responses:
+          "200":
+            description: Оценка была Удалена.
+            content: 
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/IdDto'
           "400":
             description: Некорректный формат запроса или данные неверны.
             content:
@@ -638,6 +669,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StepDto'
+        mark:
+          type: number
+          format: double
+          nullable: false
+          example: 4.3
+        user_mark:
+          type: integer
+          format: int32
+          nullable: true
+          example: 5
     StepDto:
       type: object
       required:
@@ -781,14 +822,13 @@ components:
           nullable: false
           example: AFEEF463FEDFFEDD
         recipe_id:
-          type: integer
-          format: int64
-          example: 30
+            $ref: '#/components/schemas/IdDto'
         mark:
           type: integer
           format: int32
           nullable: true
           example: 5
       
+
 
 

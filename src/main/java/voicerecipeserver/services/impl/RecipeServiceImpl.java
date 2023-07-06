@@ -1,17 +1,13 @@
 package voicerecipeserver.services.impl;
 
-import org.apache.catalina.Store;
-import org.apache.catalina.Store;
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarksDto;
+import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.BadRequestException;
@@ -20,8 +16,6 @@ import voicerecipeserver.respository.*;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.*;
-
-import static org.modelmapper.Converters.Collection.map;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -53,10 +47,10 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class)
                 .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
-        this.mapper.typeMap(Marks.class, MarksDto.class)
+        this.mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
-                    m.map(src -> src.getUser().getUid(), MarksDto::setUserId);
-                    m.map(src -> src.getRecipe().getId(), MarksDto::setRecipeId);
+                    m.map(src -> src.getUser().getUid(), MarkDto::setUserId);
+                    m.map(src -> src.getRecipe().getId(), MarkDto::setRecipeId);
                 });
     }
 
@@ -127,26 +121,26 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipeMark(MarksDto marksDto) throws NotFoundException {
+    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException {
         System.out.println("ALIVE");
-        Marks marks = mapper.map(marksDto, Marks.class);
+        Mark mark = mapper.map(markDto, Mark.class);
         System.out.println("HERE");
-        setRecipeTo(marks);
-        setAuthorTo(marks);
+        setRecipeTo(mark);
+        setAuthorTo(mark);
 
 
-        marks.setId(null);
+        mark.setId(null);
 
-        marksRepository.save(marks);
-        return new ResponseEntity<>(new IdDto().id(marks.getId()), HttpStatus.OK);
+        marksRepository.save(mark);
+        return new ResponseEntity<>(new IdDto().id(mark.getId()), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<MarksDto> UpdateRecipeMark(MarksDto mark, Long id) {
+    public ResponseEntity<MarkDto> UpdateRecipeMark(MarkDto mark, Long id) {
         return null;
     }
 
-    private void setAuthorTo(Marks mark) throws NotFoundException {
+    private void setAuthorTo(Mark mark) throws NotFoundException {
         Optional<User> author = userRepository.findByUid(mark.getUser().getUid());
 
         if (author.isEmpty()) {
@@ -156,7 +150,7 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private void setRecipeTo(Marks mark) throws NotFoundException {
+    private void setRecipeTo(Mark mark) throws NotFoundException {
         Optional<Recipe> recipe = recipeRepository.findById(mark.getRecipe().getId());
 
         if (recipe.isEmpty()) {

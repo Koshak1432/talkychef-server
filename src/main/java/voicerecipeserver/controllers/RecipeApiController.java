@@ -2,20 +2,16 @@ package voicerecipeserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.RecipeApi;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarksDto;
+import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.RecipeService;
 
-import javax.crypto.MacSpi;
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 //TODO категории в рецепты добавить
@@ -52,7 +48,7 @@ public class RecipeApiController implements RecipeApi {
 
 
     @Override
-    public ResponseEntity<IdDto> recipeIdMarkPost(MarksDto mark) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> recipeIdMarkPost(MarkDto mark) throws BadRequestException, NotFoundException {
         System.out.println("THERE");
         return service.addRecipeMark(mark);
     }
@@ -63,7 +59,7 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<MarksDto> recipeIdMarkPut(MarksDto mark, Long id) throws BadRequestException {
+    public ResponseEntity<MarkDto> recipeIdMarkPut(MarkDto mark, Long id) throws BadRequestException {
         return service.UpdateRecipeMark(mark, id);
 
     }
