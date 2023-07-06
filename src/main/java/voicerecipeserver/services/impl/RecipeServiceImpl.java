@@ -73,9 +73,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
-
-        setAuthorTo(recipe);
-        recipe.setId(null);
+        recipe.setAuthor(findUser(recipe.getAuthor().getUid()));
 
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
@@ -84,18 +82,12 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         setDistribution(recipe);
-        recipeRepository.save(recipe);
-        return new ResponseEntity<>(new IdDto().id(recipe.getId()), HttpStatus.OK);
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
     }
 
     private void setAuthorTo(Recipe recipe) throws NotFoundException {
-        Optional<User> author = userRepository.findByUid(recipe.getAuthor().getUid());
 
-        if (author.isEmpty()) {
-            throw new NotFoundException("Не удалось найти автора с uid: " + recipe.getAuthor().getUid());
-        } else {
-            recipe.setAuthor(author.get());
-        }
     }
 
     private void setDistribution(Recipe recipe) throws BadRequestException {
@@ -143,7 +135,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe oldRecipe = findRecipe(id);
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
         newRecipe.setId(id);
-        setAuthorTo(newRecipe);
+        newRecipe.setAuthor(findUser(newRecipe.getAuthor().getUid()));
         setSteps(oldRecipe, newRecipe);
         setDistribution(newRecipe);
 
