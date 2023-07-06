@@ -27,11 +27,14 @@ public class Mark {
     @Column(name = "mark")
     private Short mark;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+@ToString.Exclude
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -68,10 +68,6 @@ public class Recipe {
     private User author;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Markss> markss = new ArrayList<>();
-
-    @ToString.Exclude
     @OneToMany(mappedBy = "recipe", orphanRemoval = true)
     private List<Mark> marks = new ArrayList<>();
 
