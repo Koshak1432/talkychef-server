@@ -49,7 +49,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.avgMarkRepository = avgMarkRepository;
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class)
-                .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId);
+                .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
         this.mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
                     m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
