@@ -49,7 +49,7 @@ public class Recipe {
     @ToString.Exclude
     private List<IngredientsDistribution> ingredientsDistributions;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "media_id")
     @ToString.Exclude
     private Media media;

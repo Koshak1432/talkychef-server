@@ -14,3 +14,4 @@ INSERT INTO users(username) VALUES
 
 INSERT INTO collections(name) VALUES
 ('mainpage');
+

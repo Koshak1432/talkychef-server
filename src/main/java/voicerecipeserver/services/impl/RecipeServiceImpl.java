@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
@@ -141,12 +142,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private static Set<Long> getUnusedMediaIds(Recipe oldRecipe, Recipe newRecipe) {
-        int defaultMediaId = 172;
         Set<Long> oldRecipeMedia = getRecipeMedia(oldRecipe);
         Set<Long> newRecipeMedia = getRecipeMedia(newRecipe);
         Set<Long> unusedMedia = new HashSet<>();
         for (Long mediaId : oldRecipeMedia) {
-            if (! newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
+            if (! newRecipeMedia.contains(mediaId) && mediaId != Constants.DEFAULTMEDIAID) {
                 unusedMedia.add(mediaId);
             }
         }
@@ -237,6 +237,12 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<Void> deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteRecipe(Long recipeId) {
+        recipeRepository.deleteById(recipeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
