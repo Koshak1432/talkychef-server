@@ -7,10 +7,10 @@ import org.modelmapper.TypeToken;
 import voicerecipeserver.model.dto.*;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.mappers.DefaultMapper;
+import voicerecipeserver.respository.MarksRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -144,22 +144,6 @@ public class DefaultMapperTest {
     }
 
 
-    @Test
-    void map_recipeDto_with_required_field_to_recipe() {
-        RecipeDto dto = new RecipeDto();
-        dto.name("Re").media(new IdDto().id(1L)).authorId("AFsssDDE").cookTimeMins(40);
-
-        Recipe recipe = mapper.map(dto, Recipe.class);
-
-        assertEquals(dto.getName(), recipe.getName());
-        assertEquals(dto.getAuthorId(), recipe.getAuthor().getUid());
-        assertEquals(dto.getCookTimeMins(), recipe.getCookTimeMins());
-        assertEquals(dto.getMedia().getId(), recipe.getMedia().getId());
-        assertNull(recipe.getCollections());
-        assertNull(recipe.getId());
-        assertNull(recipe.getCategories());
-        assertNull(recipe.getSteps());
-    }
 
     @Test
     void map_commentDto_to_comment() {
@@ -286,6 +270,55 @@ public class DefaultMapperTest {
         assertEquals(recipe.getCookTimeMins(), dto.getCookTimeMins());
         assertEquals(recipe.getMedia().getId(), dto.getMedia().getId());
     }
+
+    @Test
+    void map_marks_to_marksDto() {
+        MarkDto markDto = new MarkDto();
+        markDto.mark((short) 3).id(1L).recipeId(1L).userUid("asdfadfsadfshafjsh");
+        mapper.typeMap(Mark.class, MarkDto.class)
+                .addMappings(m -> {
+                    m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
+                    m.map(src -> src.getRecipe().getId(), MarkDto::setRecipeId);
+                });
+        Mark mark = mapper.map(markDto, Mark.class);
+        assertEquals(mark.getId(), markDto.getId());
+        assertEquals(mark.getUser().getUid(), markDto.getUserUid());
+    }
+
+//    @Test
+//    void saving_marks() {
+//        Mark mark = new Mark();
+//        mark.setUser(new User(1L, "author1", null, null, null, null, null, null, null));
+//        Recipe recipe = new Recipe();
+//        recipe.setName("name123");
+//        recipe.setAuthor(new User(2L, "author2", null, null, null, null, null, null, null));
+//        recipe.setCookTimeMins(4044);
+//        recipe.setMedia(new Media(11L, null, null, null, null));
+//        mark.setRecipe(recipe);
+//        MarksRepository marksRepository;
+//        marksRepository.save(mark);
+//
+
+//    }
+
+    @Test
+    void map_recipeDto_with_required_field_to_recipe() {
+        RecipeDto dto = new RecipeDto();
+        dto.name("Re").media(new IdDto().id(1L)).authorId("AFsssDDE").cookTimeMins(40);
+
+        Recipe recipe = mapper.map(dto, Recipe.class);
+
+        assertEquals(dto.getName(), recipe.getName());
+        assertEquals(dto.getAuthorId(), recipe.getAuthor().getUid());
+        assertEquals(dto.getCookTimeMins(), recipe.getCookTimeMins());
+        assertEquals(dto.getMedia().getId(), recipe.getMedia().getId());
+        assertNull(recipe.getCollections());
+        assertNull(recipe.getId());
+        assertNull(recipe.getCategories());
+        assertNull(recipe.getSteps());
+    }
+
+
 
     @Test
     void map_recipe_list_to_dto_list() {

@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
+import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.persistence.Id;
+import javax.validation.constraints.*;
+
 import java.util.List;
 
 //todo add /recipe to RequestMapping ?
@@ -40,7 +40,18 @@ public interface RecipeApi {
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
             NotFoundException;
 
+    @PostMapping(value = "/recipe/{id}/mark", produces = {"application/json"},
+            consumes = {"application/json"})
+    ResponseEntity<IdDto> markPost(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
 
+    @PutMapping(value = "/mark/{id}", produces = {"application/json"},
+            consumes = {"application/json"})
+    ResponseEntity<IdDto> markUpdate(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
+
+    @DeleteMapping(value = "/mark/{id}",
+            produces = {"application/json"})
+    ResponseEntity<Void> markDelete(@PathVariable("id") Long id);
+  
     @PostMapping(value = "/recipe/{id}/comment", consumes = "application/json")
     ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto) throws NotFoundException, BadRequestException;
 

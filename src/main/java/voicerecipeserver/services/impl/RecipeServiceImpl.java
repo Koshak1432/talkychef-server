@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
+import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.BadRequestException;
@@ -20,27 +21,36 @@ import java.util.*;
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
+    private final ModelMapper mapper;
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final MeasureUnitRepository measureUnitRepository;
     private final MediaRepository mediaRepository;
     private UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final ModelMapper mapper;
+    private final MarksRepository marksRepository;
+    private final AvgMarkRepository avgMarkRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, MediaRepository mediaRepository,
-                             CommentRepository commentRepository, ModelMapper mapper) {
+                             CommentRepository commentRepository, ModelMapper mapper, MarksRepository marksRepository,
+                             AvgMarkRepository avgMarkRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.mediaRepository = mediaRepository;
+        this.marksRepository = marksRepository;
+        this.avgMarkRepository = avgMarkRepository;
         this.commentRepository = commentRepository;
         this.mapper = mapper;
-
-        this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
-                m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
+        this.mapper.typeMap(Recipe.class, RecipeDto.class)
+                .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
+        this.mapper.typeMap(Mark.class, MarkDto.class)
+                .addMappings(m -> {
+                    m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
+                    m.map(src -> src.getRecipe().getId(), MarkDto::setRecipeId);
+                });
     }
 
     @Autowired
@@ -51,6 +61,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException {
         Recipe recipe = findRecipe(id);
+        recipe.setAvgMark(findAvgMark(id));
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
         return new ResponseEntity<>(recipeDto, HttpStatus.OK);
     }
@@ -67,8 +78,8 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
         recipe.setAuthor(findUser(recipe.getAuthor().getUid()));
-
         recipe.setId(null);
+      
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
         for (Step step : recipe.getSteps()) {
@@ -80,9 +91,82 @@ public class RecipeServiceImpl implements RecipeService {
         return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
     }
 
-    private void setAuthorTo(Recipe recipe) throws NotFoundException {
-
+    private void setRecipeTo(Mark mark) throws NotFoundException {
+        Optional<Recipe> recipe = recipeRepository.findById(mark.getRecipe().getId());
+        if (recipe.isEmpty()) {
+            throw new NotFoundException("Не удалось найти рецепт с id: " + mark.getRecipe().getId());
+        } else {
+            mark.setRecipe(recipe.get());
+        }
     }
+
+    @Override
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
+        Recipe oldRecipe = findRecipe(id);
+        Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
+        newRecipe.setId(id);
+        setAuthorTo(newRecipe);
+        setSteps(oldRecipe, newRecipe);
+        setDistribution(newRecipe);
+      
+        Set<Long> unusedMediaIds = getUnusedMediaIds(oldRecipe, newRecipe);
+      
+        recipeRepository.save(newRecipe);
+        mediaRepository.deleteAllById(unusedMediaIds);
+        return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException {
+        Mark mark = mapper.map(markDto, Mark.class);
+        setRecipeTo(mark);
+        setAuthorTo(mark);
+        mark.setId(null);
+        marksRepository.save(mark);
+        return new ResponseEntity<>(new IdDto().id(mark.getId()), HttpStatus.OK);
+    }
+
+    private Mark findMark(Long id) throws NotFoundException {
+        Optional<Mark> markOptional = marksRepository.findById(id);
+        if (markOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти оценку с id: " + id);
+        }
+        return markOptional.get();
+    }
+
+    private AvgMark findAvgMark(Long id) throws NotFoundException {
+        Optional<AvgMark> avgMarkOptional = avgMarkRepository.findById(id);
+        if (avgMarkOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти оценку рецепта с id: " + id);
+        }
+        return avgMarkOptional.get();
+    }
+
+    @Override
+    public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException {
+        Mark newMark = mapper.map(markDto, Mark.class);
+        newMark.setId(markDto.getId());
+        setAuthorTo(newMark);
+        marksRepository.save(newMark);
+        return new ResponseEntity<>(new IdDto().id(newMark.getId()), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteRecipeMark(Long id) {
+        marksRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void setAuthorTo(Mark mark) throws NotFoundException {
+        Optional<User> author = userRepository.findByUid(mark.getUser().getUid());
+
+        if (author.isEmpty()) {
+            throw new NotFoundException("Не удалось найти автора с uid: " + mark.getUser().getUid());
+        } else {
+            mark.setUser(author.get());
+        }
+    }
+
 
     private void setDistribution(Recipe recipe) throws BadRequestException {
         HashSet<String> ingredientsInRecipe = new HashSet<>();
@@ -121,23 +205,6 @@ public class RecipeServiceImpl implements RecipeService {
         } else {
             ingredientsDistribution.setUnit(measureUnitOptional.get());
         }
-    }
-
-    @Override
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException,
-            BadRequestException {
-        Recipe oldRecipe = findRecipe(id);
-        Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-        newRecipe.setId(id);
-        newRecipe.setAuthor(findUser(newRecipe.getAuthor().getUid()));
-        setSteps(oldRecipe, newRecipe);
-        setDistribution(newRecipe);
-
-        Set<Long> unusedMediaIds = getUnusedMediaIds(oldRecipe, newRecipe);
-
-        recipeRepository.save(newRecipe);
-        mediaRepository.deleteAllById(unusedMediaIds);
-        return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
     }
 
     private static Set<Long> getUnusedMediaIds(Recipe oldRecipe, Recipe newRecipe) {
@@ -203,11 +270,16 @@ public class RecipeServiceImpl implements RecipeService {
             limit = 0;
         }
         List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit);
+        for (Recipe recipe : recipes) {
+            AvgMark mark = findAvgMark(recipe.getId());
+            recipe.setAvgMark(mark);
+        }
 
         if (recipes.isEmpty()) {
             throw new NotFoundException("Не удалось найти рецепты с подстрокой: " + name);
         }
-        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
+        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {
+        }.getType());
 
         return new ResponseEntity<>(recipeDtos, HttpStatus.OK);
     }

@@ -66,6 +66,17 @@ public class RecipeDto {
         return this;
     }
 
+  @JsonProperty("mark")
+  private Float avgMark = null;
+
+//   @JsonProperty("user_mark")
+//   private Integer userMark = null;
+  
+  public RecipeDto name(String name) {
+    this.name = name;
+    return this;
+  }
+
     /**
      * Get name
      *
@@ -307,10 +318,53 @@ public class RecipeDto {
     public List<StepDto> getSteps() {
         return steps;
     }
+   
+  public RecipeDto avgMark(Float mark) {
+    this.avgMark = mark;
+    return this;
+  }
 
-    public void setSteps(List<StepDto> steps) {
-        this.steps = steps;
+  /**
+   * Get mark
+   * @return mark
+   **/
+
+  public Float getavgMark() {
+    return avgMark;
+  }
+
+  public void setavgMark(Float mark) {
+    this.avgMark = mark;
+  }
+
+//  public RecipeDto userMark(Integer userMark) {
+//    this.userMark = userMark;
+//    return this;
+//  }
+
+//  /**
+//   * Get userMark
+//   * @return userMark
+//   **/
+
+//  public Integer getUserMark() {
+//    return userMark;
+//  }
+
+//  public void setUserMark(Integer userMark) {
+//    this.userMark = userMark;
+//  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
     }
+    return o.toString().replace("\n", "\n    ");
+  }
 
     public RecipeDto comments(List<CommentDto> comments) {
         this.comments = comments;
@@ -358,13 +412,13 @@ public class RecipeDto {
                 this.proteins, recipeDto.proteins) && Objects.equals(this.fats, recipeDto.fats) && Objects.equals(
                 this.carbohydrates, recipeDto.carbohydrates) && Objects.equals(this.ingredientsDistributions,
                                                                                recipeDto.ingredientsDistributions) && Objects.equals(
-                this.steps, recipeDto.steps) && Objects.equals(this.comments, recipeDto.comments);
+                this.steps, recipeDto.steps) && Objects.equals(this.comments, recipeDto.comments) && Objects.exuals(this.avgMark, recipeDto.avgMark);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(name, id, media, cookTimeMins, authorId, prepTimeMins, kilocalories, proteins, fats,
-                            carbohydrates, ingredientsDistributions, steps, comments);
+                            carbohydrates, ingredientsDistributions, steps, comments, avgMark);
     }
 
     @Override
@@ -385,6 +439,7 @@ public class RecipeDto {
         sb.append("    ingredientsDistributions: ").append(toIndentedString(ingredientsDistributions)).append("\n");
         sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
         sb.append("    comments: ").append(toIndentedString(comments)).append("\n");
+        sb.append("    avgMark: ").append(toIndentedString(avgMark)).append("\n");
         sb.append("}");
         return sb.toString();
     }
