@@ -34,7 +34,7 @@ public class Step {
     private Integer waitTimeMins;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_d")
+    @JoinColumn(name = "recipe_id")
     @ToString.Exclude
     private Recipe recipe;
 
