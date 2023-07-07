@@ -1,12 +1,12 @@
 package voicerecipeserver.services.impl;
 
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
@@ -23,27 +23,24 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final MeasureUnitRepository measureUnitRepository;
-    private final IngredientsDistributionRepository ingredientsDistributionRepository;
-    private final StepRepository stepRepository;
     private final MediaRepository mediaRepository;
     private UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final ModelMapper mapper;
 
-    // TODO не ну это колбасу точно убрать надо, мб по-другому внедрить
     @Autowired
-    public RecipeServiceImpl(StepRepository stepRepository, RecipeRepository recipeRepository,
-                             IngredientRepository ingredientRepository, MeasureUnitRepository measureUnitRepository,
-                             IngredientsDistributionRepository ingredientsDistributionRepository, MediaRepository mediaRepository,
-                             ModelMapper mapper) {
-        this.stepRepository = stepRepository;
+    public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
+                             MeasureUnitRepository measureUnitRepository, MediaRepository mediaRepository,
+                             CommentRepository commentRepository, ModelMapper mapper) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
-        this.ingredientsDistributionRepository = ingredientsDistributionRepository;
         this.mediaRepository = mediaRepository;
+        this.commentRepository = commentRepository;
         this.mapper = mapper;
-        this.mapper.typeMap(Recipe.class, RecipeDto.class)
-                .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
+
+        this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
+                m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
     }
 
     @Autowired
@@ -60,21 +57,18 @@ public class RecipeServiceImpl implements RecipeService {
 
     private Recipe findRecipe(Long id) throws NotFoundException {
         Optional<Recipe> recipeOptional = recipeRepository.findById(id);
-
         if (recipeOptional.isEmpty()) {
             throw new NotFoundException("Не удалось найти рецепт с id: " + id);
         }
-
         return recipeOptional.get();
     }
 
     @Override
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
+        recipe.setAuthor(findUser(recipe.getAuthor().getUid()));
 
-        setAuthorTo(recipe);
         recipe.setId(null);
-
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
         for (Step step : recipe.getSteps()) {
@@ -82,18 +76,12 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         setDistribution(recipe);
-        recipeRepository.save(recipe);
-        return new ResponseEntity<>(new IdDto().id(recipe.getId()), HttpStatus.OK);
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
     }
 
     private void setAuthorTo(Recipe recipe) throws NotFoundException {
-        Optional<User> author = userRepository.findByUid(recipe.getAuthor().getUid());
 
-        if (author.isEmpty()) {
-            throw new NotFoundException("Не удалось найти автора с uid: " + recipe.getAuthor().getUid());
-        } else {
-            recipe.setAuthor(author.get());
-        }
     }
 
     private void setDistribution(Recipe recipe) throws BadRequestException {
@@ -115,7 +103,8 @@ public class RecipeServiceImpl implements RecipeService {
                 ingredientsDistribution.setIngredient(ingredientRepository.save(receivedIngredient));
             } else {
                 ingredientsDistribution.setIngredient(ingredientFromRepo.get());
-                ingredientsDistribution.setId(new IngredientsDistributionKey(recipe.getId(), ingredientFromRepo.get().getId()));
+                ingredientsDistribution.setId(
+                        new IngredientsDistributionKey(recipe.getId(), ingredientFromRepo.get().getId()));
             }
             //TODO в идеале бы настроить для recipe save так, чтобы он сохранял measureUnit, ingredient, если их нет
             // в БД. Хочется убрать лишний find.
@@ -125,7 +114,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void setMeasureUnit(IngredientsDistribution ingredientsDistribution) {
-        Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findByName(ingredientsDistribution.getUnit().getName());
+        Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findByName(
+                ingredientsDistribution.getUnit().getName());
         if (measureUnitOptional.isEmpty()) {
             ingredientsDistribution.setUnit(measureUnitRepository.save(ingredientsDistribution.getUnit()));
         } else {
@@ -134,11 +124,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException,
+            BadRequestException {
         Recipe oldRecipe = findRecipe(id);
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
         newRecipe.setId(id);
-        setAuthorTo(newRecipe);
+        newRecipe.setAuthor(findUser(newRecipe.getAuthor().getUid()));
         setSteps(oldRecipe, newRecipe);
         setDistribution(newRecipe);
 
@@ -155,7 +146,7 @@ public class RecipeServiceImpl implements RecipeService {
         Set<Long> newRecipeMedia = getRecipeMedia(newRecipe);
         Set<Long> unusedMedia = new HashSet<>();
         for (Long mediaId : oldRecipeMedia) {
-            if (!newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
+            if (! newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
                 unusedMedia.add(mediaId);
             }
         }
@@ -169,7 +160,7 @@ public class RecipeServiceImpl implements RecipeService {
         newSteps.sort(Comparator.comparingInt(Step::getStepNum));
 
         // rest of the oldSteps will be deleted automatically because of orphanRemoval = true
-        for (int i = 0; i < newSteps.size(); ++i) {
+        for (int i = 0; i < newSteps.size(); ++ i) {
             Step newStep = newSteps.get(i);
             if (i < oldSteps.size()) {
                 newStep.setId(oldSteps.get(i).getId());
@@ -190,6 +181,21 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeMedia;
     }
 
+    User findUser(String userUid) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findByUid(userUid);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти пользователя с uid: " + userUid);
+        }
+        return userOptional.get();
+    }
+
+    Comment findComment(Long commentId) throws NotFoundException {
+        Optional<Comment> commentOptional = commentRepository.findById(commentId);
+        if (commentOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти комментарий с id: " + commentId);
+        }
+        return commentOptional.get();
+    }
 
     @Override
     public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException {
@@ -204,5 +210,33 @@ public class RecipeServiceImpl implements RecipeService {
         List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
 
         return new ResponseEntity<>(recipeDtos, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException, BadRequestException {
+        Comment comment = mapper.map(commentDto, Comment.class);
+        comment.setId(null);
+        comment.setDate(new Date());
+        User user = findUser(commentDto.getUserUid());
+        Recipe recipe = findRecipe(commentDto.getRecipeId());
+        comment.setUser(user);
+        comment.setRecipe(recipe);
+
+        Comment savedComment = commentRepository.save(comment);
+        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException, BadRequestException {
+        Comment comment = findComment(commentDto.getId());
+        comment.setContent(commentDto.getContent());
+        Comment savedComment = commentRepository.save(comment);
+        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

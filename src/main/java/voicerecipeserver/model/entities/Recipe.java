@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -65,6 +66,10 @@ public class Recipe {
     @JoinColumn(name = "author_id")
     @ToString.Exclude
     private User author;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
