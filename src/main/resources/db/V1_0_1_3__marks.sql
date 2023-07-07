@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS avg_marks
 (
     recipe_id BIGINT REFERENCES recipes PRIMARY KEY,
     avg_mark  REAL,
-    quantity BIGINT
+    quantity BIGINT CHECK (quantity > 0)
 );
 
 CREATE OR REPLACE FUNCTION add_avg_mark()

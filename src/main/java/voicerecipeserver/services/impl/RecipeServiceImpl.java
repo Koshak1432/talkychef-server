@@ -31,14 +31,14 @@ public class RecipeServiceImpl implements RecipeService {
 
     private final MarksRepository marksRepository;
 
-    private final AvgMarkRepository avg_markRepository;
+    private final AvgMarkRepository avgMarkRepository;
 
     // TODO не ну это колбасу точно убрать надо, мб по-другому внедрить
     @Autowired
     public RecipeServiceImpl(StepRepository stepRepository, RecipeRepository recipeRepository,
                              IngredientRepository ingredientRepository, MeasureUnitRepository measureUnitRepository,
                              IngredientsDistributionRepository ingredientsDistributionRepository, MediaRepository mediaRepository,
-                             ModelMapper mapper, MarksRepository marksRepository, AvgMarkRepository avg_markRepository) {
+                             ModelMapper mapper, MarksRepository marksRepository, AvgMarkRepository avgMarkRepository) {
         this.stepRepository = stepRepository;
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
@@ -46,12 +46,10 @@ public class RecipeServiceImpl implements RecipeService {
         this.ingredientsDistributionRepository = ingredientsDistributionRepository;
         this.mediaRepository = mediaRepository;
         this.marksRepository = marksRepository;
-        this.avg_markRepository = avg_markRepository;
+        this.avgMarkRepository = avgMarkRepository;
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class)
-                .addMappings(m -> {
-                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId);
-                });
+                .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId);
         this.mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
                     m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
@@ -148,7 +146,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private AvgMark findAvgMark(Long id) throws NotFoundException {
-        Optional<AvgMark> avgMarkOptional = avg_markRepository.findById(id);
+        Optional<AvgMark> avgMarkOptional = avgMarkRepository.findById(id);
         if (avgMarkOptional.isEmpty()) {
             throw new NotFoundException("Не удалось найти оценку рецепта с id: " + id);
         }
@@ -157,7 +155,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException {
-        Mark oldMark = findMark(markDto.getId());
         Mark newMark = mapper.map(markDto, Mark.class);
         newMark.setId(markDto.getId());
         setAuthorTo(newMark);

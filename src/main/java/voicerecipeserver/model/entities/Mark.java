@@ -26,7 +26,7 @@ public class Mark {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipeId")
+    @JoinColumn(name = "recipe_id")
     @ToString.Exclude
     private Recipe recipe;
 
