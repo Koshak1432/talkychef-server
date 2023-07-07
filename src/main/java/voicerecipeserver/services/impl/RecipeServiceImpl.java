@@ -1,6 +1,5 @@
 package voicerecipeserver.services.impl;
 
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.services.RecipeService;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -216,27 +214,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException, BadRequestException {
-//        System.out.println("COMMENT DTO:");
-//        System.out.println(commentDto.getId());
-//        System.out.println(commentDto.getUserUid());
-//        System.out.println(commentDto.getRecipeId());
-//        System.out.println(commentDto.getContent());
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setId(null);
         comment.setDate(new Date());
-//        System.out.println("COMMENT:");
-//        System.out.println(comment.getId());
-//        System.out.println(comment.getUser());
-//        System.out.println(comment.getUser().getUid());
-//        System.out.println(comment.getRecipe().getId());
-//        System.out.println(comment.getContent());
         User user = findUser(commentDto.getUserUid());
         Recipe recipe = findRecipe(commentDto.getRecipeId());
         comment.setUser(user);
+        comment.setRecipe(recipe);
 
         Comment savedComment = commentRepository.save(comment);
-        user.getComments().add(savedComment);
-        recipe.getComments().add(savedComment);
         return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
     }
 
