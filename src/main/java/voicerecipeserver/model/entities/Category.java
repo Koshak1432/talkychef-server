@@ -25,7 +25,7 @@ public class Category {
     @ManyToMany
     @JoinTable(name = "categories_distribution",
             joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+            inverseJoinColumns = @JoinColumn(name = "recipeId"))
     private List<Recipe> recipes;
 
 

@@ -48,24 +48,19 @@ public class RecipeApiController implements RecipeApi {
 
 
     @Override
-    public ResponseEntity<IdDto> recipeIdMarkPost(MarkDto mark) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> MarkPost(MarkDto mark) throws BadRequestException, NotFoundException {
         return service.addRecipeMark(mark);
     }
 
+
     @Override
-    public ResponseEntity<List<RecipeDto>> recipeSearchMarksGet(Integer limit) {
-        return null; //todo метод вывода всех оценок от одногопользователя
-        //todo delete marks
+    public ResponseEntity<IdDto> MarkUpdate(MarkDto mark) throws BadRequestException, NotFoundException {
+        return service.updateRecipeMark(mark);
     }
 
     @Override
-    public ResponseEntity<IdDto> recipeIdMarkPut(MarkDto mark) throws BadRequestException, NotFoundException {
-        return service.UpdateRecipeMark(mark);
-    }
-
-    @Override
-    public ResponseEntity<Void> recipeIdMarkDelete(Long id) {
-         return service.DeleteRecipeMark(id);
+    public ResponseEntity<Void> MarkDelete(Long id) {
+         return service.deleteRecipeMark(id);
 
     }
 

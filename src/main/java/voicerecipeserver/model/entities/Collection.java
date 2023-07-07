@@ -28,7 +28,7 @@ public class Collection {
     @JoinTable(
             name = "collections_distribution",
             joinColumns = @JoinColumn(name = "collection_id"),
-            inverseJoinColumns = @JoinColumn(name = "recipe_id")
+            inverseJoinColumns = @JoinColumn(name = "recipeId")
     )
     @ToString.Exclude
     @Setter(AccessLevel.NONE)

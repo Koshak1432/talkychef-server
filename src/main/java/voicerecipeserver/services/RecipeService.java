@@ -20,7 +20,7 @@ public interface RecipeService {
 
     ResponseEntity<IdDto> addRecipeMark(MarkDto mark) throws NotFoundException;
 
-    ResponseEntity<IdDto> UpdateRecipeMark(MarkDto mark) throws NotFoundException;
+    ResponseEntity<IdDto> updateRecipeMark(MarkDto mark) throws NotFoundException;
 
-    ResponseEntity<Void> DeleteRecipeMark(Long id);
+    ResponseEntity<Void> deleteRecipeMark(Long id);
 }

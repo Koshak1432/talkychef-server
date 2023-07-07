@@ -37,18 +37,14 @@ public interface RecipeApi {
 
     @PostMapping(value = "/recipe/{id}/mark", produces = {"application/json"},
             consumes = {"application/json"})
-    ResponseEntity<IdDto> recipeIdMarkPost(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
-
-    @GetMapping(value = "/recipe/search/marks",
-            produces = {"application/json"})
-    ResponseEntity<List<RecipeDto>> recipeSearchMarksGet(@RequestParam(value = "limit", required = false) Integer limit);
+    ResponseEntity<IdDto> MarkPost(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
 
     @PutMapping(value = "/mark/{id}", produces = {"application/json"},
             consumes = {"application/json"})
-    ResponseEntity<IdDto> recipeIdMarkPut(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
+    ResponseEntity<IdDto> MarkUpdate(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
 
     @DeleteMapping(value = "/mark/{id}",
             produces = {"application/json"})
-    ResponseEntity<Void> recipeIdMarkDelete(@PathVariable("id") Long id);
+    ResponseEntity<Void> MarkDelete(@PathVariable("id") Long id);
 
 }

@@ -57,7 +57,7 @@ public class RecipeDto   {
   private List<StepDto> steps = null;
 
   @JsonProperty("mark")
-  private Double mark = null;
+  private Float avgMark = null;
 
   @JsonProperty("user_mark")
   private Integer userMark = null;
@@ -299,8 +299,8 @@ public class RecipeDto   {
   }
 
 
-  public RecipeDto mark(Double mark) {
-    this.mark = mark;
+  public RecipeDto avgMark(Float mark) {
+    this.avgMark = mark;
     return this;
   }
 
@@ -309,31 +309,31 @@ public class RecipeDto   {
    * @return mark
    **/
 
-  public Double getMark() {
-    return mark;
+  public Float getavgMark() {
+    return avgMark;
   }
 
-  public void setMark(Double mark) {
-    this.mark = mark;
+  public void setavgMark(Float mark) {
+    this.avgMark = mark;
   }
 
-  public RecipeDto userMark(Integer userMark) {
-    this.userMark = userMark;
-    return this;
-  }
-
-  /**
-   * Get userMark
-   * @return userMark
-   **/
-
-  public Integer getUserMark() {
-    return userMark;
-  }
-
-  public void setUserMark(Integer userMark) {
-    this.userMark = userMark;
-  }
+//  public RecipeDto userMark(Integer userMark) {
+//    this.userMark = userMark;
+//    return this;
+//  }
+//
+//  /**
+//   * Get userMark
+//   * @return userMark
+//   **/
+//
+//  public Integer getUserMark() {
+//    return userMark;
+//  }
+//
+//  public void setUserMark(Integer userMark) {
+//    this.userMark = userMark;
+//  }
 
   @Override
   public boolean equals(java.lang.Object o) {
