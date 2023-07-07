@@ -1,6 +1,7 @@
 package voicerecipeserver.services;
 
 import org.springframework.http.ResponseEntity;
+import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
@@ -23,4 +24,11 @@ public interface RecipeService {
     ResponseEntity<IdDto> updateRecipeMark(MarkDto mark) throws NotFoundException;
 
     ResponseEntity<Void> deleteRecipeMark(Long id);
+
+    ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException, BadRequestException;
+
+    ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException, BadRequestException;
+
+    ResponseEntity<Void> deleteComment(Long commentId);
+
 }
