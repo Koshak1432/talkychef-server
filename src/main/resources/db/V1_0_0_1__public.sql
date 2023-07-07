@@ -96,3 +96,6 @@ CREATE TABLE IF NOT EXISTS collections_distribution(
     recipe_id bigint NOT NULL REFERENCES recipes ON DELETE CASCADE,
     PRIMARY KEY (collection_id, recipe_id)
 );
+
+
+

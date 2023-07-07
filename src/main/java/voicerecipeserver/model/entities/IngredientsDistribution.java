@@ -25,7 +25,7 @@ public class IngredientsDistribution {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("recipeId")
-    @JoinColumn(name = "recipe_id")
+    @JoinColumn(name = "recipeId")
     @ToString.Exclude
     private Recipe recipe;
 

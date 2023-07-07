@@ -41,7 +41,7 @@ public class Recipe {
     private Double carbohydrates;
 
 
-    @OneToMany(mappedBy = "recipe" , orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Step> steps;
 
@@ -68,6 +68,14 @@ public class Recipe {
     private User author;
 
     @ToString.Exclude
+    @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Mark> marks = new ArrayList<>();
+
+    @OneToOne(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.ALL)
+    private AvgMark avgMark;
+
+//    private Short userMark = null;
+
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
