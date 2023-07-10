@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
@@ -137,14 +136,6 @@ public class RecipeServiceImpl implements RecipeService {
         mark.setId(null);
         marksRepository.save(mark);
         return new ResponseEntity<>(new IdDto().id(mark.getId()), HttpStatus.OK);
-    }
-
-    private Mark findMark(Long id) throws NotFoundException {
-        Optional<Mark> markOptional = marksRepository.findById(id);
-        if (markOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти оценку с id: " + id);
-        }
-        return markOptional.get();
     }
 
     @Override
@@ -292,7 +283,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setId(null);
         comment.setDate(new Date());
@@ -306,7 +297,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = findComment(commentDto.getId());
         comment.setContent(commentDto.getContent());
         Comment savedComment = commentRepository.save(comment);
@@ -320,7 +311,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipe(Long recipeId) throws NotFoundException {
+    public ResponseEntity<Void> deleteRecipe(Long recipeId) {
         recipeRepository.deleteById(recipeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
