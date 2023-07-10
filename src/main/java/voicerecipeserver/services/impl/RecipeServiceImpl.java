@@ -168,7 +168,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void setAuthorTo(Mark mark) throws NotFoundException {
         Optional<User> author = userRepository.findByUid(mark.getUser().getUid());
-
         if (author.isEmpty()) {
             throw new NotFoundException("Не удалось найти автора с uid: " + mark.getUser().getUid());
         } else {

@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.5'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'io.freefair.lombok' version '6.5.1'
+    id "org.flywaydb.flyway" version "9.20.0"
     id 'java'
 }
 
@@ -14,6 +15,15 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+
+//flyway {
+//    url = 'jdbc:postgresql://localhost:5432/talkyChef'
+//    user = 'postgres'
+//    password = ''
+//    schemas = 'public'
+//    locations = ['filesystem:src/main/resources/db']
+//    // other configuration options...
+//}
 
 repositories {
     mavenCentral()
