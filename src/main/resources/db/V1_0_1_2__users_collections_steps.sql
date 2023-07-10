@@ -1,8 +1,8 @@
 ALTER TABLE collections
-ADD COLUMN number integer default (0) NOT NULL;
+    ADD COLUMN number integer default (0) NOT NULL;
 
 AlTER TABLE recipe_steps
-ALTER COLUMN media_id DROP NOT NULL;
+    ALTER COLUMN media_id DROP NOT NULL;
 
 ALTER TABLE users
     RENAME COLUMN username TO uid;
@@ -23,5 +23,6 @@ ALTER TABLE users
 
 
 UPDATE collections
-SET number = (SELECT COUNT(recipe_id) FROM collections_distribution
+SET number = (SELECT COUNT(recipe_id)
+              FROM collections_distribution
               WHERE collection_id = collections.id)

@@ -71,11 +71,6 @@ public class RecipeDto {
 
 //   @JsonProperty("user_mark")
 //   private Integer userMark = null;
-  
-  public RecipeDto name(String name) {
-    this.name = name;
-    return this;
-  }
 
     /**
      * Get name
@@ -359,12 +354,6 @@ public class RecipeDto {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
 
     public RecipeDto comments(List<CommentDto> comments) {
         this.comments = comments;
@@ -412,7 +401,7 @@ public class RecipeDto {
                 this.proteins, recipeDto.proteins) && Objects.equals(this.fats, recipeDto.fats) && Objects.equals(
                 this.carbohydrates, recipeDto.carbohydrates) && Objects.equals(this.ingredientsDistributions,
                                                                                recipeDto.ingredientsDistributions) && Objects.equals(
-                this.steps, recipeDto.steps) && Objects.equals(this.comments, recipeDto.comments) && Objects.exuals(this.avgMark, recipeDto.avgMark);
+                this.steps, recipeDto.steps) && Objects.equals(this.comments, recipeDto.comments) && Objects.equals(this.avgMark, recipeDto.avgMark);
     }
 
     @Override
