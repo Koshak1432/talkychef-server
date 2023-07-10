@@ -72,6 +72,7 @@ public class RecipeDto {
 //   @JsonProperty("user_mark")
 //   private Integer userMark = null;
 
+
     /**
      * Get name
      *

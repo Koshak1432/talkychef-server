@@ -31,4 +31,5 @@ public interface RecipeService {
 
     ResponseEntity<Void> deleteComment(Long commentId);
 
+    ResponseEntity<Void> deleteRecipe(Long id) throws NotFoundException;
 }

@@ -33,13 +33,13 @@ public class Media {
     @NotNull
     private byte[] fileData;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="media", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy="media", cascade = CascadeType.REMOVE)
     @ToString.Exclude
-    private List<Recipe> recipes;
+    private Recipe recipe;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="media", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy="media", cascade = CascadeType.REMOVE)
     @ToString.Exclude
-    private List<Step> steps;
+    private Step step;
 
     //TODO add/remove methods for bidirect.
 

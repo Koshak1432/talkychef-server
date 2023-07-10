@@ -18,7 +18,7 @@ public class Step {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_id")
     @ToString.Exclude
     private Media media;

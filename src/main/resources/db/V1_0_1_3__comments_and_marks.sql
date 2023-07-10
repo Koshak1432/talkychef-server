@@ -95,5 +95,3 @@ CREATE OR REPLACE TRIGGER update_avg_mark_trigger
     ON marks
     FOR EACH ROW
 EXECUTE FUNCTION update_avg_mark();
-
-
