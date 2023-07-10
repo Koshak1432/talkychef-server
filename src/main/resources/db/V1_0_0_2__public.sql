@@ -15,4 +15,3 @@ VALUES ('root');
 INSERT INTO collections(name)
 VALUES ('mainpage');
 
-
