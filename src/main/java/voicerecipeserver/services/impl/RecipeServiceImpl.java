@@ -47,7 +47,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class)
                 .addMappings(m ->
-                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
+                        m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
         this.mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
                     m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
@@ -321,11 +321,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<Void> deleteRecipe(Long recipeId) throws NotFoundException {
-//        Recipe recipe = findRecipe(recipeId);
-//        Media media = recipe.getMedia();
-//        if (media != null && !media.getId().equals(Constants.DEFAULTMEDIAID)) {
-//            mediaRepository.deleteById(media.getId());
-//        }
         recipeRepository.deleteById(recipeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
