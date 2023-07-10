@@ -65,9 +65,6 @@ public class RecipeServiceImpl implements RecipeService {
 
         setAvgMark(recipe);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
-        System.out.println(recipe.getSteps());
-        System.out.println("DTO");
-        System.out.println(recipeDto.getSteps());
         return new ResponseEntity<>(recipeDto, HttpStatus.OK);
     }
 
@@ -115,10 +112,10 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
-        Recipe oldRecipe = findRecipe(id);
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
+        Recipe oldRecipe = findRecipe(recipeDto.getId());
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-        newRecipe.setId(id);
+        newRecipe.setId(recipeDto.getId());
         setAuthorTo(newRecipe);
         setSteps(oldRecipe, newRecipe);
         setDistribution(newRecipe);

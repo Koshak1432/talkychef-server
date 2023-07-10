@@ -39,9 +39,8 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> recipeUpdate(RecipeDto recipeDto, Long id) throws NotFoundException,
-            BadRequestException {
-        return service.updateRecipe(recipeDto, id);
+    public ResponseEntity<IdDto> recipeUpdate(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
+        return service.updateRecipe(recipeDto);
     }
 
     public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit) throws NotFoundException {
@@ -60,7 +59,7 @@ public class RecipeApiController implements RecipeApi {
 
     @Override
     public ResponseEntity<Void> markDelete(Long id) {
-         return service.deleteRecipeMark(id);
+        return service.deleteRecipeMark(id);
     }
 
     @Override
@@ -74,7 +73,7 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<Void> commentDelete(Long commentId) {
-        return service.deleteComment(commentId);
+    public ResponseEntity<Void> commentDelete(Long id) {
+        return service.deleteComment(id);
     }
 }
