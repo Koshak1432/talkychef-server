@@ -66,7 +66,7 @@ public class RecipeDto {
         return this;
     }
 
-  @JsonProperty("mark")
+  @JsonProperty("avgMark")
   private Float avgMark = null;
 
 //   @JsonProperty("user_mark")
