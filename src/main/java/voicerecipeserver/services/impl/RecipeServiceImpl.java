@@ -46,7 +46,8 @@ public class RecipeServiceImpl implements RecipeService {
         this.commentRepository = commentRepository;
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class)
-                .addMappings(m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
+                .addMappings(m ->
+                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
         this.mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
                     m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
@@ -62,8 +63,10 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException {
         Recipe recipe = findRecipe(id);
-        recipe.setAvgMark(findAvgMark(id));
+
+        setAvgMark(recipe);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
+
         return new ResponseEntity<>(recipeDto, HttpStatus.OK);
     }
 
@@ -145,14 +148,6 @@ public class RecipeServiceImpl implements RecipeService {
         return markOptional.get();
     }
 
-    private AvgMark findAvgMark(Long id) throws NotFoundException {
-        Optional<AvgMark> avgMarkOptional = avgMarkRepository.findById(id);
-        if (avgMarkOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти оценку рецепта с id: " + id);
-        }
-        return avgMarkOptional.get();
-    }
-
     @Override
     public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException {
         Mark newMark = mapper.map(markDto, Mark.class);
@@ -170,7 +165,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void setAuthorTo(Mark mark) throws NotFoundException {
         Optional<User> author = userRepository.findByUid(mark.getUser().getUid());
-
         if (author.isEmpty()) {
             throw new NotFoundException("Не удалось найти автора с uid: " + mark.getUser().getUid());
         } else {
@@ -281,8 +275,7 @@ public class RecipeServiceImpl implements RecipeService {
         }
         List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit);
         for (Recipe recipe : recipes) {
-            AvgMark mark = findAvgMark(recipe.getId());
-            recipe.setAvgMark(mark);
+            setAvgMark(recipe);
         }
 
         if (recipes.isEmpty()) {
@@ -292,6 +285,11 @@ public class RecipeServiceImpl implements RecipeService {
         }.getType());
 
         return new ResponseEntity<>(recipeDtos, HttpStatus.OK);
+    }
+
+    private void setAvgMark(Recipe recipe) {
+        Optional<AvgMark> avgMarkOptional = avgMarkRepository.findById(recipe.getId());
+        avgMarkOptional.ifPresent(recipe::setAvgMark);
     }
 
     @Override
