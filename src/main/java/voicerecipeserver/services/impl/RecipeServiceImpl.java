@@ -114,10 +114,10 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto, Long id) throws NotFoundException, BadRequestException {
-        Recipe oldRecipe = findRecipe(id);
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
+        Recipe oldRecipe = findRecipe(recipeDto.getId());
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-        newRecipe.setId(id);
+        newRecipe.setId(recipeDto.getId());
         setAuthorTo(newRecipe);
         setSteps(oldRecipe, newRecipe);
         setDistribution(newRecipe);
