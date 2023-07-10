@@ -66,7 +66,6 @@ public class RecipeServiceImpl implements RecipeService {
 
         setAvgMark(recipe);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
-
         return new ResponseEntity<>(recipeDto, HttpStatus.OK);
     }
 
