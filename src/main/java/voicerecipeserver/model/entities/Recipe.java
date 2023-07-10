@@ -49,7 +49,7 @@ public class Recipe {
     @ToString.Exclude
     private List<IngredientsDistribution> ingredientsDistributions;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "media_id")
     @ToString.Exclude
     private Media media;
@@ -77,7 +77,8 @@ public class Recipe {
 //    private Short userMark = null;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    @ToString.Exclude
+    private List<Comment> comments;
 
     @Override
     public boolean equals(Object o) {

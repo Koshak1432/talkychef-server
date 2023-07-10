@@ -68,10 +68,6 @@ BEGIN
         quantity = quantity - 1
     WHERE recipe_id = OLD.recipe_id;
 
-    IF (SELECT quantity FROM avg_marks WHERE recipe_id = OLD.recipe_id) = 0 THEN
-        DELETE FROM avg_marks WHERE recipe_id = OLD.recipe_id;
-    END IF;
-
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
@@ -95,5 +91,4 @@ CREATE OR REPLACE TRIGGER update_avg_mark_trigger
     ON marks
     FOR EACH ROW
 EXECUTE FUNCTION update_avg_mark();
-
 
