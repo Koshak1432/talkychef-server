@@ -19,7 +19,7 @@ public class MarkDto {
     @JsonProperty("id")
     private Long id = null;
 
-    @JsonProperty("user_id")
+    @JsonProperty("user_uid")
     private String userUid = null;
 
     @JsonProperty("recipe_id")
