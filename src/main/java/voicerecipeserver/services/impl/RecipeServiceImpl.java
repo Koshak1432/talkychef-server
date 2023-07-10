@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
@@ -46,7 +47,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class)
                 .addMappings(m ->
-                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
+                        m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
         this.mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
                     m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
@@ -81,7 +82,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
         setAuthorTo(recipe);
         recipe.setId(null);
-      
+
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
         for (Step step : recipe.getSteps()) {
@@ -102,6 +103,7 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
+
     private void setRecipeTo(Mark mark) throws NotFoundException {
         Optional<Recipe> recipe = recipeRepository.findById(mark.getRecipe().getId());
         if (recipe.isEmpty()) {
@@ -119,9 +121,9 @@ public class RecipeServiceImpl implements RecipeService {
         setAuthorTo(newRecipe);
         setSteps(oldRecipe, newRecipe);
         setDistribution(newRecipe);
-      
+
         Set<Long> unusedMediaIds = getUnusedMediaIds(oldRecipe, newRecipe);
-      
+
         recipeRepository.save(newRecipe);
         mediaRepository.deleteAllById(unusedMediaIds);
         return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
@@ -210,12 +212,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private static Set<Long> getUnusedMediaIds(Recipe oldRecipe, Recipe newRecipe) {
-        int defaultMediaId = 172;
         Set<Long> oldRecipeMedia = getRecipeMedia(oldRecipe);
         Set<Long> newRecipeMedia = getRecipeMedia(newRecipe);
         Set<Long> unusedMedia = new HashSet<>();
         for (Long mediaId : oldRecipeMedia) {
-            if (! newRecipeMedia.contains(mediaId) && mediaId != defaultMediaId) {
+            if (!newRecipeMedia.contains(mediaId)) {
                 unusedMedia.add(mediaId);
             }
         }
@@ -229,7 +230,7 @@ public class RecipeServiceImpl implements RecipeService {
         newSteps.sort(Comparator.comparingInt(Step::getStepNum));
 
         // rest of the oldSteps will be deleted automatically because of orphanRemoval = true
-        for (int i = 0; i < newSteps.size(); ++ i) {
+        for (int i = 0; i < newSteps.size(); ++i) {
             Step newStep = newSteps.get(i);
             if (i < oldSteps.size()) {
                 newStep.setId(oldSteps.get(i).getId());
@@ -315,6 +316,12 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<Void> deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteRecipe(Long recipeId) throws NotFoundException {
+        recipeRepository.deleteById(recipeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

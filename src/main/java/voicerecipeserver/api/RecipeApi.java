@@ -32,7 +32,11 @@ public interface RecipeApi {
     @PutMapping(value = "/recipes", consumes = "application/json")
     ResponseEntity<IdDto> recipeUpdate(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException;
 
-    @GetMapping(value = "/recipes/search/{name}", produces = "application/json")
+    @DeleteMapping(value = "/recipe/{id}", produces = "application/json")
+    ResponseEntity<Void> recipeDelete(@PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
+            NotFoundException, BadRequestException;
+
+    @GetMapping(value = "/recipe/search/{name}", produces = "application/json")
     ResponseEntity<List<RecipeDto>> recipeSearchNameGet(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
