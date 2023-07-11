@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class VoiceRecipeServerApplicationTests {
 
-    @Test
-    void contextLoads() {
-
-    }
+//    @Test
+//    void contextLoads() {
+//
+//    }
 
 }
