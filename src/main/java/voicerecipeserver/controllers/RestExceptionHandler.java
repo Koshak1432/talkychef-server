@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import voicerecipeserver.model.dto.Error;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
 import voicerecipeserver.model.exceptions.NotFoundException;
@@ -60,6 +61,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleValidationFailed(ConstraintViolationException e) {
         String message = e.getMessage();
         return new ResponseEntity<>(new Error().code(400).message("Validation failed: " + message.substring(message.indexOf(":"))), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({AuthException.class})
+    protected ResponseEntity<Object> handleAuthException(Exception e) {
+        String message = e.getMessage();
+        return new ResponseEntity<>(new Error().code(400).message("Authorization failed: " + message), HttpStatus.BAD_REQUEST);
     }
 
 }
