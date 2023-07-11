@@ -33,7 +33,8 @@ public interface RecipeApi {
     ResponseEntity<IdDto> recipeUpdate(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException;
 
     @DeleteMapping(value = "/recipe/{id}", produces = "application/json")
-    ResponseEntity<Void> recipeDelete(@PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
+    ResponseEntity<Void> recipeDelete(
+            @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
             NotFoundException, BadRequestException;
 
     @GetMapping(value = "/recipe/search/{name}", produces = "application/json")
