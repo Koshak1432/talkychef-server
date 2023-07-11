@@ -14,14 +14,14 @@ import java.util.Optional;
 public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     @Query(value = """
-        SELECT * FROM recipes
-        WHERE name ILIKE :namePart || '%'
-        UNION
-        SELECT * FROM recipes
-        WHERE name ILIKE '% ' || :namePart || '%'
-        ORDER BY name
-        LIMIT CASE WHEN (:limit > 0) THEN :limit END
-""", nativeQuery = true)
+                    SELECT * FROM recipes
+                    WHERE name ILIKE :namePart || '%'
+                    UNION
+                    SELECT * FROM recipes
+                    WHERE name ILIKE '% ' || :namePart || '%'
+                    ORDER BY name
+                    LIMIT CASE WHEN (:limit > 0) THEN :limit END
+            """, nativeQuery = true)
     List<Recipe> findByNameContaining(@Param("namePart") String inline, @Param("limit") Integer limit);
 
     // https://medium.com/swlh/sql-pagination-you-are-probably-doing-it-wrong-d0f2719cc166 - performance issue
@@ -37,5 +37,8 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 )
 """, nativeQuery = true)
     List<Recipe> findRecipesWithOffsetFromCollectionById(int numRecipes, int offset, long collectionId);
+
+
+    Optional<Recipe> findRecipeByMediaId(Long mediaId);
 
 }
