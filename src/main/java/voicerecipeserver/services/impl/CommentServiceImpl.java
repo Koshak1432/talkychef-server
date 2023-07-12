@@ -17,6 +17,7 @@ import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.services.CommentService;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -32,6 +33,30 @@ public class CommentServiceImpl implements CommentService {
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+    }
+
+    Comment findComment(Long commentId) throws NotFoundException {
+        Optional<Comment> commentOptional = commentRepository.findById(commentId);
+        if (commentOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти комментарий с id: " + commentId);
+        }
+        return commentOptional.get();
+    }
+
+    User findUser(String userUid) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findByUid(userUid);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти пользователя с uid: " + userUid);
+        }
+        return userOptional.get();
+    }
+
+    private Recipe findRecipe(Long id) throws NotFoundException {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(id);
+        if (recipeOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти рецепт с id: " + id);
+        }
+        return recipeOptional.get();
     }
 
     @Override

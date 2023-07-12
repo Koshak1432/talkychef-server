@@ -19,29 +19,23 @@ import java.util.*;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
-
     private final ModelMapper mapper;
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final MeasureUnitRepository measureUnitRepository;
     private UserRepository userRepository;
-    private final CommentRepository commentRepository;
-    private final MarkRepository markRepository;
     private final AvgMarkRepository avgMarkRepository;
     private final StepRepository stepRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
-                             MeasureUnitRepository measureUnitRepository, CommentRepository commentRepository,
-                             ModelMapper mapper, MarkRepository markRepository, AvgMarkRepository avgMarkRepository,
-                             StepRepository stepRepository) {
+                             MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
+                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.stepRepository = stepRepository;
-        this.markRepository = markRepository;
         this.avgMarkRepository = avgMarkRepository;
-        this.commentRepository = commentRepository;
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorId));
@@ -106,11 +100,10 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-
     @Override
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
-        setAuthorTo(recipe);
+        setAuthorToRecipe(recipe);
         recipe.setId(null);
         checkMediaUniqueness(recipe);
         // через маппер можно сделать путем добавления конвертера. Только вот код
@@ -124,7 +117,7 @@ public class RecipeServiceImpl implements RecipeService {
         return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
     }
 
-    private void setAuthorTo(Recipe recipe) throws NotFoundException {
+    private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
         Optional<User> author = userRepository.findByUid(recipe.getAuthor().getUid());
         if (author.isEmpty()) {
             throw new NotFoundException("Не удалось найти автора с uid: " + recipe.getAuthor().getUid());
@@ -133,22 +126,12 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-
-    private void setRecipeTo(Mark mark) throws NotFoundException {
-        Optional<Recipe> recipe = recipeRepository.findById(mark.getRecipe().getId());
-        if (recipe.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепт с id: " + mark.getRecipe().getId());
-        } else {
-            mark.setRecipe(recipe.get());
-        }
-    }
-
     @Override
     public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe oldRecipe = findRecipe(recipeDto.getId());
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
         newRecipe.setId(recipeDto.getId());
-        setAuthorTo(newRecipe);
+        setAuthorToRecipe(newRecipe);
         setSteps(oldRecipe, newRecipe);
         checkMediaUniqueness(newRecipe);
         setDistribution(newRecipe);
@@ -156,16 +139,6 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.save(newRecipe);
         return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
     }
-
-    private void setAuthorTo(Mark mark) throws NotFoundException {
-        Optional<User> author = userRepository.findByUid(mark.getUser().getUid());
-        if (author.isEmpty()) {
-            throw new NotFoundException("Не удалось найти автора с uid: " + mark.getUser().getUid());
-        } else {
-            mark.setUser(author.get());
-        }
-    }
-
 
     private void setDistribution(Recipe recipe) throws BadRequestException {
         HashSet<String> ingredientsInRecipe = new HashSet<>();
@@ -220,34 +193,6 @@ public class RecipeServiceImpl implements RecipeService {
             }
             newStep.setRecipe(newRecipe);
         }
-    }
-
-    private static Set<Long> getRecipeMedia(Recipe recipe) {
-        Set<Long> recipeMedia = new HashSet<>();
-        recipeMedia.add(recipe.getMedia().getId());
-        for (Step step : recipe.getSteps()) {
-            Media media = step.getMedia();
-            if (media != null) {
-                recipeMedia.add(media.getId());
-            }
-        }
-        return recipeMedia;
-    }
-
-    User findUser(String userUid) throws NotFoundException {
-        Optional<User> userOptional = userRepository.findByUid(userUid);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти пользователя с uid: " + userUid);
-        }
-        return userOptional.get();
-    }
-
-    Comment findComment(Long commentId) throws NotFoundException {
-        Optional<Comment> commentOptional = commentRepository.findById(commentId);
-        if (commentOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти комментарий с id: " + commentId);
-        }
-        return commentOptional.get();
     }
 
     @Override
