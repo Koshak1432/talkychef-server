@@ -29,9 +29,10 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+
                 .authorizeHttpRequests(
                         authz -> authz
-                                .antMatchers(Constants.BASE_API_PATH +"/login", Constants.BASE_API_PATH +"/token").permitAll()
+                                .antMatchers(Constants.BASE_API_PATH +"/login", Constants.BASE_API_PATH +"/token",Constants.BASE_API_PATH+"/registration").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)

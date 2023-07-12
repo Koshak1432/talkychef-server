@@ -3,6 +3,12 @@ package voicerecipeserver.security.service.impl;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import voicerecipeserver.model.dto.UserDto;
+import voicerecipeserver.model.exceptions.BadRequestException;
+import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
@@ -14,11 +20,12 @@ import voicerecipeserver.security.service.AuthService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-
+    private final ModelMapper mapper;
     private final UserServiceImpl userServiceImpl;
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProviderImpl jwtProviderImpl;
@@ -27,15 +34,19 @@ public class AuthServiceImpl implements AuthService {
         final User user = userServiceImpl.getByLogin(authRequest.getLogin())
                 .orElseThrow(() -> new AuthException("Пользователь не найден"));
         if (user.getPassword().equals(authRequest.getPassword())) {
-            final String accessToken = jwtProviderImpl.generateAccessToken(user);
-            final String refreshToken = jwtProviderImpl.generateRefreshToken(user);
-            refreshStorage.put(user.getLogin(), refreshToken);
-            JwtResponse jwtResponse = new JwtResponse();
-            jwtResponse.accessToken(accessToken).refreshToken(refreshToken);
-            return jwtResponse;
+            return getJwtResponse(user);
         } else {
             throw new AuthException("Неправильный пароль");
         }
+    }
+
+    private JwtResponse getJwtResponse(User user) {
+        final String accessToken = jwtProviderImpl.generateAccessToken(user);
+        final String refreshToken = jwtProviderImpl.generateRefreshToken(user);
+        refreshStorage.put(user.getLogin(), refreshToken);
+        JwtResponse jwtResponse = new JwtResponse();
+        jwtResponse.accessToken(accessToken).refreshToken(refreshToken);
+        return jwtResponse;
     }
 
     public JwtResponse getAccessToken(@NonNull String refreshToken) throws AuthException {
@@ -63,12 +74,7 @@ public class AuthServiceImpl implements AuthService {
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userServiceImpl.getByLogin(login)
                         .orElseThrow(() -> new AuthException("Пользователь не найден"));
-                final String accessToken = jwtProviderImpl.generateAccessToken(user);
-                final String newRefreshToken = jwtProviderImpl.generateRefreshToken(user);
-                refreshStorage.put(user.getLogin(), newRefreshToken);
-                JwtResponse jwtResponse = new JwtResponse();
-                jwtResponse.accessToken(accessToken).refreshToken(newRefreshToken);
-                return jwtResponse;
+                return getJwtResponse(user);
             }
         }
         throw new AuthException("Невалидный JWT токен");
@@ -78,4 +84,12 @@ public class AuthServiceImpl implements AuthService {
         return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
     }
 
+    public JwtResponse registration(UserDto userDto) throws AuthException, NotFoundException, BadRequestException {
+        Optional<User> userFromDb = userServiceImpl.getByLogin(userDto.getLogin());
+        if (userFromDb.isPresent())
+            throw new AuthException("Пользователь существует");
+        userServiceImpl.postUser(userDto);
+        userFromDb =  userServiceImpl.getByLogin(userDto.getLogin());
+        return getJwtResponse(userFromDb.get());
+    }
 }

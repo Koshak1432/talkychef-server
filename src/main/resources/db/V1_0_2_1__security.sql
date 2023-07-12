@@ -11,9 +11,9 @@ ALTER TABLE users
     ALTER COLUMN login SET NOT NULL,
     ALTER COLUMN password SET NOT NULL;
 
-create table user_role
+CREATE TABLE IF NOT EXISTS user_role
 (
-    user_id bigint not null,
+    user_id bigint NOT NULL,
     roles   varchar(64)
 );
 
