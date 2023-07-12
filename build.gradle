@@ -16,14 +16,14 @@ configurations {
     }
 }
 
-//flyway {
-//    url = 'jdbc:postgresql://localhost:5432/talkyChef'
-//    user = 'postgres'
-//    password = ''
-//    schemas = 'public'
-//    locations = ['filesystem:src/main/resources/db']
-//    // other configuration options...
-//}
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/talkyChef'
+    user = 'postgres'
+    password = ''
+    schemas = 'public'
+    locations = ['filesystem:src/main/resources/db']
+    // other configuration options...
+}
 
 repositories {
     mavenCentral()

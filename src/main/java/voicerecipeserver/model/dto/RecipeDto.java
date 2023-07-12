@@ -17,7 +17,7 @@ import javax.validation.constraints.*;
  * RecipeDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-10T05:23:43.765589189Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-12T05:52:57.996944769Z[GMT]")
 
 
 public class RecipeDto   {
@@ -33,8 +33,8 @@ public class RecipeDto   {
   @JsonProperty("cook_time_mins")
   private Integer cookTimeMins = null;
 
-  @JsonProperty("author_id")
-  private String authorId = null;
+  @JsonProperty("author_uid")
+  private String authorUid = null;
 
   @JsonProperty("prep_time_mins")
   private Integer prepTimeMins = null;
@@ -75,7 +75,7 @@ public class RecipeDto   {
    * Get name
    * @return name
    **/
-  @NotNull
+      @NotNull
 
   @Size(max=128)   public String getName() {
     return name;
@@ -94,9 +94,9 @@ public class RecipeDto   {
    * Get id
    * @return id
    **/
-  @NotNull
+      @NotNull
 
-  public Long getId() {
+    public Long getId() {
     return id;
   }
 
@@ -113,10 +113,10 @@ public class RecipeDto   {
    * Get media
    * @return media
    **/
-  @NotNull
+      @NotNull
 
-  @Valid
-  public IdDto getMedia() {
+    @Valid
+    public IdDto getMedia() {
     return media;
   }
 
@@ -133,9 +133,9 @@ public class RecipeDto   {
    * Get cookTimeMins
    * @return cookTimeMins
    **/
-  @NotNull
+      @NotNull
 
-  public Integer getCookTimeMins() {
+    public Integer getCookTimeMins() {
     return cookTimeMins;
   }
 
@@ -143,23 +143,23 @@ public class RecipeDto   {
     this.cookTimeMins = cookTimeMins;
   }
 
-  public RecipeDto authorId(String authorId) {
-    this.authorId = authorId;
+  public RecipeDto authorUid(String authorUid) {
+    this.authorUid = authorUid;
     return this;
   }
 
   /**
-   * Get authorId
-   * @return authorId
+   * Get authorUid
+   * @return authorUid
    **/
-  @NotNull
+      @NotNull
 
-  @Size(max=32)   public String getAuthorId() {
-    return authorId;
+  @Size(max=32)   public String getAuthorUid() {
+    return authorUid;
   }
 
-  public void setAuthorId(String authorId) {
-    this.authorId = authorId;
+  public void setAuthorUid(String authorUid) {
+    this.authorUid = authorUid;
   }
 
   public RecipeDto prepTimeMins(Integer prepTimeMins) {
@@ -171,8 +171,8 @@ public class RecipeDto   {
    * Get prepTimeMins
    * @return prepTimeMins
    **/
-
-  public Integer getPrepTimeMins() {
+  
+    public Integer getPrepTimeMins() {
     return prepTimeMins;
   }
 
@@ -189,8 +189,8 @@ public class RecipeDto   {
    * Get kilocalories
    * @return kilocalories
    **/
-
-  public Double getKilocalories() {
+  
+    public Double getKilocalories() {
     return kilocalories;
   }
 
@@ -207,8 +207,8 @@ public class RecipeDto   {
    * Get proteins
    * @return proteins
    **/
-
-  public Double getProteins() {
+  
+    public Double getProteins() {
     return proteins;
   }
 
@@ -225,8 +225,8 @@ public class RecipeDto   {
    * Get fats
    * @return fats
    **/
-
-  public Double getFats() {
+  
+    public Double getFats() {
     return fats;
   }
 
@@ -243,8 +243,8 @@ public class RecipeDto   {
    * Get carbohydrates
    * @return carbohydrates
    **/
-
-  public Double getCarbohydrates() {
+  
+    public Double getCarbohydrates() {
     return carbohydrates;
   }
 
@@ -269,8 +269,8 @@ public class RecipeDto   {
    * Get ingredientsDistributions
    * @return ingredientsDistributions
    **/
-  @Valid
-  public List<IngredientsDistributionDto> getIngredientsDistributions() {
+      @Valid
+    public List<IngredientsDistributionDto> getIngredientsDistributions() {
     return ingredientsDistributions;
   }
 
@@ -295,8 +295,8 @@ public class RecipeDto   {
    * Get steps
    * @return steps
    **/
-  @Valid
-  public List<StepDto> getSteps() {
+      @Valid
+    public List<StepDto> getSteps() {
     return steps;
   }
 
@@ -321,8 +321,8 @@ public class RecipeDto   {
    * Get comments
    * @return comments
    **/
-  @Valid
-  public List<CommentDto> getComments() {
+      @Valid
+    public List<CommentDto> getComments() {
     return comments;
   }
 
@@ -339,8 +339,8 @@ public class RecipeDto   {
    * Get avgMark
    * @return avgMark
    **/
-
-  public Float getAvgMark() {
+  
+    public Float getAvgMark() {
     return avgMark;
   }
 
@@ -359,36 +359,36 @@ public class RecipeDto   {
     }
     RecipeDto recipeDto = (RecipeDto) o;
     return Objects.equals(this.name, recipeDto.name) &&
-            Objects.equals(this.id, recipeDto.id) &&
-            Objects.equals(this.media, recipeDto.media) &&
-            Objects.equals(this.cookTimeMins, recipeDto.cookTimeMins) &&
-            Objects.equals(this.authorId, recipeDto.authorId) &&
-            Objects.equals(this.prepTimeMins, recipeDto.prepTimeMins) &&
-            Objects.equals(this.kilocalories, recipeDto.kilocalories) &&
-            Objects.equals(this.proteins, recipeDto.proteins) &&
-            Objects.equals(this.fats, recipeDto.fats) &&
-            Objects.equals(this.carbohydrates, recipeDto.carbohydrates) &&
-            Objects.equals(this.ingredientsDistributions, recipeDto.ingredientsDistributions) &&
-            Objects.equals(this.steps, recipeDto.steps) &&
-            Objects.equals(this.comments, recipeDto.comments) &&
-            Objects.equals(this.avgMark, recipeDto.avgMark);
+        Objects.equals(this.id, recipeDto.id) &&
+        Objects.equals(this.media, recipeDto.media) &&
+        Objects.equals(this.cookTimeMins, recipeDto.cookTimeMins) &&
+        Objects.equals(this.authorUid, recipeDto.authorUid) &&
+        Objects.equals(this.prepTimeMins, recipeDto.prepTimeMins) &&
+        Objects.equals(this.kilocalories, recipeDto.kilocalories) &&
+        Objects.equals(this.proteins, recipeDto.proteins) &&
+        Objects.equals(this.fats, recipeDto.fats) &&
+        Objects.equals(this.carbohydrates, recipeDto.carbohydrates) &&
+        Objects.equals(this.ingredientsDistributions, recipeDto.ingredientsDistributions) &&
+        Objects.equals(this.steps, recipeDto.steps) &&
+        Objects.equals(this.comments, recipeDto.comments) &&
+        Objects.equals(this.avgMark, recipeDto.avgMark);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, id, media, cookTimeMins, authorId, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps, comments, avgMark);
+    return Objects.hash(name, id, media, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps, comments, avgMark);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RecipeDto {\n");
-
+    
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    media: ").append(toIndentedString(media)).append("\n");
     sb.append("    cookTimeMins: ").append(toIndentedString(cookTimeMins)).append("\n");
-    sb.append("    authorId: ").append(toIndentedString(authorId)).append("\n");
+    sb.append("    authorUid: ").append(toIndentedString(authorUid)).append("\n");
     sb.append("    prepTimeMins: ").append(toIndentedString(prepTimeMins)).append("\n");
     sb.append("    kilocalories: ").append(toIndentedString(kilocalories)).append("\n");
     sb.append("    proteins: ").append(toIndentedString(proteins)).append("\n");

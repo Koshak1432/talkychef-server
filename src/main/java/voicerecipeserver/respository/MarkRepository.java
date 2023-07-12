@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import voicerecipeserver.model.entities.Mark;
 
 @Repository
-public interface MarksRepository extends CrudRepository<Mark, Long>{
+public interface MarkRepository extends CrudRepository<Mark, Long>{
 }
