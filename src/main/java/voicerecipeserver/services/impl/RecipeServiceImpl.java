@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
@@ -27,20 +26,20 @@ public class RecipeServiceImpl implements RecipeService {
     private final MeasureUnitRepository measureUnitRepository;
     private UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final MarksRepository marksRepository;
+    private final MarkRepository markRepository;
     private final AvgMarkRepository avgMarkRepository;
     private final StepRepository stepRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, CommentRepository commentRepository,
-                             ModelMapper mapper, MarksRepository marksRepository, AvgMarkRepository avgMarkRepository,
+                             ModelMapper mapper, MarkRepository markRepository, AvgMarkRepository avgMarkRepository,
                              StepRepository stepRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.stepRepository = stepRepository;
-        this.marksRepository = marksRepository;
+        this.markRepository = markRepository;
         this.avgMarkRepository = avgMarkRepository;
         this.commentRepository = commentRepository;
         this.mapper = mapper;
@@ -158,31 +157,6 @@ public class RecipeServiceImpl implements RecipeService {
         return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException {
-        Mark mark = mapper.map(markDto, Mark.class);
-        setRecipeTo(mark);
-        setAuthorTo(mark);
-        mark.setId(null);
-        marksRepository.save(mark);
-        return new ResponseEntity<>(new IdDto().id(mark.getId()), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException {
-        Mark newMark = mapper.map(markDto, Mark.class);
-        newMark.setId(markDto.getId());
-        setAuthorTo(newMark);
-        marksRepository.save(newMark);
-        return new ResponseEntity<>(new IdDto().id(newMark.getId()), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Void> deleteRecipeMark(Long id) {
-        marksRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     private void setAuthorTo(Mark mark) throws NotFoundException {
         Optional<User> author = userRepository.findByUid(mark.getUser().getUid());
         if (author.isEmpty()) {
@@ -297,34 +271,6 @@ public class RecipeServiceImpl implements RecipeService {
     private void setAvgMark(Recipe recipe) {
         Optional<AvgMark> avgMarkOptional = avgMarkRepository.findById(recipe.getId());
         avgMarkOptional.ifPresent(recipe::setAvgMark);
-    }
-
-    @Override
-    public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException {
-        Comment comment = mapper.map(commentDto, Comment.class);
-        comment.setId(null);
-        comment.setDate(new Date());
-        User user = findUser(commentDto.getUserUid());
-        Recipe recipe = findRecipe(commentDto.getRecipeId());
-        comment.setUser(user);
-        comment.setRecipe(recipe);
-
-        Comment savedComment = commentRepository.save(comment);
-        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
-        Comment comment = findComment(commentDto.getId());
-        comment.setContent(commentDto.getContent());
-        Comment savedComment = commentRepository.save(comment);
-        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Void> deleteComment(Long commentId) {
-        commentRepository.deleteById(commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
