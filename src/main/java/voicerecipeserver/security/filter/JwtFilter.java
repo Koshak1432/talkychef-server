@@ -2,8 +2,8 @@ package voicerecipeserver.security.filter;
 
 
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.JwtProvider;
-import voicerecipeserver.security.service.impl.JwtUtils;
+import voicerecipeserver.security.service.impl.JwtProviderImpl;
+import voicerecipeserver.security.service.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +26,14 @@ public class JwtFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "Authorization";
 
-    private final JwtProvider jwtProvider;
+    private final JwtProviderImpl jwtProviderImpl;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc)
             throws IOException, ServletException {
         final String token = getTokenFromRequest((HttpServletRequest) request);
-        if (token != null && jwtProvider.validateAccessToken(token)) {
-            final Claims claims = jwtProvider.getAccessClaims(token);
+        if (token != null && jwtProviderImpl.validateAccessToken(token)) {
+            final Claims claims = jwtProviderImpl.getAccessClaims(token);
             final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
             jwtInfoToken.setAuthenticated(true);
             SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);

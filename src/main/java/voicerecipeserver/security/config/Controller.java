@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.AuthService;
+import voicerecipeserver.security.service.impl.AuthServiceImpl;
 
 @RestController
 @RequestMapping(Constants.BASE_API_PATH)
 @RequiredArgsConstructor
 public class Controller {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("hello/user")

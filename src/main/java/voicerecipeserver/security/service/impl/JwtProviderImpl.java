@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import voicerecipeserver.model.entities.User;
+import voicerecipeserver.security.service.JwtProvider;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -18,12 +19,12 @@ import java.util.Date;
 
 @Slf4j
 @Component
-public class JwtProvider {
+public class JwtProviderImpl implements JwtProvider {
 
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
 
-    public JwtProvider(
+    public JwtProviderImpl(
             @Value("${jwt.secret.access}") String jwtAccessSecret,
             @Value("${jwt.secret.refresh}") String jwtRefreshSecret
     ) {
@@ -71,13 +72,13 @@ public class JwtProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException expEx) {
-            log.error("Token expired", expEx);
+            log.error("Token expired exception");
         } catch (UnsupportedJwtException unsEx) {
-            log.error("Unsupported jwt", unsEx);
+            log.error("Unsupported jwt exception");
         } catch (MalformedJwtException mjEx) {
-            log.error("Malformed jwt", mjEx);
+            log.error("Malformed jwt exception");
         } catch (Exception e) {
-            log.error("invalid token", e);
+            log.error("invalid token exception");
         }
         return false;
     }

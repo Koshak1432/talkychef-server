@@ -1,4 +1,4 @@
-package voicerecipeserver.security.service.impl;
+package voicerecipeserver.security.service;
 
 import io.jsonwebtoken.Claims;
 import voicerecipeserver.security.domain.JwtAuthentication;

@@ -1,11 +1,11 @@
 package voicerecipeserver.security.config;
 
 import voicerecipeserver.config.Constants;
-import voicerecipeserver.security.domain.JwtRequest;
-import voicerecipeserver.security.domain.JwtResponse;
-import voicerecipeserver.security.domain.RefreshJwtRequest;
+import voicerecipeserver.security.dto.JwtRequest;
+import voicerecipeserver.security.dto.JwtResponse;
+import voicerecipeserver.security.dto.RefreshJwtRequest;
 import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.security.service.impl.AuthService;
+import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) throws AuthException {

@@ -1,5 +1,10 @@
 package voicerecipeserver.controllers;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,10 +25,15 @@ import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
+import java.security.SignatureException;
+
+
+
 
 @RestControllerAdvice
 @CrossOrigin(maxAge = 1440)
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+
     @Override
     @NonNull
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -68,5 +78,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String message = e.getMessage();
         return new ResponseEntity<>(new Error().code(400).message("Authorization failed: " + message), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler({ExpiredJwtException.class})
+    protected ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException e) {
+        String message = e.getMessage();
+        logger.error("Invalid token: {}", message, e);
+        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message), HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler({MalformedJwtException.class})
+    protected ResponseEntity<Object> handleMalformedJwtException(MalformedJwtException e) {
+        String message = e.getMessage();
+        logger.error("Invalid token: {}", message, e);
+        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message), HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler({UnsupportedJwtException.class})
+    protected ResponseEntity<Object> handleUnsupportedJwtException(UnsupportedJwtException e) {
+        String message = e.getMessage();
+        logger.error("Invalid token: {}", message, e);
+        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message), HttpStatus.UNAUTHORIZED);
+    }
 
+
+    private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 }
