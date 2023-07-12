@@ -2,7 +2,6 @@ package voicerecipeserver.api;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.IdDto;
@@ -14,12 +13,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 @Valid
-@RequestMapping(Constants.BASE_API_PATH)
+@RequestMapping(Constants.BASE_API_PATH + "/media")
 public interface MediaApi {
-    @GetMapping(value = "/media/{id}")
+    @GetMapping(value = "/{id}")
     ResponseEntity<byte[]> mediaGet(@PathVariable("id") @PositiveOrZero Long id) throws NotFoundException;
 
-    @PostMapping(value = "/media", produces = "application/json")
-    ResponseEntity<IdDto> mediaPost(@RequestHeader(HttpHeaders.CONTENT_TYPE) String contentTypeHeader, @RequestBody @NotNull byte[] data) throws InvalidMediaTypeException;
+    @PostMapping
+    ResponseEntity<IdDto> mediaPost(@RequestHeader(HttpHeaders.CONTENT_TYPE) String contentTypeHeader,
+                                    @RequestBody @NotNull byte[] data) throws InvalidMediaTypeException;
 
 }
