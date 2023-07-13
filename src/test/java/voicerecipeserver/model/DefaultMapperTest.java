@@ -265,7 +265,7 @@ public class DefaultMapperTest {
 
         RecipeDto dto = mapper.map(recipe, RecipeDto.class);
         assertEquals(recipe.getName(), dto.getName());
-        assertEquals(recipe.getAuthor().getId(), Integer.parseInt(dto.getAuthorUid()));
+        assertEquals(recipe.getAuthor().getUid(), dto.getAuthorUid());
         assertEquals(recipe.getCookTimeMins(), dto.getCookTimeMins());
         assertEquals(recipe.getMedia().getId(), dto.getMedia().getId());
     }
