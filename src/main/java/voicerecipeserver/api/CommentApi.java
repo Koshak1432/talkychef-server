@@ -18,7 +18,7 @@ import java.util.List;
 @Validated
 public interface CommentApi {
     @PostMapping
-    ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto) throws NotFoundException, BadRequestException;
+    ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto) throws NotFoundException;
 
     // TODO мб следует ещё один эксепшн с другим кодом создать, чтобы различать not found recipe и not found comment
     // или же просто говорить что всё ок(так плохо делать)
