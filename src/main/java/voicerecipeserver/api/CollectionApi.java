@@ -9,10 +9,10 @@ import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
 @Valid
 @RequestMapping(Constants.BASE_API_PATH + "/collections")

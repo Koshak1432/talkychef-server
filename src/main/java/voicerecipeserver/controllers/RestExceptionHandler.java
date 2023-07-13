@@ -14,7 +14,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -24,10 +23,7 @@ import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
-import javax.validation.ConstraintViolationException;
-import java.security.SignatureException;
-
-
+import jakarta.validation.ConstraintViolationException;
 
 
 @RestControllerAdvice

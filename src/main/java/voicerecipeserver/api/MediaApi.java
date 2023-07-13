@@ -8,9 +8,9 @@ import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Valid
 @RequestMapping(Constants.BASE_API_PATH + "/media")

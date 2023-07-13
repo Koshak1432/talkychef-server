@@ -1,12 +1,9 @@
 package voicerecipeserver.model.entities;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 

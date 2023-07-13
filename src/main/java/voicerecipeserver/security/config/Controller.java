@@ -11,11 +11,16 @@ import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceImpl;
 
 @RestController
-@RequestMapping(Constants.BASE_API_PATH)
+//@RequestMapping(Constants.BASE_API_PATH)
 @RequiredArgsConstructor
 public class Controller {
 
     private final AuthServiceImpl authService;
+
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("Hello user  + !");
+    }
 
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping("hello/user")

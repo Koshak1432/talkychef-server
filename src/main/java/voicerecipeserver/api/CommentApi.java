@@ -9,7 +9,7 @@ import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
-import javax.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.PositiveOrZero;
 
 
 @RequestMapping(Constants.BASE_API_PATH + "/comments")

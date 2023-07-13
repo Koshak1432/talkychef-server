@@ -1,12 +1,12 @@
 package voicerecipeserver.model.entities;
 
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.sql.Types;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,16 +27,16 @@ public class Media {
     private MediaType mediaType;
 
 
-    @Column(name = "file_data", columnDefinition="BLOB")
-//    @Type(type = "org.hibernate.type.BinaryType")
+    @Column(name = "file_data", columnDefinition = "BLOB")
+    @JdbcTypeCode(Types.VARBINARY)
     @NotNull
     private byte[] fileData;
 
-    @OneToOne(mappedBy="media", orphanRemoval = true)
+    @OneToOne(mappedBy = "media", orphanRemoval = true)
     @ToString.Exclude
     private Recipe recipe;
 
-    @OneToOne(mappedBy="media", orphanRemoval = true)
+    @OneToOne(mappedBy = "media", orphanRemoval = true)
     @ToString.Exclude
     private Step step;
 

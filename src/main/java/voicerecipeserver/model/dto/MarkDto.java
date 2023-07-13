@@ -3,15 +3,16 @@ package voicerecipeserver.model.dto;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Generated;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 /**
  * CommmentDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-05T10:23" +
+@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-05T10:23" +
         ":47.949525164Z[GMT]")
 
 
