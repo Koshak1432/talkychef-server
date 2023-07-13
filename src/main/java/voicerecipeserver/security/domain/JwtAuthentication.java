@@ -2,6 +2,7 @@ package voicerecipeserver.security.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import voicerecipeserver.model.entities.Role;
@@ -11,10 +12,11 @@ import java.util.Set;
 
 @Getter
 @Setter
+@ToString
 public class JwtAuthentication implements Authentication {
 
     private boolean authenticated;
-    private String displayName;
+    private String login;
     private Set<Role> roles;
 
     @Override
@@ -27,7 +29,7 @@ public class JwtAuthentication implements Authentication {
     public Object getDetails() { return null; }
 
     @Override
-    public Object getPrincipal() { return displayName; }
+    public Object getPrincipal() { return login; }
 
     @Override
     public boolean isAuthenticated() { return authenticated; }
@@ -38,6 +40,6 @@ public class JwtAuthentication implements Authentication {
     }
 
     @Override
-    public String getName() { return displayName; }
+    public String getName() { return login; }
 
 }

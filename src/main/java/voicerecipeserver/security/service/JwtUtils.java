@@ -13,7 +13,7 @@ public class JwtUtils {
     public static JwtAuthentication generate(Claims claims) {
         JwtAuthentication jwtInfoToken = new JwtAuthentication();
         jwtInfoToken.setRoles(getRoles(claims));
-        jwtInfoToken.setDisplayName(claims.get("displayName", String.class));
+        jwtInfoToken.setLogin(claims.get("login", String.class));
         return jwtInfoToken;
     }
 

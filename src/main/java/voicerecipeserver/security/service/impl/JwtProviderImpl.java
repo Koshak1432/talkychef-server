@@ -41,7 +41,7 @@ public class JwtProviderImpl implements JwtProvider {
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
                 .claim("roles", user.getRoles())
-                .claim("displayName", user.getDisplayName())
+                .claim("login", user.getLogin())
                 .compact();
     }
 
