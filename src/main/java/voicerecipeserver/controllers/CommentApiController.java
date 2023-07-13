@@ -24,12 +24,14 @@ public class CommentApiController implements CommentApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> commentPost(CommentDto commentDto) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> commentPost(CommentDto commentDto) throws NotFoundException {
+        System.out.println("COMMENT DTO:");
+        System.out.println(commentDto);
         return commentService.postComment(commentDto);
     }
 
     @Override
-    public ResponseEntity<IdDto> commentUpdate(CommentDto commentDto) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> commentUpdate(CommentDto commentDto) throws NotFoundException {
         return commentService.updateComment(commentDto);
     }
 

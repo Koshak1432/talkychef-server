@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
+import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.Comment;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
@@ -62,12 +63,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException {
+        System.out.println("COMMENT DTO 2:");
+        System.out.println(commentDto);
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setId(null);
         User user = findUser(commentDto.getUserUid());
         Recipe recipe = findRecipe(commentDto.getRecipeId());
         comment.setUser(user);
         comment.setRecipe(recipe);
+        System.out.println("COMMENT:");
+        System.out.println(comment);
+
 
         Comment savedComment = commentRepository.save(comment);
         return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
