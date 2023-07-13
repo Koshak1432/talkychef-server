@@ -3,7 +3,6 @@ package voicerecipeserver.model.dto;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.IngredientsDistributionDto;
 import voicerecipeserver.model.dto.StepDto;
@@ -17,7 +16,7 @@ import javax.validation.constraints.*;
  * RecipeDto
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-12T05:52:57.996944769Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-13T05:15:32.507112241Z[GMT]")
 
 
 public class RecipeDto   {
@@ -58,10 +57,6 @@ public class RecipeDto   {
   @JsonProperty("steps")
   @Valid
   private List<StepDto> steps = null;
-
-  @JsonProperty("comments")
-  @Valid
-  private List<CommentDto> comments = null;
 
   @JsonProperty("avgMark")
   private Float avgMark = null;
@@ -304,32 +299,6 @@ public class RecipeDto   {
     this.steps = steps;
   }
 
-  public RecipeDto comments(List<CommentDto> comments) {
-    this.comments = comments;
-    return this;
-  }
-
-  public RecipeDto addCommentsItem(CommentDto commentsItem) {
-    if (this.comments == null) {
-      this.comments = new ArrayList<CommentDto>();
-    }
-    this.comments.add(commentsItem);
-    return this;
-  }
-
-  /**
-   * Get comments
-   * @return comments
-   **/
-      @Valid
-    public List<CommentDto> getComments() {
-    return comments;
-  }
-
-  public void setComments(List<CommentDto> comments) {
-    this.comments = comments;
-  }
-
   public RecipeDto avgMark(Float avgMark) {
     this.avgMark = avgMark;
     return this;
@@ -370,13 +339,12 @@ public class RecipeDto   {
         Objects.equals(this.carbohydrates, recipeDto.carbohydrates) &&
         Objects.equals(this.ingredientsDistributions, recipeDto.ingredientsDistributions) &&
         Objects.equals(this.steps, recipeDto.steps) &&
-        Objects.equals(this.comments, recipeDto.comments) &&
         Objects.equals(this.avgMark, recipeDto.avgMark);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, id, media, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps, comments, avgMark);
+    return Objects.hash(name, id, media, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps, avgMark);
   }
 
   @Override
@@ -396,7 +364,6 @@ public class RecipeDto   {
     sb.append("    carbohydrates: ").append(toIndentedString(carbohydrates)).append("\n");
     sb.append("    ingredientsDistributions: ").append(toIndentedString(ingredientsDistributions)).append("\n");
     sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
-    sb.append("    comments: ").append(toIndentedString(comments)).append("\n");
     sb.append("    avgMark: ").append(toIndentedString(avgMark)).append("\n");
     sb.append("}");
     return sb.toString();
