@@ -11,6 +11,8 @@ import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.CommentService;
 
+import java.util.List;
+
 @CrossOrigin(maxAge = 1440)
 @RestController
 public class CommentApiController implements CommentApi {
@@ -34,5 +36,10 @@ public class CommentApiController implements CommentApi {
     @Override
     public ResponseEntity<Void> commentDelete(Long id) {
         return commentService.deleteComment(id);
+    }
+
+    @Override
+    public ResponseEntity<List<CommentDto>> getRecipeComments(Long id) {
+        return commentService.getRecipeComments(id);
     }
 }

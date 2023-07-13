@@ -17,6 +17,7 @@ import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.services.CommentService;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,5 +86,12 @@ public class CommentServiceImpl implements CommentService {
     public ResponseEntity<Void> deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<CommentDto>> getRecipeComments(Long id) {
+        List<Comment> comments = commentRepository.getCommentsByRecipeId(id);
+        List<CommentDto> dtos = comments.stream().map((comment) -> mapper.map(comment, CommentDto.class)).toList();
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 }
