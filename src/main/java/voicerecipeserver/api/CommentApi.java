@@ -9,7 +9,9 @@ import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 
 @RequestMapping(Constants.BASE_API_PATH + "/comments")
@@ -24,7 +26,10 @@ public interface CommentApi {
     ResponseEntity<IdDto> commentUpdate(@RequestBody CommentDto commentDto) throws NotFoundException,
             BadRequestException;
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<Void> commentDelete(
-            @PathVariable("id") @PositiveOrZero(message = "comment id must be not negative") Long id);
+            @PathVariable("id") @Positive(message = "comment id must be positive") Long id);
+
+    @GetMapping("/{id}")
+    ResponseEntity<List<CommentDto>> getRecipeComments(@PathVariable("id") @Positive(message = "recipe id must be positive") Long id);
 }

@@ -15,7 +15,7 @@ public class DefaultMapper extends ModelMapper {
         super();
         this.emptyTypeMap(RecipeDto.class, Recipe.class).addMappings(mapper -> {
             mapper.skip(Recipe::setAuthor);
-            mapper.map(RecipeDto::getAuthorId, (d, v) -> d.getAuthor().setUid((String)v));
+            mapper.map(RecipeDto::getAuthorUid, (d, v) -> d.getAuthor().setUid((String)v));
         }).implicitMappings();
 
         Converter<String, String> toLowercase =
