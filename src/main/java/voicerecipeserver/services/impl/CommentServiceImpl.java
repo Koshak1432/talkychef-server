@@ -64,7 +64,6 @@ public class CommentServiceImpl implements CommentService {
     public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setId(null);
-        comment.setDate(new Date());
         User user = findUser(commentDto.getUserUid());
         Recipe recipe = findRecipe(commentDto.getRecipeId());
         comment.setUser(user);
