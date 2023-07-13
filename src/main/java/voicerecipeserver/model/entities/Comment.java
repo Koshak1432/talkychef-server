@@ -33,7 +33,7 @@ public class Comment {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date")
-    private LocalDateTime date;
+    private Date date;
 
     @Column(name = "content")
     private String content;

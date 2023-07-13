@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -26,7 +27,7 @@ public class CommentDto   {
   private Long recipeId = null;
 
   @JsonProperty("post_time")
-  private LocalDateTime postTime = null;
+  private Date postTime = null;
 
   @JsonProperty("content")
   private String content = null;
@@ -88,7 +89,7 @@ public class CommentDto   {
     this.recipeId = recipeId;
   }
 
-  public CommentDto postTime(LocalDateTime postTime) {
+  public CommentDto postTime(Date postTime) {
     this.postTime = postTime;
     return this;
   }
@@ -100,11 +101,11 @@ public class CommentDto   {
       @NotNull
 
     @Valid
-    public LocalDateTime getPostTime() {
+    public Date getPostTime() {
     return postTime;
   }
 
-  public void setPostTime(LocalDateTime postTime) {
+  public void setPostTime(Date postTime) {
     this.postTime = postTime;
   }
 
