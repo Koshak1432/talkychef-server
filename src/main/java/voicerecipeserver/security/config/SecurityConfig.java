@@ -1,8 +1,5 @@
 package voicerecipeserver.security.config;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.security.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,15 +9,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import voicerecipeserver.config.Constants;
+import voicerecipeserver.security.filter.JwtFilter;
+import voicerecipeserver.security.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@RequestMapping(Constants.BASE_API_PATH)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+
+    private final UserService userService;
+    private final BeanConfig passwordEncoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -38,5 +40,21 @@ public class SecurityConfig {
                                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 ).build();
     }
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeHttpRequests(requests -> requests
+//                        .requestMatchers(Constants.BASE_API_PATH + "/token", Constants.BASE_API_PATH + "/registration",Constants.BASE_API_PATH + "/"  ).permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+//                .formLogin(form -> form
+//                        .loginPage(Constants.BASE_API_PATH + "/login")
+//                        .permitAll()
+//                )
+//                .logout(logout -> logout.permitAll());
+//        return http.build();
+//    }
+
 
 }

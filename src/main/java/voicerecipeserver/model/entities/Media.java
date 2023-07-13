@@ -28,8 +28,7 @@ public class Media {
 
 
     @Column(name = "file_data", columnDefinition="BLOB")
-    @Lob
-    @Type(type = "org.hibernate.type.BinaryType")
+//    @Type(type = "org.hibernate.type.BinaryType")
     @NotNull
     private byte[] fileData;
 

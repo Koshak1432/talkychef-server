@@ -9,6 +9,7 @@ import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.RecipeRepository;
+import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
@@ -26,6 +27,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final ModelMapper mapper;
+    @Autowired
+    private BeanConfig passwordEncoder;
     private final UserServiceImpl userServiceImpl;
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProviderImpl jwtProviderImpl;
@@ -33,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
         final User user = userServiceImpl.getByLogin(authRequest.getLogin())
                 .orElseThrow(() -> new AuthException("Пользователь не найден"));
-        if (user.getPassword().equals(authRequest.getPassword())) {
+        if (passwordEncoder.getPasswordEncoder().matches(authRequest.getPassword(), user.getPassword())) {
             return getJwtResponse(user);
         } else {
             throw new AuthException("Неправильный пароль");

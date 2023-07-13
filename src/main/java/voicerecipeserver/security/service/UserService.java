@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService {
+public interface UserService{
     public Optional<User> getByLogin(@NonNull String login);
 
     ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException, BadRequestException;

@@ -34,7 +34,6 @@ import java.security.SignatureException;
 @CrossOrigin(maxAge = 1440)
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @Override
     @NonNull
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
@@ -42,7 +41,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new Error().code(400).message("Validation Failed"), HttpStatus.BAD_REQUEST);
     }
 
-    @Override
     @NonNull
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status,
@@ -50,7 +48,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new Error().code(400).message("Validation Failed"), HttpStatus.BAD_REQUEST);
     }
 
-    @Override
     @NonNull
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
                                                         HttpStatus status, WebRequest request) {

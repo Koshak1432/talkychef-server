@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(Constants.BASE_API_PATH)
-
 @RequiredArgsConstructor
 public class AuthController {
 
