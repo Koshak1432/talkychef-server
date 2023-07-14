@@ -1,6 +1,7 @@
 package voicerecipeserver.api;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import jakarta.validation.constraints.Size;
 @Valid
 @RequestMapping(Constants.BASE_API_PATH + "/collections")
 public interface CollectionApi {
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping
     ResponseEntity<Void> collectionPost(@RequestParam @NotBlank String name);
 
