@@ -1,5 +1,6 @@
 package voicerecipeserver.services.impl;
 
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,13 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.entities.Comment;
-import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.User;
+import voicerecipeserver.model.dto.MarkDto;
+import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CommentRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
+import voicerecipeserver.security.domain.JwtAuthentication;
+import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import voicerecipeserver.services.CommentService;
 
 import java.util.Date;
@@ -25,14 +27,16 @@ public class CommentServiceImpl implements CommentService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final AuthServiceImpl authentication;
 
     @Autowired
     public CommentServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository,
-                              CommentRepository commentRepository) {
+                              CommentRepository commentRepository, AuthServiceImpl authentication) {
         this.mapper = mapper;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.authentication = authentication;
     }
 
     Comment findComment(Long commentId) throws NotFoundException {
@@ -76,14 +80,30 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = findComment(commentDto.getId());
-        comment.setContent(commentDto.getContent());
+        if (authentication != null && checkAuthorities(commentDto.getId())) {
+            comment.setContent(commentDto.getContent());
+        }
         Comment savedComment = commentRepository.save(comment);
         return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Void> deleteComment(Long commentId) {
-        commentRepository.deleteById(commentId);
+    public ResponseEntity<Void> deleteComment(Long commentId) throws NotFoundException {
+        if (authentication != null && checkAuthorities(commentId)) {
+            commentRepository.deleteById(commentId);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    private boolean checkAuthorities(Long markId) throws NotFoundException {
+        JwtAuthentication principal = authentication.getAuthInfo();
+        Comment comment = findComment(markId);
+        User user = comment.getUser();
+        if (principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin())) {
+            return true;
+        }
+        return false;
+    }
+
+
 }

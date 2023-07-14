@@ -1,17 +1,13 @@
 package voicerecipeserver.security.service.impl;
 
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.UserDto;
-import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.BadRequestException;
@@ -24,18 +20,22 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    @Autowired
     private BeanConfig passwordEncoder;
 
     private final ModelMapper mapper;
 
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, BeanConfig passwordEncoder,  ModelMapper mapper) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.mapper = mapper;
+    }
+
 
     public Optional<User> getByLogin(@NonNull String login) {
-        Optional<User> user = userRepository.findByLogin(login);
-        return user;
+        return userRepository.findByLogin(login);
     }
 
     @Override
@@ -49,22 +49,21 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(new IdDto().id(savedUser.getId()), HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<IdDto> updateUser(UserDto userDto) throws NotFoundException, BadRequestException {
-        User user = findUser(userDto.getLogin());
-        user.setPassword(userDto.getPassword());
-        user.setDisplayName(userDto.getDisplayName());
+    public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) throws NotFoundException {
+        User user = findUserByLogin(userDto.getLogin());
+        user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
         User savedUser = userRepository.save(user);
         return new ResponseEntity<>(new IdDto().id(savedUser.getId()), HttpStatus.OK);
-
     }
 
-    private User findUser(String login) throws NotFoundException {
+    User findUserByLogin(String login) throws NotFoundException {
         Optional<User> userOptional = userRepository.findByLogin(login);
         if (userOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепт с id: " + login);
+            throw new NotFoundException("Не удалось найти пользователя с логином: " + login);
         }
+
         return userOptional.get();
     }
+
 
 }

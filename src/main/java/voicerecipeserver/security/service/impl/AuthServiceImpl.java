@@ -5,18 +5,19 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.UserDto;
+import voicerecipeserver.model.entities.Role;
+import voicerecipeserver.model.entities.User;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.RecipeRepository;
+import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
-import voicerecipeserver.model.entities.User;
-import voicerecipeserver.model.exceptions.AuthException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import voicerecipeserver.security.service.AuthService;
 
 import java.util.HashMap;
@@ -24,14 +25,23 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+
 public class AuthServiceImpl implements AuthService {
-    private final ModelMapper mapper;
     @Autowired
+    public AuthServiceImpl(ModelMapper mapper, BeanConfig passwordEncoder, UserServiceImpl userServiceImpl, JwtProviderImpl jwtProviderImpl, UserRepository userRepository) {
+        this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
+        this.userServiceImpl = userServiceImpl;
+        this.jwtProviderImpl = jwtProviderImpl;
+        this.userRepository = userRepository;
+    }
+
+    private final ModelMapper mapper;
     private BeanConfig passwordEncoder;
     private final UserServiceImpl userServiceImpl;
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProviderImpl jwtProviderImpl;
+    private UserRepository userRepository;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
         final User user = userServiceImpl.getByLogin(authRequest.getLogin())
@@ -94,5 +104,20 @@ public class AuthServiceImpl implements AuthService {
         userServiceImpl.postUser(userDto);
         userFromDb =  userServiceImpl.getByLogin(userDto.getLogin());
         return getJwtResponse(userFromDb.get());
+    }
+
+    public JwtResponse changePassword(UserDto userDto) throws NotFoundException, BadRequestException, AuthException {
+
+        if (!checkAuthorities(userDto.getLogin())) {
+            throw new AuthException("Невозможно изменить пароль");
+        }
+       userServiceImpl.updateUserPassword(userDto);
+        Optional<User> user  = userServiceImpl.getByLogin(userDto.getLogin());
+        return getJwtResponse(user.get());
+    }
+
+    private boolean checkAuthorities(String login)  {
+        JwtAuthentication principal = getAuthInfo();
+        return principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(login);
     }
 }

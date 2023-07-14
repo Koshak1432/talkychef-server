@@ -26,5 +26,5 @@ public interface CommentApi {
 
     @DeleteMapping(value = "/{id}")
     ResponseEntity<Void> commentDelete(
-            @PathVariable("id") @PositiveOrZero(message = "comment id must be not negative") Long id);
+            @PathVariable("id") @PositiveOrZero(message = "comment id must be not negative") Long id) throws NotFoundException;
 }

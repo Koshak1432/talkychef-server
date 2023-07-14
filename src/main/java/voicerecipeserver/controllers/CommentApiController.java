@@ -32,7 +32,7 @@ public class CommentApiController implements CommentApi {
     }
 
     @Override
-    public ResponseEntity<Void> commentDelete(Long id) {
+    public ResponseEntity<Void> commentDelete(Long id) throws NotFoundException {
         return commentService.deleteComment(id);
     }
 }

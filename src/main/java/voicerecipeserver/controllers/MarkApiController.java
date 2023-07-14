@@ -32,7 +32,7 @@ public class MarkApiController implements MarkApi {
     }
 
     @Override
-    public ResponseEntity<Void> markDelete(Long id) {
+    public ResponseEntity<Void> markDelete(Long id) throws NotFoundException {
         return markService.deleteRecipeMark(id);
     }
 }

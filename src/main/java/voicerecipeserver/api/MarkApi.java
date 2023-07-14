@@ -21,5 +21,5 @@ public interface MarkApi {
     ResponseEntity<IdDto> markUpdate(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<Void> markDelete(@PathVariable("id") Long id);
+    ResponseEntity<Void> markDelete(@PathVariable("id") Long id) throws NotFoundException;
 }

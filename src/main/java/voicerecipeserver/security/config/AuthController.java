@@ -1,7 +1,8 @@
 package voicerecipeserver.security.config;
 
-import voicerecipeserver.api.UserApi;
+import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
+
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
@@ -12,10 +13,6 @@ import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(Constants.BASE_API_PATH)
@@ -48,5 +45,12 @@ public class AuthController {
         final JwtResponse token = authService.refresh(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
+
+    @PutMapping("/user/password")
+    public ResponseEntity<JwtResponse> userUpdate(@RequestBody UserDto userDto) throws NotFoundException, BadRequestException, AuthException {
+        final JwtResponse token = authService.changePassword(userDto);
+        return ResponseEntity.ok(token);
+    }
+
 
 }

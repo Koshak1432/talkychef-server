@@ -10,5 +10,5 @@ public interface MarkService {
 
     ResponseEntity<IdDto> updateRecipeMark(MarkDto mark) throws NotFoundException;
 
-    ResponseEntity<Void> deleteRecipeMark(Long id);
+    ResponseEntity<Void> deleteRecipeMark(Long id) throws NotFoundException;
 }

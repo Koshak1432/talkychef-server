@@ -11,5 +11,5 @@ public interface CommentService {
 
     ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException, BadRequestException;
 
-    ResponseEntity<Void> deleteComment(Long commentId);
+    ResponseEntity<Void> deleteComment(Long commentId) throws NotFoundException;
 }
