@@ -27,11 +27,11 @@ public interface RecipeApi {
             @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
             NotFoundException;
 
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
     ResponseEntity<IdDto> recipePost(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException;
 
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PutMapping
     ResponseEntity<IdDto> recipeUpdate(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException;
 

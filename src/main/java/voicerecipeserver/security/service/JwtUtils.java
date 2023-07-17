@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JwtUtils {
+    private JwtUtils() {
+    }
 
     public static JwtAuthentication generate(Claims claims) {
         JwtAuthentication jwtInfoToken = new JwtAuthentication();
@@ -16,11 +18,11 @@ public class JwtUtils {
         jwtInfoToken.setLogin(claims.get("login", String.class));
         return jwtInfoToken;
     }
-
+    @SuppressWarnings("unchecked")
     private static Set<Role> getRoles(Claims claims) {
         List<String> roles = claims.get("roles", List.class);
         return roles.stream()
-                .map(role -> Role.valueOf(role))
+                .map(Role::valueOf)
                 .collect(Collectors.toSet());
     }
 }
