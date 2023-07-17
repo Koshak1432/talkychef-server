@@ -235,7 +235,7 @@ public class RecipeServiceImpl implements RecipeService {
         JwtAuthentication principal = authentication.getAuthInfo();
         Recipe recipe = findRecipe(recipeId);
         User user = recipe.getAuthor();
-        if (principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin())) {
+        if (principal.getAuthorities().contains(Role1.ADMIN) || principal.getLogin().equals(user.getUid())) {
             return true;
         }
         return false;

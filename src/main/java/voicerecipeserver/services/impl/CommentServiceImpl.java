@@ -9,7 +9,6 @@ import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.entities.Comment;
 import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CommentRepository;
@@ -106,6 +105,6 @@ public class CommentServiceImpl implements CommentService {
         JwtAuthentication principal = authentication.getAuthInfo();
         Comment comment = findComment(markId);
         User user = comment.getUser();
-        return principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin());
+        return principal.getAuthorities().contains(Role1.ADMIN) || principal.getLogin().equals(user.getUid());
     }
 }

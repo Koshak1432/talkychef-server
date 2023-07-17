@@ -2,7 +2,6 @@ package voicerecipeserver.security.service;
 
 import io.jsonwebtoken.Claims;
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.model.entities.Role;
 
 import java.util.List;
 import java.util.Set;
@@ -17,10 +16,10 @@ public class JwtUtils {
         return jwtInfoToken;
     }
 
-    private static Set<Role> getRoles(Claims claims) {
+    private static Set<Role1> getRoles(Claims claims) {
         List<String> roles = claims.get("roles", List.class);
         return roles.stream()
-                .map(Role::valueOf)
+                .map(Role1::valueOf)
                 .collect(Collectors.toSet());
     }
 }

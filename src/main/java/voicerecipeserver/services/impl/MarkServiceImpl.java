@@ -1,6 +1,5 @@
 package voicerecipeserver.services.impl;
 
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.entities.Mark;
 import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MarkRepository;
@@ -92,7 +90,7 @@ public class MarkServiceImpl implements MarkService {
         JwtAuthentication principal = authentication.getAuthInfo();
         Mark mark = findMark(markId);
         User user = mark.getUser();
-        if (principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin())) {
+        if (principal.getAuthorities().contains(Role1.ADMIN) || principal.getLogin().equals(user.getUid())) {
             return true;
         }
         return false;

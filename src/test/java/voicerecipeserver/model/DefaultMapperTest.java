@@ -161,7 +161,7 @@ public class DefaultMapperTest {
 
     @Test
     void map_comment_to_commentDto() {
-        User user = new User("anton", "1234", "Антон", Collections.singleton(Role.USER));
+        User user = new User("anton", "1234", "Антон", Collections.singleton(Role1.USER));
         Recipe recipe = new Recipe();
         recipe.setId(25L);
         Comment comment = new Comment(1L, recipe, user, null, "Очень густо");
@@ -258,7 +258,7 @@ public class DefaultMapperTest {
     void map_recipe_to_recipeDto() {
         Recipe recipe = new Recipe();
         recipe.setName("name123");
-        recipe.setAuthor(new User("anton", "1234", "Антон", Collections.singleton(Role.USER)));
+        recipe.setAuthor(new User("anton", "1234", "Антон", Collections.singleton(Role1.USER)));
         recipe.setCookTimeMins(4044);
         recipe.setMedia(new Media(11L, null, null, null, null));
 
