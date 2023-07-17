@@ -1,6 +1,5 @@
 package voicerecipeserver.services.impl;
 
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarkDto;
-import voicerecipeserver.model.entities.*;
+import voicerecipeserver.model.entities.Comment;
+import voicerecipeserver.model.entities.Recipe;
+import voicerecipeserver.model.entities.Role;
+import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CommentRepository;
 import voicerecipeserver.respository.RecipeRepository;
@@ -18,7 +19,7 @@ import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import voicerecipeserver.services.CommentService;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -67,7 +68,6 @@ public class CommentServiceImpl implements CommentService {
     public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setId(null);
-        comment.setDate(new Date());
         User user = findUser(commentDto.getUserUid());
         Recipe recipe = findRecipe(commentDto.getRecipeId());
         comment.setUser(user);
@@ -95,15 +95,17 @@ public class CommentServiceImpl implements CommentService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<List<CommentDto>> getRecipeComments(Long id) {
+        List<Comment> comments = commentRepository.getCommentsByRecipeId(id);
+        List<CommentDto> dtos = comments.stream().map((comment) -> mapper.map(comment, CommentDto.class)).toList();
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
     private boolean checkAuthorities(Long markId) throws NotFoundException {
         JwtAuthentication principal = authentication.getAuthInfo();
         Comment comment = findComment(markId);
         User user = comment.getUser();
-        if (principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin())) {
-            return true;
-        }
-        return false;
+        return principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin());
     }
-
-
 }
