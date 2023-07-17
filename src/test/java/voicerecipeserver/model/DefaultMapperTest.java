@@ -181,12 +181,12 @@ public class DefaultMapperTest {
         stepDtos.add(new StepDto().description("Посидеть посмотреть").stepNum(1).media(new IdDto().id(1L)));
         stepDtos.add(new StepDto().description("Посидеть поготовить").stepNum(2).media(new IdDto().id(2L)));
         stepDtos.add(new StepDto().description("Посидеть поесть").stepNum(3));
-        recipeDto.name("Ro").media(new IdDto().id(1L)).authorId("AFDSDE").cookTimeMins(40).setSteps(stepDtos);
+        recipeDto.name("Ro").media(new IdDto().id(1L)).authorUid("AFDSDE").cookTimeMins(40).setSteps(stepDtos);
 
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
 
         assertEquals(recipe.getName(), recipeDto.getName());
-        assertEquals(recipe.getAuthor().getUid(), recipeDto.getAuthorId());
+        assertEquals(recipe.getAuthor().getUid(), recipeDto.getAuthorUid());
         assertEquals(recipe.getCookTimeMins(), recipeDto.getCookTimeMins());
         assertEquals(recipe.getMedia().getId(), recipeDto.getMedia().getId());
         assertNull(recipe.getCollections());
@@ -229,7 +229,7 @@ public class DefaultMapperTest {
         ingredientsDistDtos.add(
                 new IngredientsDistributionDto().name("ing3").ingredientId(3L).count(2340.0).measureUnitName("pinta3"));
 
-        recipeDto.name("Ro").media(new IdDto().id(1L)).authorId("AFDSDE").cookTimeMins(40).steps(
+        recipeDto.name("Ro").media(new IdDto().id(1L)).authorUid("AFDSDE").cookTimeMins(40).steps(
                 stepDtos).setIngredientsDistributions(ingredientsDistDtos);
 
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
@@ -264,7 +264,7 @@ public class DefaultMapperTest {
 
         RecipeDto dto = mapper.map(recipe, RecipeDto.class);
         assertEquals(recipe.getName(), dto.getName());
-        assertEquals(recipe.getAuthor().getId(), Integer.parseInt(dto.getAuthorId()));
+        assertEquals(recipe.getAuthor().getUid(), dto.getAuthorUid());
         assertEquals(recipe.getCookTimeMins(), dto.getCookTimeMins());
         assertEquals(recipe.getMedia().getId(), dto.getMedia().getId());
     }
@@ -302,12 +302,12 @@ public class DefaultMapperTest {
     @Test
     void map_recipeDto_with_required_field_to_recipe() {
         RecipeDto dto = new RecipeDto();
-        dto.name("Re").media(new IdDto().id(1L)).authorId("AFsssDDE").cookTimeMins(40);
+        dto.name("Re").media(new IdDto().id(1L)).authorUid("AFsssDDE").cookTimeMins(40);
 
         Recipe recipe = mapper.map(dto, Recipe.class);
 
         assertEquals(dto.getName(), recipe.getName());
-        assertEquals(dto.getAuthorId(), recipe.getAuthor().getUid());
+        assertEquals(dto.getAuthorUid(), recipe.getAuthor().getUid());
         assertEquals(dto.getCookTimeMins(), recipe.getCookTimeMins());
         assertEquals(dto.getMedia().getId(), recipe.getMedia().getId());
         assertNull(recipe.getCollections());
@@ -320,9 +320,9 @@ public class DefaultMapperTest {
     @Test
     void map_recipe_list_to_dto_list() {
         RecipeDto recipeDto1 = new RecipeDto();
-        recipeDto1.name("dto1").media(new IdDto().id(1L)).authorId("author1").cookTimeMins(40);
+        recipeDto1.name("dto1").media(new IdDto().id(1L)).authorUid("author1").cookTimeMins(40);
         RecipeDto recipeDto2 = new RecipeDto();
-        recipeDto2.name("dto2").media(new IdDto().id(2L)).authorId("author2").cookTimeMins(50);
+        recipeDto2.name("dto2").media(new IdDto().id(2L)).authorUid("author2").cookTimeMins(50);
 
         Recipe recipe1 = mapper.map(recipeDto1, Recipe.class);
         Recipe recipe2 = mapper.map(recipeDto2, Recipe.class);

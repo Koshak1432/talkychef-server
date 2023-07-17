@@ -1,19 +1,20 @@
 package voicerecipeserver.model.dto;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.validation.constraints.*;
+import java.util.Date;
+import java.util.Objects;
 
 /**
- * CommmentDto
+ * CommentDto
  */
 @Validated
-@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-05T10:23" +
-        ":47.949525164Z[GMT]")
+@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-05T10:23" + ":47.949525164Z"
+        + "[GMT]")
 
 
 public class CommentDto {
@@ -25,6 +26,9 @@ public class CommentDto {
 
     @JsonProperty("recipe_id")
     private Long recipeId = null;
+
+    @JsonProperty("post_time")
+    private Date postTime = null;
 
     @JsonProperty("content")
     private String content = null;
@@ -40,6 +44,7 @@ public class CommentDto {
      * @return id
      **/
     @NotNull
+
     public Long getId() {
         return id;
     }
@@ -88,6 +93,26 @@ public class CommentDto {
         this.recipeId = recipeId;
     }
 
+    public CommentDto postTime(Date postTime) {
+        this.postTime = postTime;
+        return this;
+    }
+
+    /**
+     * Timestamp defined by RFC3339(ISO 8601)
+     *
+     * @return postTime
+     **/
+    @NotNull
+    @Valid
+    public Date getPostTime() {
+        return postTime;
+    }
+
+    public void setPostTime(Date postTime) {
+        this.postTime = postTime;
+    }
+
     public CommentDto content(String content) {
         this.content = content;
         return this;
@@ -120,22 +145,25 @@ public class CommentDto {
         CommentDto commentDto = (CommentDto) o;
         return Objects.equals(this.id, commentDto.id) && Objects.equals(this.userUid,
                                                                         commentDto.userUid) && Objects.equals(
-                this.recipeId, commentDto.recipeId) && Objects.equals(this.content, commentDto.content);
+                this.recipeId, commentDto.recipeId) && Objects.equals(this.postTime,
+                                                                      commentDto.postTime) && Objects.equals(
+                this.content, commentDto.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userUid, recipeId, content);
+        return Objects.hash(id, userUid, recipeId, postTime, content);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class CommmentDto {\n");
+        sb.append("class CommentDto {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    userUid: ").append(toIndentedString(userUid)).append("\n");
         sb.append("    recipeId: ").append(toIndentedString(recipeId)).append("\n");
+        sb.append("    postTime: ").append(toIndentedString(postTime)).append("\n");
         sb.append("    content: ").append(toIndentedString(content)).append("\n");
         sb.append("}");
         return sb.toString();
