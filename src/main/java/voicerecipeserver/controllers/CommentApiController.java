@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.CommentApi;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.CommentService;
 
@@ -36,7 +35,7 @@ public class CommentApiController implements CommentApi {
     }
 
     @Override
-    public ResponseEntity<Void> commentDelete(Long id) {
+    public ResponseEntity<Void> commentDelete(Long id) throws NotFoundException {
         return commentService.deleteComment(id);
     }
 

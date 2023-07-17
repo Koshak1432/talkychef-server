@@ -15,6 +15,7 @@ import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CollectionRepository;
 import voicerecipeserver.respository.RecipeRepository;
+import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import voicerecipeserver.services.CollectionService;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
+
 
     private final ModelMapper mapper;
 
@@ -88,8 +90,6 @@ public class CollectionServiceImpl implements CollectionService {
                 recipeRepository.findRecipesWithOffsetFromCollectionById(Constants.MAX_RECIPES_PER_PAGE, pageNum * Constants.MAX_RECIPES_PER_PAGE, collection.getId()),
                 new TypeToken<List<RecipeDto>>() {}.getType()
         ));
-
-
         return new ResponseEntity<>(collectionDto, HttpStatus.OK);
     }
 }

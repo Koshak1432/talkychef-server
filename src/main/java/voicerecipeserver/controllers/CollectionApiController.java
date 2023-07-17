@@ -2,7 +2,6 @@ package voicerecipeserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.CollectionApi;
@@ -10,8 +9,8 @@ import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.CollectionService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.PositiveOrZero;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @RestController
 @CrossOrigin(maxAge = 1440)
