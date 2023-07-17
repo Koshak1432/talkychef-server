@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
         return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public JwtResponse registration(UserDto userDto) throws AuthException {
+    public JwtResponse registration(UserDto userDto) throws AuthException, NotFoundException {
         Optional<User> userFromDb = userServiceImpl.getByLogin(userDto.getLogin());
         if (userFromDb.isPresent()) {
             throw new AuthException("Пользователь существует");
