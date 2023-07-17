@@ -9,6 +9,7 @@ import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.mappers.DefaultMapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -143,7 +144,6 @@ public class DefaultMapperTest {
     }
 
 
-
     @Test
     void map_commentDto_to_comment() {
         CommentDto dto = new CommentDto();
@@ -161,7 +161,7 @@ public class DefaultMapperTest {
 
     @Test
     void map_comment_to_commentDto() {
-        User user = new User(10L, "dsfaadf2UID", "kek", null, null, null, null, null, null, null);
+        User user = new User("anton", "1234", "Антон", Collections.singleton(Role.USER));
         Recipe recipe = new Recipe();
         recipe.setId(25L);
         Comment comment = new Comment(1L, recipe, user, null, "Очень густо");
@@ -254,12 +254,11 @@ public class DefaultMapperTest {
     }
 
 
-
     @Test
     void map_recipe_to_recipeDto() {
         Recipe recipe = new Recipe();
         recipe.setName("name123");
-        recipe.setAuthor(new User(2L, "author", null, null, null, null, null, null, null, null));
+        recipe.setAuthor(new User("anton", "1234", "Антон", Collections.singleton(Role.USER)));
         recipe.setCookTimeMins(4044);
         recipe.setMedia(new Media(11L, null, null, null, null));
 
@@ -318,7 +317,6 @@ public class DefaultMapperTest {
     }
 
 
-
     @Test
     void map_recipe_list_to_dto_list() {
         RecipeDto recipeDto1 = new RecipeDto();
@@ -333,7 +331,8 @@ public class DefaultMapperTest {
         recipes.add(recipe2);
 
 //        List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
-        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
+        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {
+        }.getType());
 
         assertEquals(2, recipeDtos.size());
 

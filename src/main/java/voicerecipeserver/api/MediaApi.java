@@ -2,15 +2,17 @@ package voicerecipeserver.api;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 
 @Valid
 @RequestMapping(Constants.BASE_API_PATH + "/media")

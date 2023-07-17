@@ -1,6 +1,8 @@
 package voicerecipeserver.services.impl;
 
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -8,29 +10,35 @@ import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.entities.Mark;
 import voicerecipeserver.model.entities.Recipe;
+import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
+import voicerecipeserver.security.domain.JwtAuthentication;
+import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import voicerecipeserver.services.MarkService;
 
 import java.util.Optional;
 
 @Service
+
 public class MarkServiceImpl implements MarkService {
     private final ModelMapper mapper;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
     private final MarkRepository markRepository;
+    private final AuthServiceImpl authentication;
 
-    public MarkServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository,
-                           MarkRepository markRepository) {
+    @Autowired
+    public MarkServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository, MarkRepository markRepository, AuthServiceImpl authentication) {
         this.mapper = mapper;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.markRepository = markRepository;
+        this.authentication = authentication;
     }
 
     private void setRecipeToMark(Mark mark) throws NotFoundException {
@@ -64,15 +72,39 @@ public class MarkServiceImpl implements MarkService {
     @Override
     public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException {
         Mark newMark = mapper.map(markDto, Mark.class);
-        newMark.setId(markDto.getId());
-        setAuthorToMark(newMark);
-        markRepository.save(newMark);
+        if (authentication != null && checkAuthorities(markDto.getId())) {
+            newMark.setId(markDto.getId());
+            setAuthorToMark(newMark);
+            markRepository.save(newMark);
+        }
         return new ResponseEntity<>(new IdDto().id(newMark.getId()), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipeMark(Long id) {
-        markRepository.deleteById(id);
+    public ResponseEntity<Void> deleteRecipeMark(Long markId) throws NotFoundException {
+        if (authentication != null && checkAuthorities(markId)) {
+            markRepository.deleteById(markId);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    private boolean checkAuthorities(Long markId) throws NotFoundException {
+        JwtAuthentication principal = authentication.getAuthInfo();
+        Mark mark = findMark(markId);
+        User user = mark.getUser();
+        if (principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin())) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private Mark findMark(Long id) throws NotFoundException {
+        Optional<Mark> markOptional = markRepository.findById(id);
+        if (markOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти оценку с id: " + id);
+        }
+        return markOptional.get();
+    }
 }
+
