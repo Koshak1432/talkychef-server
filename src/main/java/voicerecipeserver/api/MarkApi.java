@@ -10,7 +10,7 @@ import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
-@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
 @RequestMapping(Constants.BASE_API_PATH + "/marks")
 @Validated
 public interface MarkApi {

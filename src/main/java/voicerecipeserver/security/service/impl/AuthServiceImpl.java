@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
     private JwtResponse getJwtResponse(User user) {
         final String accessToken = jwtProviderImpl.generateAccessToken(user);
         final String refreshToken = jwtProviderImpl.generateRefreshToken(user);
-        refreshStorage.put(user.getLogin(), refreshToken);
+        refreshStorage.put(user.getUid(), refreshToken);
         JwtResponse jwtResponse = new JwtResponse();
         jwtResponse.accessToken(accessToken).refreshToken(refreshToken);
         return jwtResponse;
@@ -106,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
         return getJwtResponse(userFromDb.get());
     }
 
-    public JwtResponse changePassword(UserDto userDto) throws NotFoundException, BadRequestException, AuthException {
+    public JwtResponse changePassword(UserDto userDto) throws NotFoundException, AuthException {
 
         if (!checkAuthorities(userDto.getLogin())) {
             throw new AuthException("Невозможно изменить пароль");

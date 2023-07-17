@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
 
     public Optional<User> getByLogin(@NonNull String login) {
-        return userRepository.findByLogin(login);
+        return userRepository.findByUid(login);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     User findUserByLogin(String login) throws NotFoundException {
-        Optional<User> userOptional = userRepository.findByLogin(login);
+        Optional<User> userOptional = userRepository.findByUid(login);
         if (userOptional.isEmpty()) {
             throw new NotFoundException("Не удалось найти пользователя с логином: " + login);
         }

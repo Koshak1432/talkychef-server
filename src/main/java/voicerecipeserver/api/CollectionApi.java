@@ -18,7 +18,7 @@ import jakarta.validation.constraints.Size;
 @Valid
 @RequestMapping(Constants.BASE_API_PATH + "/collections")
 public interface CollectionApi {
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
     ResponseEntity<Void> collectionPost(@RequestParam @NotBlank String name);
 
