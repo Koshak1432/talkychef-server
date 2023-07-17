@@ -12,8 +12,7 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 
 import jakarta.validation.constraints.PositiveOrZero;
 
-@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-
+@PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
 @RequestMapping(Constants.BASE_API_PATH + "/comments")
 @Validated
 public interface CommentApi {
