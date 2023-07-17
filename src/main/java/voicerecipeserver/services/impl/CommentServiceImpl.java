@@ -66,17 +66,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException {
-        System.out.println("COMMENT DTO 2:");
-        System.out.println(commentDto);
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setId(null);
         User user = findUser(commentDto.getUserUid());
         Recipe recipe = findRecipe(commentDto.getRecipeId());
         comment.setUser(user);
         comment.setRecipe(recipe);
-        System.out.println("COMMENT:");
-        System.out.println(comment);
-
 
         Comment savedComment = commentRepository.save(comment);
         return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
@@ -100,17 +95,17 @@ public class CommentServiceImpl implements CommentService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private boolean checkAuthorities(Long markId) throws NotFoundException {
-        JwtAuthentication principal = authentication.getAuthInfo();
-        Comment comment = findComment(markId);
-        User user = comment.getUser();
-        return principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin());
-    }
-
     @Override
     public ResponseEntity<List<CommentDto>> getRecipeComments(Long id) {
         List<Comment> comments = commentRepository.getCommentsByRecipeId(id);
         List<CommentDto> dtos = comments.stream().map((comment) -> mapper.map(comment, CommentDto.class)).toList();
         return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    private boolean checkAuthorities(Long markId) throws NotFoundException {
+        JwtAuthentication principal = authentication.getAuthInfo();
+        Comment comment = findComment(markId);
+        User user = comment.getUser();
+        return principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin());
     }
 }

@@ -16,7 +16,6 @@ import java.util.Objects;
 @Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-05T10:23" + ":47.949525164Z"
         + "[GMT]")
 
-
 public class CommentDto {
     @JsonProperty("id")
     private Long id = null;
@@ -105,6 +104,7 @@ public class CommentDto {
      **/
     @NotNull
     @Valid
+
     public Date getPostTime() {
         return postTime;
     }

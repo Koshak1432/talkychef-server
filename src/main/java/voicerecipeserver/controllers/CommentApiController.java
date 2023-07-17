@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.CommentApi;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.CommentService;
 
