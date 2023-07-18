@@ -119,7 +119,6 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         setDistribution(recipe);
-        System.out.println(recipe);
 
         Recipe savedRecipe = recipeRepository.save(recipe);
         return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);

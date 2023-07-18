@@ -42,50 +42,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-////
-//@RunWith(SpringRunner.class)
-//@WebMvcTest
-//@ComponentScan(basePackages ="voicerecipeserver.controllers")
-//@ContextConfiguration(classes = RecipeApiController.class)
-//public class RecipeApiControllerTest {
-//    @Autowired
-//    private MockMvc mvc;
-//    @MockBean
-//    private RecipeRepository recipeRepository;
-//
-////    @MockBean
-////    private RecipeApiController recipeApiController;
-////
-////    @MockBean
-////    private AuthController authController;
-////
-////    @MockBean
-////    private JwtFilter jwtFilter;
-////
-////    @MockBean
-////    private SecurityConfig securityConfig;
-//
-//    // ... other methods
-//    @Test
-//    void test_something() throws Exception {
-//        assert(true);
-//    }
-////    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
-////    @Test
-////    public void test() throws Exception {
-////        Recipe recipe = new Recipe();
-////        recipe.setId(2L);
-////        recipe.setAuthor(User.builder().uid("admin").id(1L).build());
-////        recipe.setName("Super dish");
-////        recipe.setCookTimeMins(30);
-////        when(recipeRepository.findById(1L))
-////                .thenReturn(Optional.of(recipe));
-////
-////        mvc.perform(get(Constants.BASE_API_PATH + "/recipes/1").with(jwt()).contentType(MediaType.APPLICATION_JSON))
-////                .andExpect(status().isOk());
-////    }
-//}
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -172,7 +128,7 @@ public class TestingWebApplicationTests {
                 .thenReturn(Optional.of(recipe));
 
         Set<Role> roles = new HashSet<>();
-        roles.add(Role.ADMIN);
+        roles.add(new Role("ADMIN"));
 
         // Set the authentication context with the desired roles
         Authentication auth = SecurityTestUtils.createAuthenticationWithRoles(roles, "user");

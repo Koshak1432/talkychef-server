@@ -35,7 +35,6 @@ public interface RecipeApi {
     @PutMapping
     ResponseEntity<IdDto> recipeUpdate(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException;
 
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
