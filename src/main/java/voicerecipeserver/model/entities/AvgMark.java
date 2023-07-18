@@ -24,7 +24,8 @@ public class AvgMark {
 
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id")
+    @MapsId
     private Recipe recipe;
 
 }

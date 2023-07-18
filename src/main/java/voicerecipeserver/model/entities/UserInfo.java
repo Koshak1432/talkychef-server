@@ -27,6 +27,7 @@ public class UserInfo {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @MapsId
     @ToString.Exclude
     private User user;
 
