@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Setter
 @Embeddable
 public class IngredientsDistributionKey implements Serializable {
-    @Column(name = "recipeId")
+    @Column(name = "recipe_id")
     private Long recipeId;
 
     @Column(name = "ingredient_id")
