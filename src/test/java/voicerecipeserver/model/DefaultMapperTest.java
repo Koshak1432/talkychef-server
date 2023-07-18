@@ -11,6 +11,7 @@ import voicerecipeserver.model.mappers.DefaultMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -161,7 +162,7 @@ public class DefaultMapperTest {
 
     @Test
     void map_comment_to_commentDto() {
-        User user = new User("anton", "1234", "Антон", Collections.singleton(Role1.USER));
+        User user = new User("anton", "1234", "Антон", Set.of(new Role("ADMIN")));
         Recipe recipe = new Recipe();
         recipe.setId(25L);
         Comment comment = new Comment(1L, recipe, user, null, "Очень густо");
@@ -258,7 +259,7 @@ public class DefaultMapperTest {
     void map_recipe_to_recipeDto() {
         Recipe recipe = new Recipe();
         recipe.setName("name123");
-        recipe.setAuthor(new User("anton", "1234", "Антон", Collections.singleton(Role1.USER)));
+        recipe.setAuthor(new User("anton", "1234", "Антон", Set.of(new Role("ADMIN"))));
         recipe.setCookTimeMins(4044);
         recipe.setMedia(new Media(11L, null, null, null, null));
 
