@@ -13,21 +13,23 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 
-@PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
 @RequestMapping(Constants.BASE_API_PATH + "/comments")
 @Validated
 public interface CommentApi {
     @PostMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto) throws NotFoundException;
 
     // TODO мб следует ещё один эксепшн с другим кодом создать, чтобы различать not found recipe и not found comment
     // или же просто говорить что всё ок(так плохо делать)
 
     @PutMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<IdDto> commentUpdate(@RequestBody CommentDto commentDto) throws NotFoundException,
             BadRequestException;
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<Void> commentDelete(@PathVariable("id") @Positive(message = "comment id must be positive") Long id) throws NotFoundException;
 
     @GetMapping("/{id}")

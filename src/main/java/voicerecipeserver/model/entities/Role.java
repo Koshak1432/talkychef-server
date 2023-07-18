@@ -1,19 +1,35 @@
 package voicerecipeserver.model.entities;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@RequiredArgsConstructor
-public enum Role implements GrantedAuthority {
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-    ADMIN("ADMIN"),
-    USER("USER");
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Entity
+@Table(name = "roles")
+public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-    private final String vale;
+    @Column(name = "name")
+    private String name;
 
-    @Override
-    public String getAuthority() {
-        return vale;
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
+
+    public Role(String name) {
+        this.name = name;
     }
-
 }

@@ -5,6 +5,8 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
@@ -18,6 +20,7 @@ import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.*;
+import java.util.Collection;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -233,13 +236,19 @@ public class RecipeServiceImpl implements RecipeService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
+        for (GrantedAuthority authority : authorities) {
+            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean checkAuthorities(Long recipeId) throws NotFoundException {
         JwtAuthentication principal = authentication.getAuthInfo();
         Recipe recipe = findRecipe(recipeId);
         User user = recipe.getAuthor();
-        if (principal.getAuthorities().contains(Role.ADMIN) || principal.getLogin().equals(user.getLogin())) {
-            return true;
-        }
-        return false;
+        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(user.getUid());
     }
 }

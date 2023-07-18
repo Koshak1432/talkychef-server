@@ -38,6 +38,7 @@ public interface RecipeApi {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<Void> recipeDelete(
             @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
             NotFoundException, BadRequestException;
