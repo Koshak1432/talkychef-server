@@ -29,17 +29,6 @@ public class User {
     @Column(name = "display_name")
     private String displayName;
 
-    private String info;
-
-    @Column(name = "ok_link")
-    private String okLink;
-
-    @Column(name = "tg_link")
-    private String tgLink;
-
-    @Column(name = "vk_link")
-    private String vkLink;
-
     @OneToMany(mappedBy = "author")
     @ToString.Exclude
     private List<Recipe> recipes;
@@ -57,6 +46,10 @@ public class User {
     @JoinColumn(name = "role_id"))
     @ToString.Exclude
     private Set<Role> roles;
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private UserInfo userInfo;
 
     public User(String uid, String password, String displayName, Set<Role> roles) {
         this.uid = uid;

@@ -39,7 +39,9 @@ public class Media {
     @ToString.Exclude
     private Step step;
 
-    //TODO add/remove methods for bidirect.
+    @ToString.Exclude
+    @OneToOne(mappedBy = "profileImage", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserInfo userInfo;
 
     @Override
     public boolean equals(Object o) {

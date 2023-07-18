@@ -1,11 +1,10 @@
 package voicerecipeserver.model.entities;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import jakarta.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -15,7 +14,7 @@ import jakarta.persistence.*;
 @Table(name = "avg_marks")
 public class AvgMark {
     @Id
-    Long recipeId;
+    private Long recipeId;
 
     @Column(name = "avg_mark")
     private Float avgMark;
