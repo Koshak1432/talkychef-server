@@ -1,9 +1,6 @@
 package voicerecipeserver.model.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +14,9 @@ import java.util.Set;
 @Setter
 @ToString
 @Entity
+@Builder
 @Table(name = "recipes")
+@AllArgsConstructor
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -40,4 +40,5 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     Optional<Recipe> findRecipeByMediaId(Long mediaId);
 
+
 }

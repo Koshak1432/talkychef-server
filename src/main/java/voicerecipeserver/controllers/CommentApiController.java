@@ -15,6 +15,7 @@ import java.util.List;
 @CrossOrigin(maxAge = 1440)
 @RestController
 public class CommentApiController implements CommentApi {
+
     private final CommentService commentService;
 
     @Autowired
@@ -24,8 +25,6 @@ public class CommentApiController implements CommentApi {
 
     @Override
     public ResponseEntity<IdDto> commentPost(CommentDto commentDto) throws NotFoundException {
-        System.out.println("COMMENT DTO:");
-        System.out.println(commentDto);
         return commentService.postComment(commentDto);
     }
 

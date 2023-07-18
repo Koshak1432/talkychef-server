@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers(Constants.BASE_API_PATH + "/auth/token").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/login").permitAll()
                         .requestMatchers("/", Constants.BASE_API_PATH + "/recipes/**").permitAll() //todo вывод только рецептов
+                        .requestMatchers(Constants.BASE_API_PATH + "/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
