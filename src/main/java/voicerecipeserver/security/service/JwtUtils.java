@@ -20,8 +20,7 @@ public class JwtUtils {
     private static Set<Role> getRoles(Claims claims) {
         List<String> roles = claims.get("roles", List.class);
         return roles.stream()
-                .map(role -> )
+                .map(Role::new)
                 .collect(Collectors.toSet());
     }
-    //todo
 }

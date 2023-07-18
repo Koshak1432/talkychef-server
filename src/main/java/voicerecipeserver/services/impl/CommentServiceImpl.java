@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
@@ -18,6 +19,7 @@ import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import voicerecipeserver.services.CommentService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,10 +103,19 @@ public class CommentServiceImpl implements CommentService {
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
+    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
+        for (GrantedAuthority authority : authorities) {
+            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean checkAuthorities(Long markId) throws NotFoundException {
         JwtAuthentication principal = authentication.getAuthInfo();
         Comment comment = findComment(markId);
         User user = comment.getUser();
-        return principal.getAuthorities().contains(Role1.ADMIN) || principal.getLogin().equals(user.getUid());
+        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(user.getUid());
     }
 }

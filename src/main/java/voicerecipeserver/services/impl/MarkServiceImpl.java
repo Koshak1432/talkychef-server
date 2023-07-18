@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
@@ -18,6 +19,7 @@ import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import voicerecipeserver.services.MarkService;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -86,14 +88,20 @@ public class MarkServiceImpl implements MarkService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
+        for (GrantedAuthority authority : authorities) {
+            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean checkAuthorities(Long markId) throws NotFoundException {
         JwtAuthentication principal = authentication.getAuthInfo();
         Mark mark = findMark(markId);
         User user = mark.getUser();
-        if (principal.getAuthorities().contains(Role1.ADMIN) || principal.getLogin().equals(user.getUid())) {
-            return true;
-        }
-        return false;
+        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(user.getUid());
     }
 
 

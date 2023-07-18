@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
         User user = mapper.map(userDto, User.class);
         user.setId(null);
         user.setUid(userDto.getLogin());
-        Role userRole = getRoleByName("ADMIN");
-        HashSet<Role> roles = new HashSet<>();
+        Role userRole = getRoleByName("USER");
+        Set<Role> roles = new HashSet<>();
         roles.add(userRole);
         user.setRoles(roles);
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(user.getPassword()));
