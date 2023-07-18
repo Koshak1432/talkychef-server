@@ -9,12 +9,10 @@ import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.mappers.DefaultMapper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class DefaultMapperTest {
@@ -261,7 +259,7 @@ public class DefaultMapperTest {
         recipe.setName("name123");
         recipe.setAuthor(new User("anton", "1234", "Антон", Set.of(new Role("ADMIN"))));
         recipe.setCookTimeMins(4044);
-        recipe.setMedia(new Media(11L, null, null, null, null));
+        recipe.setMedia(new Media(11L, null, null, null, null, null));
 
         RecipeDto dto = mapper.map(recipe, RecipeDto.class);
         assertEquals(recipe.getName(), dto.getName());
@@ -283,22 +281,6 @@ public class DefaultMapperTest {
         assertEquals(mark.getId(), markDto.getId());
         assertEquals(mark.getUser().getUid(), markDto.getUserUid());
     }
-
-//    @Test
-//    void saving_marks() {
-//        Mark mark = new Mark();
-//        mark.setUser(new User(1L, "author1", null, null, null, null, null, null, null));
-//        Recipe recipe = new Recipe();
-//        recipe.setName("name123");
-//        recipe.setAuthor(new User(2L, "author2", null, null, null, null, null, null, null));
-//        recipe.setCookTimeMins(4044);
-//        recipe.setMedia(new Media(11L, null, null, null, null));
-//        mark.setRecipe(recipe);
-//        MarksRepository marksRepository;
-//        marksRepository.save(mark);
-//
-
-//    }
 
     @Test
     void map_recipeDto_with_required_field_to_recipe() {
