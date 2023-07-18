@@ -12,7 +12,6 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-@PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
 
 @Valid
 @RequestMapping(Constants.BASE_API_PATH + "/media")
@@ -20,6 +19,8 @@ public interface MediaApi {
     @GetMapping(value = "/{id}")
     ResponseEntity<byte[]> mediaGet(@PathVariable("id") @PositiveOrZero Long id) throws NotFoundException;
 
+
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
     ResponseEntity<IdDto> mediaPost(@RequestHeader(HttpHeaders.CONTENT_TYPE) String contentTypeHeader,
                                     @RequestBody @NotNull byte[] data) throws InvalidMediaTypeException;
