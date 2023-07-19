@@ -55,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
 
 
 
-    public JwtResponse getAccessToken(@CookieValue(value = "refreshToken", required = true) @NonNull String refreshToken) throws AuthException {
+    public JwtResponse getAccessToken( @NonNull String refreshToken) throws AuthException {
         JwtResponse jwtResponse = new JwtResponse();
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);

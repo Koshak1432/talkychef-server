@@ -10,7 +10,6 @@ import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
-import voicerecipeserver.security.dto.RefreshJwtRequest;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.security.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -39,14 +38,14 @@ public class AuthController {
     }
 
     @PostMapping("/auth/token")
-    public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) throws AuthException {
-        final JwtResponse token = authService.getAccessToken(request.getRefreshToken());
+    public ResponseEntity<JwtResponse> getNewAccessToken(@CookieValue(value = "refreshToken", required = true) String refreshToken) throws AuthException {
+        final JwtResponse token = authService.getAccessToken(refreshToken);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/auth/refresh")
-    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) throws AuthException {
-        final JwtResponse token = authService.refresh(request.getRefreshToken());
+    public ResponseEntity<JwtResponse> getNewRefreshToken(@CookieValue(value = "refreshToken", required = true) String refreshToken) throws AuthException {
+        final JwtResponse token = authService.refresh(refreshToken);
         return ResponseEntity.ok(token);
     }
 
