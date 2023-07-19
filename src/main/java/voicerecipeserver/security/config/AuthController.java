@@ -1,5 +1,7 @@
 package voicerecipeserver.security.config;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 
@@ -26,6 +28,8 @@ public class AuthController {
         final JwtResponse token = authService.registration(user);
         return ResponseEntity.ok(token);
     }
+
+
 
 
     @PostMapping("/login")

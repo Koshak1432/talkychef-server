@@ -62,10 +62,13 @@ public class MarkServiceImpl implements MarkService {
     @Override
     public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException {
         Mark mark = mapper.map(markDto, Mark.class);
-        setRecipeToMark(mark);
-        setAuthorToMark(mark);
-        mark.setId(null);
-        markRepository.save(mark);
+        Optional<Mark> markOptional = markRepository.findById(mark.getId());
+        if (markOptional.isEmpty()) {
+            setRecipeToMark(mark);
+            setAuthorToMark(mark);
+            mark.setId(null);
+            markRepository.save(mark);
+        }
         return new ResponseEntity<>(new IdDto().id(mark.getId()), HttpStatus.OK);
     }
 
