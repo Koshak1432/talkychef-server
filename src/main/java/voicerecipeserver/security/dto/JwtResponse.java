@@ -21,9 +21,6 @@ public class JwtResponse   {
     @JsonProperty("accessToken")
     private String accessToken = null;
 
-    @JsonProperty("refreshToken")
-    private String refreshToken = null;
-
 
     public JwtResponse type(String type) {
         this.type = type;
@@ -63,25 +60,6 @@ public class JwtResponse   {
         this.accessToken = accessToken;
     }
 
-    public JwtResponse refreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-        return this;
-    }
-
-    /**
-     * Get refreshToken
-     * @return refreshToken
-     **/
-    @NotNull
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -93,13 +71,11 @@ public class JwtResponse   {
         }
         JwtResponse jwtResponse = (JwtResponse) o;
         return Objects.equals(this.type, jwtResponse.type) &&
-                Objects.equals(this.accessToken, jwtResponse.accessToken) &&
-                Objects.equals(this.refreshToken, jwtResponse.refreshToken);
-    }
+                Objects.equals(this.accessToken, jwtResponse.accessToken);}
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, accessToken, refreshToken);
+        return Objects.hash(type, accessToken);
     }
 
     @Override
@@ -109,7 +85,6 @@ public class JwtResponse   {
 
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    accessToken: ").append(toIndentedString(accessToken)).append("\n");
-        sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
         sb.append("}");
         return sb.toString();
     }

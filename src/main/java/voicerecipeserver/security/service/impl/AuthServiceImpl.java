@@ -1,15 +1,20 @@
 package voicerecipeserver.security.service.impl;
 
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.domain.JwtAuthentication;
@@ -18,13 +23,13 @@ import voicerecipeserver.security.dto.JwtResponse;
 import voicerecipeserver.security.service.AuthService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 
 public class AuthServiceImpl implements AuthService {
+    public static final String USER_NOT_EXISTS = "Пользователь не найден";
+    
     @Autowired
     public AuthServiceImpl(BeanConfig passwordEncoder, UserServiceImpl userServiceImpl,
                            JwtProviderImpl jwtProviderImpl) {
@@ -35,55 +40,51 @@ public class AuthServiceImpl implements AuthService {
 
     private final BeanConfig passwordEncoder;
     private final UserServiceImpl userServiceImpl;
-    private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProviderImpl jwtProviderImpl;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
+
         final User user = userServiceImpl.getByLogin(authRequest.getLogin()).orElseThrow(
-                () -> new AuthException("Пользователь не найден"));
+                () -> new AuthException(USER_NOT_EXISTS));
         if (passwordEncoder.getPasswordEncoder().matches(authRequest.getPassword(), user.getPassword())) {
-            return getJwtResponse(user);
+            return getJwtResponseAndFillCookie(user);
         } else {
             throw new AuthException("Неправильный пароль");
         }
     }
 
-    private JwtResponse getJwtResponse(User user) {
-        final String accessToken = jwtProviderImpl.generateAccessToken(user);
-        final String refreshToken = jwtProviderImpl.generateRefreshToken(user);
-        refreshStorage.put(user.getUid(), refreshToken);
+
+
+    public JwtResponse getAccessToken(@CookieValue(value = "refreshToken", required = true) @NonNull String refreshToken) throws AuthException {
         JwtResponse jwtResponse = new JwtResponse();
-        jwtResponse.accessToken(accessToken).refreshToken(refreshToken);
+        if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
+            final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
+            final String login = claims.getSubject();
+            final User user = userServiceImpl.getByLogin(login).orElseThrow(
+                    () -> new AuthException(USER_NOT_EXISTS));
+            final String accessToken = jwtProviderImpl.generateAccessToken(user);
+            jwtResponse.setAccessToken(accessToken);
+        }
         return jwtResponse;
     }
 
-    public JwtResponse getAccessToken(@NonNull String refreshToken) throws AuthException {
-        if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final User user = userServiceImpl.getByLogin(login).orElseThrow(
-                        () -> new AuthException("Пользователь не найден"));
-                final String accessToken = jwtProviderImpl.generateAccessToken(user);
-                JwtResponse jwtResponse = new JwtResponse();
-                jwtResponse.accessToken(accessToken);
-                return jwtResponse;
-            }
-        }
-        return new JwtResponse();
+
+    private static void fillRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days in seconds
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
     }
 
-    public JwtResponse refresh(@NonNull String refreshToken) throws AuthException {
+    public JwtResponse refresh(@CookieValue(value = "refreshToken", required = true) @NonNull String refreshToken) throws AuthException {
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final User user = userServiceImpl.getByLogin(login).orElseThrow(
-                        () -> new AuthException("Пользователь не найден"));
-                return getJwtResponse(user);
-            }
+            final User user = userServiceImpl.getByLogin(login).orElseThrow(
+                    () -> new AuthException(USER_NOT_EXISTS));
+            return getJwtResponseAndFillCookie(user);
         }
         throw new AuthException("Невалидный JWT токен");
     }
@@ -99,19 +100,52 @@ public class AuthServiceImpl implements AuthService {
         }
         userServiceImpl.postUser(userDto);
         userFromDb = userServiceImpl.getByLogin(userDto.getLogin());
-        return getJwtResponse(userFromDb.get());
+        return userFromDb.map(this::getJwtResponseAndFillCookie).orElseGet(JwtResponse::new);
     }
 
-    // todo ???
     public JwtResponse changePassword(UserDto userDto) throws NotFoundException, AuthException {
-        if (! checkAuthorities(userDto.getLogin())) {
+        if (!checkAuthorities(userDto.getLogin())) {
             throw new AuthException("Невозможно изменить пароль");
         }
         userServiceImpl.updateUserPassword(userDto);
         Optional<User> user = userServiceImpl.getByLogin(userDto.getLogin());
-        return getJwtResponse(user.get());
+        return user.map(this::getJwtResponseAndFillCookie).orElseGet(JwtResponse::new);
+
     }
 
+    private JwtResponse getJwtResponse(User user) {
+        final String accessToken = jwtProviderImpl.generateAccessToken(user);
+        JwtResponse jwtResponse = new JwtResponse();
+        jwtResponse.accessToken(accessToken);
+        return jwtResponse;
+    }
+
+    private JwtResponse getJwtResponseAndFillCookie(User user) {
+        JwtResponse jwtResponse = null;
+             jwtResponse = getJwtResponse(user);
+            ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (requestAttributes != null) {
+                HttpServletResponse response = requestAttributes.getResponse();
+                if (response != null) {
+                    final String refreshToken = jwtProviderImpl.generateRefreshToken(user);
+                    fillRefreshTokenCookie(response, refreshToken);
+                }
+            }
+        return jwtResponse;
+    }
+
+
+    public String getRefreshFromCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
     private boolean checkAuthorities(String login) {
         JwtAuthentication principal = getAuthInfo();
         return isContainsRole(principal.getRoles(), "ADMIN") || principal.getLogin().equals(login);
