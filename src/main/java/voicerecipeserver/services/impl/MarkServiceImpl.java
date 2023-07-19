@@ -11,6 +11,7 @@ import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.entities.Mark;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
@@ -42,51 +43,62 @@ public class MarkServiceImpl implements MarkService {
     }
 
     private void setRecipeToMark(Mark mark) throws NotFoundException {
-        Optional<Recipe> recipe = recipeRepository.findById(mark.getRecipe().getId());
+        Optional<Recipe> recipe = recipeRepository.findById(mark.getId().getRecipeId());
         if (recipe.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепт с id: " + mark.getRecipe().getId());
+            throw new NotFoundException("Не удалось найти рецепт с id: " + mark.getId().getRecipeId());
         } else {
+            mark.getId().setRecipeId(recipe.get().getId());
             mark.setRecipe(recipe.get());
         }
     }
 
     private void setAuthorToMark(Mark mark) throws NotFoundException {
-        Optional<User> author = userRepository.findByUid(mark.getUser().getUid());
+        Optional<User> author = userRepository.findById(mark.getId().getUserId());
         if (author.isEmpty()) {
-            throw new NotFoundException("Не удалось найти автора с uid: " + mark.getUser().getUid());
+            throw new NotFoundException("Не удалось найти автора с uid: " + mark.getId().getUserId());
         } else {
+            mark.getId().setUserId(author.get().getId());
             mark.setUser(author.get());
         }
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException {
+    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException {
         Mark mark = mapper.map(markDto, Mark.class);
-        Optional<Mark> markOptional = markRepository.findById(mark.getId());
+        Optional<User> user = userRepository.findByUid(markDto.getUserUid());
+        if (user.isPresent()) {
+            mark.getId().setUserId(user.get().getId());
+        } else {
+            throw new AuthException("Такого пользователя не существует");
+        }
+        Optional<Mark> markOptional = markRepository.findByUserIdAndRecipeId(mark.getId().getUserId(), mark.getId().getRecipeId());
         if (markOptional.isEmpty()) {
             setRecipeToMark(mark);
             setAuthorToMark(mark);
-            mark.setId(null);
             markRepository.save(mark);
         }
-        return new ResponseEntity<>(new IdDto().id(mark.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(new IdDto().id(mark.getId().getRecipeId()), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException {
         Mark newMark = mapper.map(markDto, Mark.class);
-        if (authentication != null && checkAuthorities(markDto.getId())) {
-            newMark.setId(markDto.getId());
-            setAuthorToMark(newMark);
-            markRepository.save(newMark);
+        if (authentication != null && checkAuthorities(markDto.getUserUid())) {
+            if (markIsPresent(newMark)) {
+                markRepository.save(newMark);
+            }
         }
-        return new ResponseEntity<>(new IdDto().id(newMark.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(new IdDto().id(newMark.getId().getRecipeId()), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipeMark(Long markId) throws NotFoundException {
-        if (authentication != null && checkAuthorities(markId)) {
-            markRepository.deleteById(markId);
+    public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws NotFoundException {
+        if (authentication != null && checkAuthorities(userUid)) {
+            Optional<User> user = userRepository.findByUid(userUid);
+            if (user.isPresent()) {
+                Long userId = user.get().getId();
+                markRepository.deleteByIdUserIdAndIdRecipeId(userId, recipeId);
+            }
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -100,20 +112,15 @@ public class MarkServiceImpl implements MarkService {
         return false;
     }
 
-    private boolean checkAuthorities(Long markId) throws NotFoundException {
+    private boolean checkAuthorities(String userUid) {
         JwtAuthentication principal = authentication.getAuthInfo();
-        Mark mark = findMark(markId);
-        User user = mark.getUser();
-        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(user.getUid());
+        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(userUid);
     }
 
 
-    private Mark findMark(Long id) throws NotFoundException {
-        Optional<Mark> markOptional = markRepository.findById(id);
-        if (markOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти оценку с id: " + id);
-        }
-        return markOptional.get();
+    private boolean markIsPresent(Mark mark) throws NotFoundException {
+        Optional<Mark> markOptional = markRepository.findByUserIdAndRecipeId(mark.getId().getUserId(), mark.getId().getRecipeId());
+        return markOptional.isPresent();
     }
 }
 

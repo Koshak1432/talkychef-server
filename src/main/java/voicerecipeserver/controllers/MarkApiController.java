@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.MarkApi;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.MarkService;
@@ -22,7 +23,7 @@ public class MarkApiController implements MarkApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> markPost(MarkDto mark) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> markPost(MarkDto mark) throws BadRequestException, NotFoundException, AuthException {
         return markService.addRecipeMark(mark);
     }
 
@@ -32,7 +33,9 @@ public class MarkApiController implements MarkApi {
     }
 
     @Override
-    public ResponseEntity<Void> markDelete(Long id) throws NotFoundException {
-        return markService.deleteRecipeMark(id);
+    public ResponseEntity<Void> markDelete(String userUid, Long recipeId) throws NotFoundException {
+        return markService.deleteRecipeMark(userUid, recipeId);
+
     }
+
 }
