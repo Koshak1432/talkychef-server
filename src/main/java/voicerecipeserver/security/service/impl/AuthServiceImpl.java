@@ -136,20 +136,15 @@ public class AuthServiceImpl implements AuthService {
 
 
     public String getRefreshFromCookies(HttpServletRequest request) {
-        // Get the cookies from the request
         Cookie[] cookies = request.getCookies();
-
         if (cookies != null) {
-            // Loop through the cookies to find the refresh token cookie
             for (Cookie cookie : cookies) {
                 if ("refreshToken".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }
         }
-
-        // If the refresh token cookie is not found or does not exist, handle accordingly
-        return "Refresh token not found.";
+        return null;
     }
     private boolean checkAuthorities(String login) {
         JwtAuthentication principal = getAuthInfo();
