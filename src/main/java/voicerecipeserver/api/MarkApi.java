@@ -21,8 +21,10 @@ public interface MarkApi {
     ResponseEntity<IdDto> markPost(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException, AuthException;
 
     @PutMapping
-    ResponseEntity<IdDto> markUpdate(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException;
+    ResponseEntity<IdDto> markUpdate(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException,
+            AuthException;
 
     @DeleteMapping
-    ResponseEntity<Void> markDelete(@RequestParam("user_uid") String userUid, @RequestParam("recipe_id") Long recipeId) throws NotFoundException;
+    ResponseEntity<Void> markDelete(@RequestParam("user_uid") String userUid, @RequestParam("recipe_id") Long recipeId) throws
+            NotFoundException, BadRequestException;
 }

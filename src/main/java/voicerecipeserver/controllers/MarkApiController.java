@@ -28,12 +28,12 @@ public class MarkApiController implements MarkApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> markUpdate(MarkDto mark) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> markUpdate(MarkDto mark) throws BadRequestException, NotFoundException, AuthException {
         return markService.updateRecipeMark(mark);
     }
 
     @Override
-    public ResponseEntity<Void> markDelete(String userUid, Long recipeId) throws NotFoundException {
+    public ResponseEntity<Void> markDelete(String userUid, Long recipeId) throws BadRequestException {
         return markService.deleteRecipeMark(userUid, recipeId);
 
     }

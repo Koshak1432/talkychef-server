@@ -20,7 +20,6 @@ public class Mark {
     @Column(name = "mark")
     private Short mark;
 
-
     @ManyToOne
     @MapsId("userId")
     private User user;

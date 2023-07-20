@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.entities.Mark;
+import voicerecipeserver.model.entities.MarkKey;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
+import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
@@ -34,7 +36,8 @@ public class MarkServiceImpl implements MarkService {
     private final AuthServiceImpl authentication;
 
     @Autowired
-    public MarkServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository, MarkRepository markRepository, AuthServiceImpl authentication) {
+    public MarkServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository,
+                           MarkRepository markRepository, AuthServiceImpl authentication) {
         this.mapper = mapper;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
@@ -42,8 +45,8 @@ public class MarkServiceImpl implements MarkService {
         this.authentication = authentication;
     }
 
-    private void setRecipeToMark(Mark mark) throws NotFoundException {
-        Optional<Recipe> recipe = recipeRepository.findById(mark.getId().getRecipeId());
+    private void setRecipeToMark(Mark mark, Long recipeId) throws NotFoundException {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
         if (recipe.isEmpty()) {
             throw new NotFoundException("Не удалось найти рецепт с id: " + mark.getId().getRecipeId());
         } else {
@@ -52,10 +55,10 @@ public class MarkServiceImpl implements MarkService {
         }
     }
 
-    private void setAuthorToMark(Mark mark) throws NotFoundException {
-        Optional<User> author = userRepository.findById(mark.getId().getUserId());
+    private void setAuthorToMark(Mark mark, String uid) throws NotFoundException {
+        Optional<User> author = userRepository.findByUid(uid);
         if (author.isEmpty()) {
-            throw new NotFoundException("Не удалось найти автора с uid: " + mark.getId().getUserId());
+            throw new NotFoundException("Не удалось найти пользователя с uid: " + mark.getId().getUserId());
         } else {
             mark.getId().setUserId(author.get().getId());
             mark.setUser(author.get());
@@ -63,47 +66,51 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException {
+    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException,
+            BadRequestException {
         Mark mark = mapper.map(markDto, Mark.class);
-        Optional<User> user = userRepository.findByUid(markDto.getUserUid());
-        if (user.isPresent()) {
-            mark.getId().setUserId(user.get().getId());
-        } else {
-            throw new AuthException("Такого пользователя не существует");
+        if (!isSamePerson(markDto.getUserUid())) {
+            throw new BadRequestException("Нельзя добавлять комментарии от чужого имени");
         }
-        Optional<Mark> markOptional = markRepository.findByUserIdAndRecipeId(mark.getId().getUserId(), mark.getId().getRecipeId());
-        if (markOptional.isEmpty()) {
-            setRecipeToMark(mark);
-            setAuthorToMark(mark);
+        setRecipeToMark(mark, markDto.getRecipeId());
+        setAuthorToMark(mark, markDto.getUserUid());
+        if (!markIsPresent(mark)) {
             markRepository.save(mark);
         }
-        return new ResponseEntity<>(new IdDto().id(mark.getId().getRecipeId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(mark.getId().getRecipeId()));
     }
 
     @Override
-    public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException {
+    public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException, BadRequestException,
+            AuthException {
         Mark newMark = mapper.map(markDto, Mark.class);
-        if (authentication != null && checkAuthorities(markDto.getUserUid())) {
-            if (markIsPresent(newMark)) {
-                markRepository.save(newMark);
-            }
+        if (!checkAuthorities(markDto.getUserUid())) {
+            throw new BadRequestException("Нет прав на изменение оценки");
         }
-        return new ResponseEntity<>(new IdDto().id(newMark.getId().getRecipeId()), HttpStatus.OK);
+        setRecipeToMark(newMark, markDto.getRecipeId());
+        setAuthorToMark(newMark, markDto.getUserUid());
+        if (markIsPresent(newMark)) {
+            markRepository.save(newMark);
+        } else {
+            throw new NotFoundException("Предыдущая оценка не найдена");
+        }
+        return ResponseEntity.ok(new IdDto().id(newMark.getId().getRecipeId()));
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws NotFoundException {
-        if (authentication != null && checkAuthorities(userUid)) {
-            Optional<User> user = userRepository.findByUid(userUid);
-            if (user.isPresent()) {
-                Long userId = user.get().getId();
-                markRepository.deleteByIdUserIdAndIdRecipeId(userId, recipeId);
-            }
+    public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws BadRequestException {
+        if (!checkAuthorities(userUid)) {
+            throw new BadRequestException("Нет прав на удаление оценки");
+        }
+        Optional<User> user = userRepository.findByUid(userUid);
+        if (user.isPresent()) {
+            Long userId = user.get().getId();
+            markRepository.deleteByIdUserIdAndIdRecipeId(userId, recipeId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
+    private boolean isContainsRole(Collection<? extends GrantedAuthority> authorities, String name) {
         for (GrantedAuthority authority : authorities) {
             if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
                 return true;
@@ -112,14 +119,30 @@ public class MarkServiceImpl implements MarkService {
         return false;
     }
 
-    private boolean checkAuthorities(String userUid) {
+    private boolean isSamePerson(String userUid) {
+        if (authentication == null) {
+            return false;
+        }
         JwtAuthentication principal = authentication.getAuthInfo();
-        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(userUid);
+        return principal.getLogin().equals(userUid);
     }
 
+    private boolean checkAuthorities(String userUid) {
+        if (authentication == null) {
+            return false;
+        }
+        JwtAuthentication principal = authentication.getAuthInfo();
+        return isContainsRole(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(userUid);
+    }
 
-    private boolean markIsPresent(Mark mark) throws NotFoundException {
-        Optional<Mark> markOptional = markRepository.findByUserIdAndRecipeId(mark.getId().getUserId(), mark.getId().getRecipeId());
+    private boolean markIsPresent(Mark mark) {
+        Optional<Mark> markOptional = markRepository.findByUserIdAndRecipeId(mark.getId().getUserId(),
+                                                                             mark.getId().getRecipeId());
+        if (markOptional.isPresent()) {
+            System.out.println("++++++++++++++++++++++++++++");
+            System.out.println("MARK OPTIONAL: " + markOptional.get());
+            System.out.println("++++++++++++++++++++++++++++");
+        }
         return markOptional.isPresent();
     }
 }

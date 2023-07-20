@@ -17,6 +17,7 @@ public interface MarkRepository extends CrudRepository<Mark, MarkKey>{
                     SELECT * FROM marks m WHERE m.user_id = :userId AND m.recipe_id = :recipeId
             """, nativeQuery = true)
     Optional<Mark> findByUserIdAndRecipeId(@Param("userId") Long userId, @Param("recipeId") Long recipeId);
+
     @Modifying
     @Transactional
     @Query(value = """
