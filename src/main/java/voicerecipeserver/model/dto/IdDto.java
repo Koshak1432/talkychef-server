@@ -1,11 +1,11 @@
 package voicerecipeserver.model.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Generated;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+
+import java.util.Objects;
 
 /**
  * IdDto

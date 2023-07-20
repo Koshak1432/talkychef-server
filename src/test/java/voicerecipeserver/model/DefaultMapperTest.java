@@ -271,14 +271,13 @@ public class DefaultMapperTest {
     @Test
     void map_marks_to_marksDto() {
         MarkDto markDto = new MarkDto();
-        markDto.mark((short) 3).id(1L).recipeId(1L).userUid("asdfadfsadfshafjsh");
+        markDto.mark(3).recipeId(1L).userUid("asdfadfsadfshafjsh");
         mapper.typeMap(Mark.class, MarkDto.class)
                 .addMappings(m -> {
                     m.map(src -> src.getUser().getUid(), MarkDto::setUserUid);
                     m.map(src -> src.getRecipe().getId(), MarkDto::setRecipeId);
                 });
         Mark mark = mapper.map(markDto, Mark.class);
-        assertEquals(mark.getId(), markDto.getId());
         assertEquals(mark.getUser().getUid(), markDto.getUserUid());
     }
 

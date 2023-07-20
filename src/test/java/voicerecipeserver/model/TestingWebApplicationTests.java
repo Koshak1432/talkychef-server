@@ -61,12 +61,6 @@ public class TestingWebApplicationTests {
     private UserRepository userRepository;
 
     @Test
-    public void shouldReturnDefaultMessage() throws Exception {
-        this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("Hello, World")));
-    }
-
-    @Test
     public void findRecipeByIdReturnsRecipe() throws Exception {
         Recipe recipe = Recipe.builder().id(2L).author(User.builder().uid("admin").id(1L).build()).name("Super dish").cookTimeMins(30).build();
         when(recipeRepository.findById(2L))

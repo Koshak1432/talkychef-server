@@ -1,25 +1,20 @@
 package voicerecipeserver.model.dto;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Generated;
 import org.springframework.validation.annotation.Validated;
+import jakarta.annotation.Generated;
 
 import jakarta.validation.constraints.*;
+import java.util.Objects;
 
 /**
- * CommmentDto
+ * MarkDto
  */
 @Validated
-@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-05T10:23" +
-        ":47.949525164Z[GMT]")
+@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-19T08:28:37.528548601Z[GMT]")
 
 
-public class MarkDto {
-    @JsonProperty("id")
-    private Long id = null;
-
+public class MarkDto   {
     @JsonProperty("user_uid")
     private String userUid = null;
 
@@ -27,26 +22,7 @@ public class MarkDto {
     private Long recipeId = null;
 
     @JsonProperty("mark")
-    private Short mark = null;
-
-    public MarkDto id(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    /**
-     * Get id
-     *
-     * @return id
-     **/
-    @NotNull
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Integer mark = null;
 
     public MarkDto userUid(String userUid) {
         this.userUid = userUid;
@@ -55,12 +31,11 @@ public class MarkDto {
 
     /**
      * Get userUid
-     *
      * @return userUid
      **/
     @NotNull
 
-    public String getUserUid() {
+    @Size(max=32)   public String getUserUid() {
         return userUid;
     }
 
@@ -75,7 +50,6 @@ public class MarkDto {
 
     /**
      * Get recipeId
-     *
      * @return recipeId
      **/
     @NotNull
@@ -88,23 +62,22 @@ public class MarkDto {
         this.recipeId = recipeId;
     }
 
-    public MarkDto mark(Short mark) {
+    public MarkDto mark(Integer mark) {
         this.mark = mark;
         return this;
     }
 
     /**
-     * Get mark
-     *
+     * Оценка от 1 до 5
      * @return mark
      **/
     @NotNull
 
-    public Short getMark() {
+    public Integer getMark() {
         return mark;
     }
 
-    public void setMark(Short mark) {
+    public void setMark(Integer mark) {
         this.mark = mark;
     }
 
@@ -118,22 +91,21 @@ public class MarkDto {
             return false;
         }
         MarkDto markDto = (MarkDto) o;
-        return Objects.equals(this.id, markDto.id) && Objects.equals(this.userUid,
-                                                                        markDto.userUid) && Objects.equals(
-                this.recipeId, markDto.recipeId) && Objects.equals(this.mark, markDto.mark);
+        return Objects.equals(this.userUid, markDto.userUid) &&
+                Objects.equals(this.recipeId, markDto.recipeId) &&
+                Objects.equals(this.mark, markDto.mark);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userUid, recipeId, mark);
+        return Objects.hash(userUid, recipeId, mark);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class CommmentDto {\n");
+        sb.append("class MarkDto {\n");
 
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    userUid: ").append(toIndentedString(userUid)).append("\n");
         sb.append("    recipeId: ").append(toIndentedString(recipeId)).append("\n");
         sb.append("    mark: ").append(toIndentedString(mark)).append("\n");
@@ -152,6 +124,3 @@ public class MarkDto {
         return o.toString().replace("\n", "\n    ");
     }
 }
-
-
-
