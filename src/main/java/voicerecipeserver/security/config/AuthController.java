@@ -26,13 +26,13 @@ public class AuthController {
     private final AuthServiceImplWeb authServiceWeb;
 
 
-    @PostMapping("/registrationMobile")
+    @PostMapping("/registration/mobile")
     public ResponseEntity<JwtResponse> registrationMobile(@RequestBody UserDto user) throws AuthException, NotFoundException, BadRequestException {
         final JwtResponse token = authServiceMobile.registration(user);
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/registrationWeb")
+    @PostMapping("/registration/web")
     public ResponseEntity<JwtResponse> registrationWeb(@RequestBody UserDto user) throws AuthException, NotFoundException, BadRequestException {
         final JwtResponse token = authServiceWeb.registration(user);
         return ResponseEntity.ok(token);

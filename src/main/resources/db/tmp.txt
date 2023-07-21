@@ -1,0 +1,414 @@
+{
+        "name": "Pangek Masin Ikan Patin",
+        "id": 186,
+        "media": {
+            "id": 664
+        },
+        "cook_time_mins": 60,
+        "author_uid": "root",
+        "prep_time_mins": null,
+        "kilocalories": null,
+        "proteins": null,
+        "fats": null,
+        "carbohydrates": null,
+        "ingredients_distributions": [
+            {
+                "name": "garam",
+                "measure_unit_name": "secukupnya",
+                "count": 1.0,
+                "ingredient_id": 91
+            },
+            {
+                "name": "bumbu halus",
+                "measure_unit_name": "bumbu halus",
+                "count": 1.0,
+                "ingredient_id": 439
+            },
+            {
+                "name": "tahu",
+                "measure_unit_name": "buah",
+                "count": 2.0,
+                "ingredient_id": 808
+            },
+            {
+                "name": "jahe",
+                "measure_unit_name": ".5 ruas",
+                "count": 1.5,
+                "ingredient_id": 923
+            },
+            {
+                "name": "ikan patin",
+                "measure_unit_name": "ekor",
+                "count": 1.0,
+                "ingredient_id": 1135
+            },
+            {
+                "name": "jeruk nipis",
+                "measure_unit_name": "buah",
+                "count": 1.0,
+                "ingredient_id": 1136
+            },
+            {
+                "name": "kentang",
+                "measure_unit_name": "buah",
+                "count": 1.0,
+                "ingredient_id": 1137
+            },
+            {
+                "name": "santan kental",
+                "measure_unit_name": "ml",
+                "count": 250.0,
+                "ingredient_id": 1138
+            },
+            {
+                "name": "santan encer",
+                "measure_unit_name": "ml",
+                "count": 500.0,
+                "ingredient_id": 1139
+            },
+            {
+                "name": "8 siung bawang merah",
+                "measure_unit_name": "ед.",
+                "count": 1.0,
+                "ingredient_id": 1140
+            },
+            {
+                "name": "5 siung bawang putih",
+                "measure_unit_name": "siung",
+                "count": 8.0,
+                "ingredient_id": 1141
+            },
+            {
+                "name": "2 butir kemiri",
+                "measure_unit_name": "siung",
+                "count": 5.0,
+                "ingredient_id": 1142
+            },
+            {
+                "name": "20 biji cabe rawit hijau",
+                "measure_unit_name": "butir",
+                "count": 2.0,
+                "ingredient_id": 1143
+            },
+            {
+                "name": "1.5 ruas kunyit",
+                "measure_unit_name": "biji",
+                "count": 20.0,
+                "ingredient_id": 1144
+            },
+            {
+                "name": "3 ruas lengkuas",
+                "measure_unit_name": ".5 ruas",
+                "count": 1.5,
+                "ingredient_id": 1145
+            },
+            {
+                "name": "bahan cemplung",
+                "measure_unit_name": "ruas",
+                "count": 3.0,
+                "ingredient_id": 1146
+            },
+            {
+                "name": "2 lembar daun salam",
+                "measure_unit_name": "bahan cemplung",
+                "count": 1.0,
+                "ingredient_id": 1147
+            },
+            {
+                "name": "4 lembar daun jeruk",
+                "measure_unit_name": "ед.",
+                "count": 1.0,
+                "ingredient_id": 1148
+            },
+            {
+                "name": "1 lembar daun kunyit",
+                "measure_unit_name": "lembar",
+                "count": 2.0,
+                "ingredient_id": 1149
+            },
+            {
+                "name": "1 batang sereh",
+                "measure_unit_name": "lembar",
+                "count": 4.0,
+                "ingredient_id": 1150
+            },
+            {
+                "name": "2 buah asam kandis",
+                "measure_unit_name": "lembar",
+                "count": 1.0,
+                "ingredient_id": 1151
+            },
+            {
+                "name": "7 biji cabe rawit utuh",
+                "measure_unit_name": "batang",
+                "count": 1.0,
+                "ingredient_id": 1152
+            },
+            {
+                "name": "1 genggam daun kemangi (asli ruku2)",
+                "measure_unit_name": "buah",
+                "count": 2.0,
+                "ingredient_id": 1153
+            }
+        ],
+        "steps": [
+            {
+                "media": {
+                    "id": 665
+                },
+                "description": "Cuci bersih ikan kucuri jeruk nipis diamkan 15 menit cuci kembali. Haluskan bumbu.",
+                "step_num": 0,
+                "wait_time_mins": null
+            },
+            {
+                "media": {
+                    "id": 666
+                },
+                "description": "Masukkan bumbu kedalam wajan, tambahkan santan. Didihkan.",
+                "step_num": 1,
+                "wait_time_mins": null
+            },
+            {
+                "media": {
+                    "id": 667
+                },
+                "description": "Masukkan bahan cemplung kecuali asam kandis dan kemangi. Kemudian masukkan ikan. Masak sebentar.",
+                "step_num": 2,
+                "wait_time_mins": null
+            },
+            {
+                "media": {
+                    "id": 668
+                },
+                "description": "Masukkan tahu yg sudah dipotong dan di goreng besama dengan kentang. Masak hingga kentang empuk dan kuah agak menyusut. Jangan lupa Tambahkan garam.",
+                "step_num": 3,
+                "wait_time_mins": null
+            },
+            {
+                "media": {
+                    "id": 669
+                },
+                "description": "Masukkan asam kandis dan kemangi. Masak selama 5 menit. Koreksi rasa dan matikan api.",
+                "step_num": 4,
+                "wait_time_mins": null
+            }
+        ],
+        "avgMark": null
+    },
+    {
+        "name": "Risoles isi Ayam Dan kentang",
+        "id": 225,
+        "media": {
+            "id": 838
+        },
+        "cook_time_mins": 1,
+        "author_uid": "root",
+        "prep_time_mins": null,
+        "kilocalories": null,
+        "proteins": null,
+        "fats": null,
+        "carbohydrates": null,
+        "ingredients_distributions": [
+            {
+                "name": "garam",
+                "measure_unit_name": "secukupnya",
+                "count": 1.0,
+                "ingredient_id": 91
+            },
+            {
+                "name": "air",
+                "measure_unit_name": "secukupnya",
+                "count": 1.0,
+                "ingredient_id": 391
+            },
+            {
+                "name": "merica",
+                "measure_unit_name": "/2 sdt",
+                "count": 1.0,
+                "ingredient_id": 529
+            },
+            {
+                "name": "bawang putih",
+                "measure_unit_name": "siung",
+                "count": 5.0,
+                "ingredient_id": 581
+            },
+            {
+                "name": "bawang merah",
+                "measure_unit_name": "siung",
+                "count": 10.0,
+                "ingredient_id": 582
+            },
+            {
+                "name": "jahe",
+                "measure_unit_name": "cm",
+                "count": 3.0,
+                "ingredient_id": 923
+            },
+            {
+                "name": "penyedap",
+                "measure_unit_name": "bumhu halus",
+                "count": 1.0,
+                "ingredient_id": 972
+            },
+            {
+                "name": "daun jeruk",
+                "measure_unit_name": "lembar",
+                "count": 2.0,
+                "ingredient_id": 978
+            },
+            {
+                "name": "bahan cemplung",
+                "measure_unit_name": "bahan cemplung",
+                "count": 1.0,
+                "ingredient_id": 1146
+            },
+            {
+                "name": "2 lembar daun salam",
+                "measure_unit_name": "batang",
+                "count": 2.0,
+                "ingredient_id": 1147
+            },
+            {
+                "name": "kulit risoles",
+                "measure_unit_name": "lembar",
+                "count": 30.0,
+                "ingredient_id": 1447
+            },
+            {
+                "name": "kulit risoles anti sobek",
+                "measure_unit_name": "gr",
+                "count": 500.0,
+                "ingredient_id": 1448
+            },
+            {
+                "name": "500 gr dada ayam",
+                "measure_unit_name": "gr",
+                "count": 300.0,
+                "ingredient_id": 1449
+            },
+            {
+                "name": "300 gr kentang ukuran besar",
+                "measure_unit_name": "ед.",
+                "count": 1.0,
+                "ingredient_id": 1450
+            },
+            {
+                "name": "tepung roti",
+                "measure_unit_name": "secukupnya",
+                "count": 1.0,
+                "ingredient_id": 1451
+            },
+            {
+                "name": "secukupnya gula",
+                "measure_unit_name": "ед.",
+                "count": 1.0,
+                "ingredient_id": 1452
+            },
+            {
+                "name": "bumhu halus",
+                "measure_unit_name": "ед.",
+                "count": 1.0,
+                "ingredient_id": 1453
+            },
+            {
+                "name": "kencur",
+                "measure_unit_name": "cm",
+                "count": 3.0,
+                "ingredient_id": 1454
+            },
+            {
+                "name": "2 batang daun bawang rajang",
+                "measure_unit_name": "ед.",
+                "count": 1.0,
+                "ingredient_id": 1455
+            },
+            {
+                "name": "1 batang sereh geprek",
+                "measure_unit_name": "lembar",
+                "count": 2.0,
+                "ingredient_id": 1456
+            },
+            {
+                "name": "bahan pencelup",
+                "measure_unit_name": "batang",
+                "count": 1.0,
+                "ingredient_id": 1457
+            },
+            {
+                "name": "secukupnya tepung terigu",
+                "measure_unit_name": "bahan pencelup",
+                "count": 1.0,
+                "ingredient_id": 1458
+            },
+            {
+                "name": "secukupnya air",
+                "measure_unit_name": "ед.",
+                "count": 1.0,
+                "ingredient_id": 1459
+            }
+        ],
+        "steps": [
+            {
+                "media": null,
+                "description": "Rebus ayam lalu suir suir sisihkan",
+                "step_num": 0,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Kupas kentang,cuci dan potong dadu sisihkan",
+                "step_num": 1,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Tumis bumbu halus masukkan daun salam,daun jeruk,sereh aduk rata masak hingga matang dan harum",
+                "step_num": 2,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Masukkan kentang dan ayam aduk rata tuang air secukupnya aduk rata diamkan hingga kentang matang dan bumbu meresap",
+                "step_num": 3,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Masukkan daun bawang aduk rata tambahkan garam,gula,penyedap aduk kembali",
+                "step_num": 4,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Tes rasa dan tunggu air menyusut matikan api dan diamkan dingin.",
+                "step_num": 5,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Ambil selembar kulit risoles beri 1 sdm isian lalu gulung",
+                "step_num": 6,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Celup gulungan risoles ke adonan Tepung lalu gulingkan pada tepung roti hingga rata",
+                "step_num": 7,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Panaskan minyak goreng dengan api kecil minyak panas hingga kuning kecoklatan",
+                "step_num": 8,
+                "wait_time_mins": null
+            },
+            {
+                "media": null,
+                "description": "Selesai selamat mencoba",
+                "step_num": 9,
+                "wait_time_mins": null
+            }
+        ],
+        "avgMark": null
+    }
