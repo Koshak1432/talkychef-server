@@ -16,7 +16,8 @@ import voicerecipeserver.respository.CommentRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.AuthServiceImpl;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
+import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.services.CommentService;
 
 import java.util.Collection;
@@ -29,11 +30,11 @@ public class CommentServiceImpl implements CommentService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final AuthServiceImpl authentication;
+    private final AuthServiceCommon authentication;
 
     @Autowired
     public CommentServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository,
-                              CommentRepository commentRepository, AuthServiceImpl authentication) {
+                              CommentRepository commentRepository, AuthServiceCommon authentication) {
         this.mapper = mapper;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;

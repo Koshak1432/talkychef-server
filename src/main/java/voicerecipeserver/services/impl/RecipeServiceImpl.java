@@ -16,7 +16,8 @@ import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.AuthServiceImpl;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
+import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.*;
@@ -31,19 +32,19 @@ public class RecipeServiceImpl implements RecipeService {
     private UserRepository userRepository;
     private final AvgMarkRepository avgMarkRepository;
     private final StepRepository stepRepository;
-    private final AuthServiceImpl authentication;
+    private final AuthServiceCommon authentication;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
-                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository, AuthServiceImpl authServiceImpl) {
+                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository, AuthServiceCommon authServiceCommon) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.stepRepository = stepRepository;
         this.avgMarkRepository = avgMarkRepository;
         this.mapper = mapper;
-        this.authentication = authServiceImpl;
+        this.authentication = authServiceCommon;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));;
     }

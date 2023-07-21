@@ -19,7 +19,8 @@ import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.AuthServiceImpl;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
+import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.services.MarkService;
 
 import java.util.Collection;
@@ -33,11 +34,11 @@ public class MarkServiceImpl implements MarkService {
     private final UserRepository userRepository;
 
     private final MarkRepository markRepository;
-    private final AuthServiceImpl authentication;
+    private final AuthServiceCommon authentication;
 
     @Autowired
     public MarkServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository,
-                           MarkRepository markRepository, AuthServiceImpl authentication) {
+                           MarkRepository markRepository, AuthServiceCommon authentication) {
         this.mapper = mapper;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;

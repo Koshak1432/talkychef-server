@@ -27,9 +27,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(Constants.BASE_API_PATH + "/registration").permitAll()
-                        .requestMatchers(Constants.BASE_API_PATH + "/auth/refresh").permitAll()
-                        .requestMatchers(Constants.BASE_API_PATH +"/login").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH + "/registration/*").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH + "/auth/refresh/*").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH + "/auth/token").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH +"/login/*").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/media/**").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/comments/**").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/collections/**").permitAll()
