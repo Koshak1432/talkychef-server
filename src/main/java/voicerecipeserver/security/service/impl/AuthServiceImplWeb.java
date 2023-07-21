@@ -31,13 +31,11 @@ public class AuthServiceImplWeb implements AuthService {
 
     @Autowired
     public AuthServiceImplWeb(BeanConfig passwordEncoder, UserServiceImpl userServiceImpl,
-                           JwtProviderImpl jwtProviderImpl, AuthServiceCommon authServiceCommon) {
+                           JwtProviderImpl jwtProviderImpl) {
         this.passwordEncoder = passwordEncoder;
         this.userServiceImpl = userServiceImpl;
         this.jwtProviderImpl = jwtProviderImpl;
-        this.authServiceCommon = authServiceCommon;
     }
-    private final AuthServiceCommon authServiceCommon;
 
     private final BeanConfig passwordEncoder;
     private final UserServiceImpl userServiceImpl;
@@ -104,7 +102,7 @@ public class AuthServiceImplWeb implements AuthService {
     }
 
     public JwtResponse changePassword(UserDto userDto) throws NotFoundException, AuthException {
-        if (!authServiceCommon.checkAuthorities(userDto.getLogin())) {
+        if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
             throw new AuthException("Невозможно изменить пароль");
         }
         userServiceImpl.updateUserPassword(userDto);

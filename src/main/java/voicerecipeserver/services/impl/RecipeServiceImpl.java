@@ -12,6 +12,7 @@ import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
@@ -32,21 +33,20 @@ public class RecipeServiceImpl implements RecipeService {
     private UserRepository userRepository;
     private final AvgMarkRepository avgMarkRepository;
     private final StepRepository stepRepository;
-    private final AuthServiceCommon authentication;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
-                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository, AuthServiceCommon authServiceCommon) {
+                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.stepRepository = stepRepository;
         this.avgMarkRepository = avgMarkRepository;
         this.mapper = mapper;
-        this.authentication = authServiceCommon;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
-                m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));;
+                m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
+        ;
     }
 
     @Autowired
@@ -104,21 +104,23 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
-        Recipe recipe = mapper.map(recipeDto, Recipe.class);
-        setAuthorToRecipe(recipe);
-        recipe.setId(null);
-        checkMediaUniqueness(recipe);
-        // через маппер можно сделать путем добавления конвертера. Только вот код
-        // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
-        for (Step step : recipe.getSteps()) {
-            step.setRecipe(recipe);
+    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException {
+        if (AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
+            Recipe recipe = mapper.map(recipeDto, Recipe.class);
+            setAuthorToRecipe(recipe);
+            recipe.setId(null);
+            checkMediaUniqueness(recipe);
+            // через маппер можно сделать путем добавления конвертера. Только вот код
+            // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
+            for (Step step : recipe.getSteps()) {
+                step.setRecipe(recipe);
+            }
+
+            setDistribution(recipe);
+            Recipe savedRecipe = recipeRepository.save(recipe);
+            return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
         }
-
-        setDistribution(recipe);
-
-        Recipe savedRecipe = recipeRepository.save(recipe);
-        return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
+        throw new AuthException("Неверные данные");
     }
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
@@ -130,11 +132,12 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
+
     @Override
     public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
         Recipe oldRecipe = findRecipe(recipeDto.getId());
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-        if (authentication != null && checkAuthorities(recipeDto.getId())) {
+        if (AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
             newRecipe.setId(recipeDto.getId());
             setAuthorToRecipe(newRecipe);
             setSteps(oldRecipe, newRecipe);
@@ -226,7 +229,8 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<Void> deleteRecipe(Long recipeId) throws NotFoundException {
-        if (authentication != null && checkAuthorities(recipeId)) {
+        Recipe recipe = findRecipe(recipeId);
+        if (AuthServiceCommon.checkAuthorities(recipe.getAuthor().getUid())) {
             recipeRepository.deleteById(recipeId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -241,10 +245,4 @@ public class RecipeServiceImpl implements RecipeService {
         return false;
     }
 
-    private boolean checkAuthorities(Long recipeId) throws NotFoundException {
-        JwtAuthentication principal = authentication.getAuthInfo();
-        Recipe recipe = findRecipe(recipeId);
-        User user = recipe.getAuthor();
-        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(user.getUid());
-    }
 }

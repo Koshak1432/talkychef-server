@@ -30,16 +30,14 @@ public class CommentServiceImpl implements CommentService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final AuthServiceCommon authentication;
 
     @Autowired
     public CommentServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository,
-                              CommentRepository commentRepository, AuthServiceCommon authentication) {
+                              CommentRepository commentRepository) {
         this.mapper = mapper;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
-        this.authentication = authentication;
     }
 
     Comment findComment(Long commentId) throws NotFoundException {
@@ -82,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = findComment(commentDto.getId());
-        if (authentication != null && checkAuthorities(commentDto.getId())) {
+        if (AuthServiceCommon.checkAuthorities(commentDto.getUserUid())) {
             comment.setContent(commentDto.getContent());
         }
         Comment savedComment = commentRepository.save(comment);
@@ -91,7 +89,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseEntity<Void> deleteComment(Long commentId) throws NotFoundException {
-        if (authentication != null && checkAuthorities(commentId)) {
+        Comment comment = findComment(commentId);
+        User user = comment.getUser();
+        if (AuthServiceCommon.checkAuthorities(user.getUid())) {
             commentRepository.deleteById(commentId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -113,10 +113,4 @@ public class CommentServiceImpl implements CommentService {
         return false;
     }
 
-    private boolean checkAuthorities(Long markId) throws NotFoundException {
-        JwtAuthentication principal = authentication.getAuthInfo();
-        Comment comment = findComment(markId);
-        User user = comment.getUser();
-        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(user.getUid());
-    }
 }
