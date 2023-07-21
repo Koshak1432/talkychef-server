@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
@@ -29,7 +30,7 @@ public interface RecipeApi {
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
-    ResponseEntity<IdDto> recipePost(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException;
+    ResponseEntity<IdDto> recipePost(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PutMapping

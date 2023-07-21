@@ -4,12 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.entities.Mark;
-import voicerecipeserver.model.entities.MarkKey;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
@@ -19,10 +17,9 @@ import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.AuthServiceImpl;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.MarkService;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -33,16 +30,14 @@ public class MarkServiceImpl implements MarkService {
     private final UserRepository userRepository;
 
     private final MarkRepository markRepository;
-    private final AuthServiceImpl authentication;
 
     @Autowired
     public MarkServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository,
-                           MarkRepository markRepository, AuthServiceImpl authentication) {
+                           MarkRepository markRepository) {
         this.mapper = mapper;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.markRepository = markRepository;
-        this.authentication = authentication;
     }
 
     private void setRecipeToMark(Mark mark, Long recipeId) throws NotFoundException {
@@ -69,7 +64,7 @@ public class MarkServiceImpl implements MarkService {
     public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException,
             BadRequestException {
         Mark mark = mapper.map(markDto, Mark.class);
-        if (!isSamePerson(markDto.getUserUid())) {
+        if (!AuthServiceCommon.isSamePerson(markDto.getUserUid())) {
             throw new BadRequestException("Нельзя добавлять комментарии от чужого имени");
         }
         setRecipeToMark(mark, markDto.getRecipeId());
@@ -84,7 +79,7 @@ public class MarkServiceImpl implements MarkService {
     public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException, BadRequestException,
             AuthException {
         Mark newMark = mapper.map(markDto, Mark.class);
-        if (!checkAuthorities(markDto.getUserUid())) {
+        if (!AuthServiceCommon.checkAuthorities(markDto.getUserUid())) {
             throw new BadRequestException("Нет прав на изменение оценки");
         }
         setRecipeToMark(newMark, markDto.getRecipeId());
@@ -99,7 +94,7 @@ public class MarkServiceImpl implements MarkService {
 
     @Override
     public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws BadRequestException {
-        if (!checkAuthorities(userUid)) {
+        if (!AuthServiceCommon.checkAuthorities(userUid)) {
             throw new BadRequestException("Нет прав на удаление оценки");
         }
         Optional<User> user = userRepository.findByUid(userUid);
@@ -110,39 +105,11 @@ public class MarkServiceImpl implements MarkService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private boolean isContainsRole(Collection<? extends GrantedAuthority> authorities, String name) {
-        for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    private boolean isSamePerson(String userUid) {
-        if (authentication == null) {
-            return false;
-        }
-        JwtAuthentication principal = authentication.getAuthInfo();
-        return principal.getLogin().equals(userUid);
-    }
-
-    private boolean checkAuthorities(String userUid) {
-        if (authentication == null) {
-            return false;
-        }
-        JwtAuthentication principal = authentication.getAuthInfo();
-        return isContainsRole(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(userUid);
-    }
 
     private boolean markIsPresent(Mark mark) {
         Optional<Mark> markOptional = markRepository.findByUserIdAndRecipeId(mark.getId().getUserId(),
                                                                              mark.getId().getRecipeId());
-        if (markOptional.isPresent()) {
-            System.out.println("++++++++++++++++++++++++++++");
-            System.out.println("MARK OPTIONAL: " + markOptional.get());
-            System.out.println("++++++++++++++++++++++++++++");
-        }
         return markOptional.isPresent();
     }
 }

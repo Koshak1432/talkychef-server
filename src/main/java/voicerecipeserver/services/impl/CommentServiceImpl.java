@@ -16,7 +16,8 @@ import voicerecipeserver.respository.CommentRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.AuthServiceImpl;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
+import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.services.CommentService;
 
 import java.util.Collection;
@@ -29,16 +30,14 @@ public class CommentServiceImpl implements CommentService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final AuthServiceImpl authentication;
 
     @Autowired
     public CommentServiceImpl(ModelMapper mapper, RecipeRepository recipeRepository, UserRepository userRepository,
-                              CommentRepository commentRepository, AuthServiceImpl authentication) {
+                              CommentRepository commentRepository) {
         this.mapper = mapper;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
-        this.authentication = authentication;
     }
 
     Comment findComment(Long commentId) throws NotFoundException {
@@ -81,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = findComment(commentDto.getId());
-        if (authentication != null && checkAuthorities(commentDto.getId())) {
+        if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
             comment.setContent(commentDto.getContent());
         }
         Comment savedComment = commentRepository.save(comment);
@@ -90,7 +89,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseEntity<Void> deleteComment(Long commentId) throws NotFoundException {
-        if (authentication != null && checkAuthorities(commentId)) {
+        Comment comment = findComment(commentId);
+        if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
             commentRepository.deleteById(commentId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -101,21 +101,5 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> comments = commentRepository.getCommentsByRecipeId(id);
         List<CommentDto> dtos = comments.stream().map((comment) -> mapper.map(comment, CommentDto.class)).toList();
         return new ResponseEntity<>(dtos, HttpStatus.OK);
-    }
-
-    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
-        for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkAuthorities(Long markId) throws NotFoundException {
-        JwtAuthentication principal = authentication.getAuthInfo();
-        Comment comment = findComment(markId);
-        User user = comment.getUser();
-        return isContainsRoleName(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(user.getUid());
     }
 }

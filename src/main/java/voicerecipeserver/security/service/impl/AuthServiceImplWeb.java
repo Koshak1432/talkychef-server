@@ -27,11 +27,10 @@ import java.util.Optional;
 
 @Service
 
-public class AuthServiceImpl implements AuthService {
-    public static final String USER_NOT_EXISTS = "Пользователь не найден";
-    
+public class AuthServiceImplWeb implements AuthService {
+
     @Autowired
-    public AuthServiceImpl(BeanConfig passwordEncoder, UserServiceImpl userServiceImpl,
+    public AuthServiceImplWeb(BeanConfig passwordEncoder, UserServiceImpl userServiceImpl,
                            JwtProviderImpl jwtProviderImpl) {
         this.passwordEncoder = passwordEncoder;
         this.userServiceImpl = userServiceImpl;
@@ -69,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
+
     private static void fillRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
@@ -89,9 +89,7 @@ public class AuthServiceImpl implements AuthService {
         throw new AuthException("Невалидный JWT токен");
     }
 
-    public JwtAuthentication getAuthInfo() {
-        return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
-    }
+
 
     public JwtResponse registration(UserDto userDto) throws AuthException, NotFoundException {
         Optional<User> userFromDb = userServiceImpl.getByLogin(userDto.getLogin());
@@ -104,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public JwtResponse changePassword(UserDto userDto) throws NotFoundException, AuthException {
-        if (!checkAuthorities(userDto.getLogin())) {
+        if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
             throw new AuthException("Невозможно изменить пароль");
         }
         userServiceImpl.updateUserPassword(userDto);
@@ -146,17 +144,7 @@ public class AuthServiceImpl implements AuthService {
         }
         return null;
     }
-    private boolean checkAuthorities(String login) {
-        JwtAuthentication principal = getAuthInfo();
-        return isContainsRole(principal.getRoles(), "ADMIN") || principal.getLogin().equals(login);
-    }
 
-    private static boolean isContainsRole(Collection<Role> roles, String roleName) {
-        for (Role role : roles) {
-            if (role.getName().equals(roleName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
+
 }

@@ -1,69 +1,24 @@
 package voicerecipeserver.security.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Generated;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
- * JwtResponse
+ * RefreshJwtRequest
  */
 @Validated
 @Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-12T04:39:14.314897533Z[GMT]")
 
 
-public class JwtResponse   {
-    @JsonProperty("type")
-    private String type = "Bearer";
-
-    @JsonProperty("accessToken")
-    private String accessToken = null;
-
+public class RefreshJwtRequest   {
     @JsonProperty("refreshToken")
     private String refreshToken = null;
 
-
-    public JwtResponse type(String type) {
-        this.type = type;
-        return this;
-    }
-
-    /**
-     * Get type
-     * @return type
-     **/
-    @NotNull
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public JwtResponse accessToken(String accessToken) {
-        this.accessToken = accessToken;
-        return this;
-    }
-
-    /**
-     * Get accessToken
-     * @return accessToken
-     **/
-    @NotNull
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public JwtResponse refreshToken(String refreshToken) {
+    public RefreshJwtRequest refreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
     }
@@ -72,7 +27,6 @@ public class JwtResponse   {
      * Get refreshToken
      * @return refreshToken
      **/
-    @NotNull
 
     public String getRefreshToken() {
         return refreshToken;
@@ -91,24 +45,20 @@ public class JwtResponse   {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        JwtResponse jwtResponse = (JwtResponse) o;
-        return Objects.equals(this.type, jwtResponse.type) &&
-                Objects.equals(this.accessToken, jwtResponse.accessToken) &&
-                Objects.equals(this.refreshToken, jwtResponse.refreshToken);
+        RefreshJwtRequest refreshJwtRequest = (RefreshJwtRequest) o;
+        return Objects.equals(this.refreshToken, refreshJwtRequest.refreshToken);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, accessToken, refreshToken);
+        return Objects.hash(refreshToken);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class JwtResponse {\n");
+        sb.append("class RefreshJwtRequest {\n");
 
-        sb.append("    type: ").append(toIndentedString(type)).append("\n");
-        sb.append("    accessToken: ").append(toIndentedString(accessToken)).append("\n");
         sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
         sb.append("}");
         return sb.toString();
@@ -125,3 +75,4 @@ public class JwtResponse   {
         return o.toString().replace("\n", "\n    ");
     }
 }
+
