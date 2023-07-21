@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = findComment(commentDto.getId());
-        if (AuthServiceCommon.checkAuthorities(commentDto.getUserUid())) {
+        if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
             comment.setContent(commentDto.getContent());
         }
         Comment savedComment = commentRepository.save(comment);
@@ -90,8 +90,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseEntity<Void> deleteComment(Long commentId) throws NotFoundException {
         Comment comment = findComment(commentId);
-        User user = comment.getUser();
-        if (AuthServiceCommon.checkAuthorities(user.getUid())) {
+        if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
             commentRepository.deleteById(commentId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
