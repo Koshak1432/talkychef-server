@@ -102,14 +102,4 @@ public class CommentServiceImpl implements CommentService {
         List<CommentDto> dtos = comments.stream().map((comment) -> mapper.map(comment, CommentDto.class)).toList();
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
-
-    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
-        for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }
