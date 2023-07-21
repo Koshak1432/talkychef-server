@@ -5,24 +5,18 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
-import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
-import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.*;
-import java.util.Collection;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -58,7 +52,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe = findRecipe(id);
         setAvgMark(recipe);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
-        return new ResponseEntity<>(recipeDto, HttpStatus.OK);
+        return ResponseEntity.ok(recipeDto);
     }
 
     private Recipe findRecipe(Long id) throws NotFoundException {
@@ -103,7 +97,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException {
+    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+            AuthException {
         if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
             throw new AuthException("Нет прав");
         }
@@ -119,7 +114,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         setDistribution(recipe);
         Recipe savedRecipe = recipeRepository.save(recipe);
-        return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(savedRecipe.getId()));
     }
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
@@ -131,20 +126,22 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-
     @Override
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+            AuthException {
+        if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
+            throw new AuthException("Нет прав");
+        }
         Recipe oldRecipe = findRecipe(recipeDto.getId());
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-        if (AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
-            newRecipe.setId(recipeDto.getId());
-            setAuthorToRecipe(newRecipe);
-            setSteps(oldRecipe, newRecipe);
-            checkMediaUniqueness(newRecipe);
-            setDistribution(newRecipe);
-            recipeRepository.save(newRecipe);
-        }
-        return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
+
+        newRecipe.setId(recipeDto.getId());
+        setAuthorToRecipe(newRecipe);
+        setSteps(oldRecipe, newRecipe);
+        checkMediaUniqueness(newRecipe);
+        setDistribution(newRecipe);
+        recipeRepository.save(newRecipe);
+        return ResponseEntity.ok(new IdDto().id(newRecipe.getId()));
     }
 
     private void setDistribution(Recipe recipe) throws BadRequestException {
@@ -215,10 +212,9 @@ public class RecipeServiceImpl implements RecipeService {
         if (recipes.isEmpty()) {
             throw new NotFoundException("Не удалось найти рецепты с подстрокой: " + name);
         }
-        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {
-        }.getType());
+        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
 
-        return new ResponseEntity<>(recipeDtos, HttpStatus.OK);
+        return ResponseEntity.ok(recipeDtos);
     }
 
     private void setAvgMark(Recipe recipe) {
@@ -234,14 +230,4 @@ public class RecipeServiceImpl implements RecipeService {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
-        for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

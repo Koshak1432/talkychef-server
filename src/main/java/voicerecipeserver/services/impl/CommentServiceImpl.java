@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setRecipe(recipe);
 
         Comment savedComment = commentRepository.save(comment);
-        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(savedComment.getId()));
     }
 
     @Override
@@ -84,7 +84,7 @@ public class CommentServiceImpl implements CommentService {
             comment.setContent(commentDto.getContent());
         }
         Comment savedComment = commentRepository.save(comment);
-        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(savedComment.getId()));
     }
 
     @Override
@@ -100,6 +100,6 @@ public class CommentServiceImpl implements CommentService {
     public ResponseEntity<List<CommentDto>> getRecipeComments(Long id) {
         List<Comment> comments = commentRepository.getCommentsByRecipeId(id);
         List<CommentDto> dtos = comments.stream().map((comment) -> mapper.map(comment, CommentDto.class)).toList();
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+        return ResponseEntity.ok(dtos);
     }
 }

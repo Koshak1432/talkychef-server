@@ -80,7 +80,7 @@ public class MarkServiceImpl implements MarkService {
             AuthException {
         Mark newMark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.checkAuthorities(markDto.getUserUid())) {
-            throw new BadRequestException("Нет прав на изменение оценки");
+            throw new BadRequestException("Нет прав");
         }
         setRecipeToMark(newMark, markDto.getRecipeId());
         setAuthorToMark(newMark, markDto.getUserUid());
@@ -95,7 +95,7 @@ public class MarkServiceImpl implements MarkService {
     @Override
     public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws BadRequestException {
         if (!AuthServiceCommon.checkAuthorities(userUid)) {
-            throw new BadRequestException("Нет прав на удаление оценки");
+            throw new BadRequestException("Нет прав");
         }
         Optional<User> user = userRepository.findByUid(userUid);
         if (user.isPresent()) {
