@@ -46,7 +46,6 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
-        ;
     }
 
     @Autowired
