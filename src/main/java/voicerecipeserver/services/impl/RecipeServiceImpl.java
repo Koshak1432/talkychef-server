@@ -104,22 +104,22 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException {
-        if (AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
-            Recipe recipe = mapper.map(recipeDto, Recipe.class);
-            setAuthorToRecipe(recipe);
-            recipe.setId(null);
-            checkMediaUniqueness(recipe);
-            // через маппер можно сделать путем добавления конвертера. Только вот код
-            // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
-            for (Step step : recipe.getSteps()) {
-                step.setRecipe(recipe);
-            }
-
-            setDistribution(recipe);
-            Recipe savedRecipe = recipeRepository.save(recipe);
-            return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
+        if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
+            throw new AuthException("Нет прав");
         }
-        throw new AuthException("Неверные данные");
+        Recipe recipe = mapper.map(recipeDto, Recipe.class);
+        setAuthorToRecipe(recipe);
+        recipe.setId(null);
+        checkMediaUniqueness(recipe);
+        // через маппер можно сделать путем добавления конвертера. Только вот код
+        // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
+        for (Step step : recipe.getSteps()) {
+            step.setRecipe(recipe);
+        }
+
+        setDistribution(recipe);
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
     }
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
