@@ -29,6 +29,7 @@ import jakarta.validation.ConstraintViolationException;
 @RestControllerAdvice
 @CrossOrigin(maxAge = 1440)
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     @NonNull
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -91,5 +92,4 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 }

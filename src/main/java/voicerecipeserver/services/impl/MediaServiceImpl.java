@@ -68,7 +68,7 @@ public class MediaServiceImpl implements MediaService {
         media.setMediaType(mediaType);
 
         mediaRepository.save(media);
-        return new ResponseEntity<>(new IdDto().id(media.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(media.getId()));
     }
 
 }

@@ -15,7 +15,6 @@ import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CollectionRepository;
 import voicerecipeserver.respository.RecipeRepository;
-import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.services.CollectionService;
 
 import java.util.List;
@@ -23,15 +22,14 @@ import java.util.Optional;
 
 @Service
 public class CollectionServiceImpl implements CollectionService {
-
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
-
 
     private final ModelMapper mapper;
 
     @Autowired
-    public CollectionServiceImpl(CollectionRepository repository, RecipeRepository recipeRepository, ModelMapper mapper){
+    public CollectionServiceImpl(CollectionRepository repository, RecipeRepository recipeRepository,
+                                 ModelMapper mapper) {
         this.collectionRepository = repository;
         this.recipeRepository = recipeRepository;
         this.mapper = mapper;
@@ -50,13 +48,13 @@ public class CollectionServiceImpl implements CollectionService {
     @Transactional
     public ResponseEntity<Void> addRecipeToCollection(Long recipe, String collection) throws NotFoundException {
         Optional<Collection> collectionOptional = collectionRepository.findByName(collection);
-        if(collectionOptional.isEmpty()){
+        if (collectionOptional.isEmpty()) {
             throw new NotFoundException("Не удалось найти коллекцию с именем: " + collection);
         }
 
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipe);
 
-        if(recipeOptional.isEmpty()){
+        if (recipeOptional.isEmpty()) {
             throw new NotFoundException("Не удалось найти рецепт с id: " + recipe);
         }
 
@@ -73,10 +71,10 @@ public class CollectionServiceImpl implements CollectionService {
     public ResponseEntity<CollectionDto> getCollectionPage(String name, Integer pageNum) throws NotFoundException {
         Optional<Collection> collectionOptional = collectionRepository.findByName(name);
 
-        if(null == pageNum){
+        if (null == pageNum) {
             pageNum = 0;
         }
-        if(collectionOptional.isEmpty()){
+        if (collectionOptional.isEmpty()) {
             throw new NotFoundException("Не удалось найти коллекцию с именем: " + name);
         }
 
@@ -87,9 +85,10 @@ public class CollectionServiceImpl implements CollectionService {
         collectionDto.setNumber(collection.getNumber());
 
         collectionDto.setRecipes(mapper.map(
-                recipeRepository.findRecipesWithOffsetFromCollectionById(Constants.MAX_RECIPES_PER_PAGE, pageNum * Constants.MAX_RECIPES_PER_PAGE, collection.getId()),
-                new TypeToken<List<RecipeDto>>() {}.getType()
-        ));
-        return new ResponseEntity<>(collectionDto, HttpStatus.OK);
+                recipeRepository.findRecipesWithOffsetFromCollectionById(Constants.MAX_RECIPES_PER_PAGE,
+                                                                         pageNum * Constants.MAX_RECIPES_PER_PAGE,
+                                                                         collection.getId()),
+                new TypeToken<List<RecipeDto>>() {}.getType()));
+        return ResponseEntity.ok(collectionDto);
     }
 }
