@@ -23,6 +23,8 @@ import voicerecipeserver.services.MarkService;
 
 import java.util.Optional;
 
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
+
 @Service
 
 public class MarkServiceImpl implements MarkService {
@@ -94,15 +96,13 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws BadRequestException {
-        if (!AuthServiceCommon.checkAuthorities(userUid)) {
-            throw new BadRequestException("Нет прав");
-        }
-        Optional<User> user = userRepository.findByUid(userUid);
+    public ResponseEntity<Void> deleteRecipeMark(Long recipeId) throws BadRequestException, AuthException {
+        JwtAuthentication principal = getAuthInfo();
+        if (principal == null) throw  new AuthException("Not authorized yet");
+        Optional<User> user = userRepository.findByUid(principal.getLogin());
         if (user.isPresent()) {
             Long userId = user.get().getId();
             markRepository.deleteById(new MarkKey(userId, recipeId));
-//            markRepository.deleteByIdUserIdAndIdRecipeId(userId, recipeId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -26,5 +26,5 @@ public interface MarkApi {
 
     @DeleteMapping
     ResponseEntity<Void> markDelete(@RequestParam("user_uid") String userUid, @RequestParam("recipe_id") Long recipeId) throws
-            NotFoundException, BadRequestException;
+            NotFoundException, BadRequestException, AuthException;
 }

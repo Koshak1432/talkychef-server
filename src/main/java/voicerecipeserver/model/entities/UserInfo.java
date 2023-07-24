@@ -20,10 +20,10 @@ public class UserInfo {
     private String info;
 
     @Column(name = "tg_link")
-    private String tg_link;
+    private String tgLink;
 
     @Column(name = "vk_link")
-    private String vk_link;
+    private String vkLink;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
