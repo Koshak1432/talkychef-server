@@ -3,7 +3,6 @@ package voicerecipeserver.security.service.impl;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
@@ -16,7 +15,9 @@ import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.service.UserService;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -27,7 +28,8 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper mapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BeanConfig passwordEncoder,  ModelMapper mapper, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, BeanConfig passwordEncoder, ModelMapper mapper,
+                           RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
@@ -58,14 +60,14 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(user.getPassword()));
         User savedUser = userRepository.save(user);
-        return new ResponseEntity<>(new IdDto().id(savedUser.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(savedUser.getId()));
     }
 
     public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) throws NotFoundException {
         User user = findUserByLogin(userDto.getLogin());
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
         User savedUser = userRepository.save(user);
-        return new ResponseEntity<>(new IdDto().id(savedUser.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(savedUser.getId()));
     }
 
     User findUserByLogin(String login) throws NotFoundException {
@@ -76,6 +78,4 @@ public class UserServiceImpl implements UserService {
 
         return userOptional.get();
     }
-
-
 }

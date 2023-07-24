@@ -6,23 +6,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.UserDto;
-import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.security.config.BeanConfig;
-import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
 import voicerecipeserver.security.service.AuthService;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -31,7 +28,7 @@ public class AuthServiceImplWeb implements AuthService {
 
     @Autowired
     public AuthServiceImplWeb(BeanConfig passwordEncoder, UserServiceImpl userServiceImpl,
-                           JwtProviderImpl jwtProviderImpl) {
+                              JwtProviderImpl jwtProviderImpl) {
         this.passwordEncoder = passwordEncoder;
         this.userServiceImpl = userServiceImpl;
         this.jwtProviderImpl = jwtProviderImpl;
@@ -44,7 +41,7 @@ public class AuthServiceImplWeb implements AuthService {
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
 
         final User user = userServiceImpl.getByLogin(authRequest.getLogin()).orElseThrow(
-                () -> new AuthException(USER_NOT_EXISTS));
+                () -> new AuthException(Constants.USER_NOT_EXISTS_MSG));
         if (passwordEncoder.getPasswordEncoder().matches(authRequest.getPassword(), user.getPassword())) {
             return getJwtResponseAndFillCookie(user);
         } else {
@@ -53,20 +50,18 @@ public class AuthServiceImplWeb implements AuthService {
     }
 
 
-
-    public JwtResponse getAccessToken( @NonNull String refreshToken) throws AuthException {
+    public JwtResponse getAccessToken(@NonNull String refreshToken) throws AuthException {
         JwtResponse jwtResponse = new JwtResponse();
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
             final User user = userServiceImpl.getByLogin(login).orElseThrow(
-                    () -> new AuthException(USER_NOT_EXISTS));
+                    () -> new AuthException(Constants.USER_NOT_EXISTS_MSG));
             final String accessToken = jwtProviderImpl.generateAccessToken(user);
             jwtResponse.setAccessToken(accessToken);
         }
         return jwtResponse;
     }
-
 
 
     private static void fillRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
@@ -78,17 +73,16 @@ public class AuthServiceImplWeb implements AuthService {
         response.addCookie(refreshTokenCookie);
     }
 
-    public JwtResponse refresh(@CookieValue(value = "refreshToken", required = true) @NonNull String refreshToken) throws AuthException {
-        if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final User user = userServiceImpl.getByLogin(login).orElseThrow(
-                    () -> new AuthException(USER_NOT_EXISTS));
-            return getJwtResponseAndFillCookie(user);
+    public JwtResponse refresh(@CookieValue(value = "refreshToken") @NonNull String refreshToken) throws AuthException {
+        if (!jwtProviderImpl.validateRefreshToken(refreshToken)) {
+            throw new AuthException("Невалидный JWT токен");
         }
-        throw new AuthException("Невалидный JWT токен");
+        final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
+        final String login = claims.getSubject();
+        final User user = userServiceImpl.getByLogin(login).orElseThrow(
+                () -> new AuthException(Constants.USER_NOT_EXISTS_MSG));
+        return getJwtResponseAndFillCookie(user);
     }
-
 
 
     public JwtResponse registration(UserDto userDto) throws AuthException, NotFoundException {
@@ -119,16 +113,17 @@ public class AuthServiceImplWeb implements AuthService {
     }
 
     private JwtResponse getJwtResponseAndFillCookie(User user) {
-        JwtResponse jwtResponse = null;
-             jwtResponse = getJwtResponse(user);
-            ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            if (requestAttributes != null) {
-                HttpServletResponse response = requestAttributes.getResponse();
-                if (response != null) {
-                    final String refreshToken = jwtProviderImpl.generateRefreshToken(user);
-                    fillRefreshTokenCookie(response, refreshToken);
-                }
+        JwtResponse jwtResponse;
+        jwtResponse = getJwtResponse(user);
+        ServletRequestAttributes requestAttributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes != null) {
+            HttpServletResponse response = requestAttributes.getResponse();
+            if (response != null) {
+                final String refreshToken = jwtProviderImpl.generateRefreshToken(user);
+                fillRefreshTokenCookie(response, refreshToken);
             }
+        }
         return jwtResponse;
     }
 
@@ -144,7 +139,5 @@ public class AuthServiceImplWeb implements AuthService {
         }
         return null;
     }
-
-
 
 }

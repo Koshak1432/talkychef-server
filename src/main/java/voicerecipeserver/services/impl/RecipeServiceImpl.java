@@ -6,12 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.AuthException;
@@ -20,11 +17,9 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
-import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.*;
-import java.util.Collection;
 
 import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
 
@@ -52,7 +47,6 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
-        ;
         this.markRepository = markRepository;
     }
 
@@ -67,7 +61,7 @@ public class RecipeServiceImpl implements RecipeService {
         setAvgMark(recipe);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
         setUserMark(recipeDto);
-        return new ResponseEntity<>(recipeDto, HttpStatus.OK);
+        return ResponseEntity.ok(recipeDto);
     }
 
     private Recipe findRecipe(Long id) throws NotFoundException {
@@ -112,23 +106,24 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException {
-        if (AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
-            Recipe recipe = mapper.map(recipeDto, Recipe.class);
-            setAuthorToRecipe(recipe);
-            recipe.setId(null);
-            checkMediaUniqueness(recipe);
-            // через маппер можно сделать путем добавления конвертера. Только вот код
-            // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
-            for (Step step : recipe.getSteps()) {
-                step.setRecipe(recipe);
-            }
-
-            setDistribution(recipe);
-            Recipe savedRecipe = recipeRepository.save(recipe);
-            return new ResponseEntity<>(new IdDto().id(savedRecipe.getId()), HttpStatus.OK);
+    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+            AuthException {
+        if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
+            throw new AuthException("Нет прав");
         }
-        throw new AuthException("Неверные данные");
+        Recipe recipe = mapper.map(recipeDto, Recipe.class);
+        setAuthorToRecipe(recipe);
+        recipe.setId(null);
+        checkMediaUniqueness(recipe);
+        // через маппер можно сделать путем добавления конвертера. Только вот код
+        // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
+        for (Step step : recipe.getSteps()) {
+            step.setRecipe(recipe);
+        }
+
+        setDistribution(recipe);
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        return ResponseEntity.ok(new IdDto().id(savedRecipe.getId()));
     }
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
@@ -140,20 +135,22 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-
     @Override
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+            AuthException {
+        if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
+            throw new AuthException("Нет прав");
+        }
         Recipe oldRecipe = findRecipe(recipeDto.getId());
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-        if (AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
-            newRecipe.setId(recipeDto.getId());
-            setAuthorToRecipe(newRecipe);
-            setSteps(oldRecipe, newRecipe);
-            checkMediaUniqueness(newRecipe);
-            setDistribution(newRecipe);
-            recipeRepository.save(newRecipe);
-        }
-        return new ResponseEntity<>(new IdDto().id(newRecipe.getId()), HttpStatus.OK);
+
+        newRecipe.setId(recipeDto.getId());
+        setAuthorToRecipe(newRecipe);
+        setSteps(oldRecipe, newRecipe);
+        checkMediaUniqueness(newRecipe);
+        setDistribution(newRecipe);
+        recipeRepository.save(newRecipe);
+        return ResponseEntity.ok(new IdDto().id(newRecipe.getId()));
     }
 
     private void setDistribution(Recipe recipe) throws BadRequestException {
@@ -230,7 +227,7 @@ public class RecipeServiceImpl implements RecipeService {
             setUserMark(recipeDto);
 
         }
-        return new ResponseEntity<>(recipeDtos, HttpStatus.OK);
+        return ResponseEntity.ok(recipeDtos);
     }
 
     private void setAvgMark(Recipe recipe) {
@@ -259,14 +256,4 @@ public class RecipeServiceImpl implements RecipeService {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
-        for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

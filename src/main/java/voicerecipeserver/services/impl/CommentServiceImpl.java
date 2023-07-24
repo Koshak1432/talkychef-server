@@ -74,24 +74,23 @@ public class CommentServiceImpl implements CommentService {
         comment.setRecipe(recipe);
 
         Comment savedComment = commentRepository.save(comment);
-        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(savedComment.getId()));
     }
 
     @Override
     public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = findComment(commentDto.getId());
-        if (AuthServiceCommon.checkAuthorities(commentDto.getUserUid())) {
+        if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
             comment.setContent(commentDto.getContent());
         }
         Comment savedComment = commentRepository.save(comment);
-        return new ResponseEntity<>(new IdDto().id(savedComment.getId()), HttpStatus.OK);
+        return ResponseEntity.ok(new IdDto().id(savedComment.getId()));
     }
 
     @Override
     public ResponseEntity<Void> deleteComment(Long commentId) throws NotFoundException {
         Comment comment = findComment(commentId);
-        User user = comment.getUser();
-        if (AuthServiceCommon.checkAuthorities(user.getUid())) {
+        if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
             commentRepository.deleteById(commentId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -101,16 +100,6 @@ public class CommentServiceImpl implements CommentService {
     public ResponseEntity<List<CommentDto>> getRecipeComments(Long id) {
         List<Comment> comments = commentRepository.getCommentsByRecipeId(id);
         List<CommentDto> dtos = comments.stream().map((comment) -> mapper.map(comment, CommentDto.class)).toList();
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+        return ResponseEntity.ok(dtos);
     }
-
-    private boolean isContainsRoleName(Collection<? extends GrantedAuthority> authorities, String name) {
-        for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority() != null && authority.getAuthority().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

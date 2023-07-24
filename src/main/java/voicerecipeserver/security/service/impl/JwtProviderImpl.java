@@ -4,8 +4,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
@@ -27,10 +27,8 @@ public class JwtProviderImpl implements JwtProvider {
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
 
-    public JwtProviderImpl(
-            @Value("${jwt.secret.access}") String jwtAccessSecret,
-            @Value("${jwt.secret.refresh}") String jwtRefreshSecret
-    ) {
+    public JwtProviderImpl(@Value("${jwt.secret.access}") String jwtAccessSecret,
+                           @Value("${jwt.secret.refresh}") String jwtRefreshSecret) {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
     }
@@ -43,24 +41,16 @@ public class JwtProviderImpl implements JwtProvider {
         for (Role role : user.getRoles()) {
             roles.add(role.getName());
         }
-        return Jwts.builder()
-                .setSubject(user.getUid())
-                .setExpiration(accessExpiration)
-                .signWith(jwtAccessSecret)
-                .claim("roles", roles)
-                .claim("login", user.getUid())
-                .compact();
+        return Jwts.builder().setSubject(user.getUid()).setExpiration(accessExpiration).signWith(jwtAccessSecret).claim(
+                "roles", roles).claim("login", user.getUid()).compact();
     }
 
     public String generateRefreshToken(@NonNull User user) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
-        return Jwts.builder()
-                .setSubject(user.getUid())
-                .setExpiration(refreshExpiration)
-                .signWith(jwtRefreshSecret)
-                .compact();
+        return Jwts.builder().setSubject(user.getUid()).setExpiration(refreshExpiration).signWith(
+                jwtRefreshSecret).compact();
     }
 
     public boolean validateAccessToken(@NonNull String accessToken) {
@@ -73,10 +63,7 @@ public class JwtProviderImpl implements JwtProvider {
 
     private boolean validateToken(@NonNull String token, @NonNull Key secret) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(secret)
-                    .build()
-                    .parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException expEx) {
             log.error("Token expired exception");
@@ -99,11 +86,7 @@ public class JwtProviderImpl implements JwtProvider {
     }
 
     private Claims getClaims(@NonNull String token, @NonNull Key secret) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secret)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token).getBody();
     }
 
 }
