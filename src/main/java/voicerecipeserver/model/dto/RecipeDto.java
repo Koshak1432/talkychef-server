@@ -1,7 +1,6 @@
 package voicerecipeserver.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,10 +14,10 @@ import java.util.Objects;
  * RecipeDto
  */
 @Validated
-@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-12T05:52:57.996944769Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-24T04:20:59.334595174Z[GMT]")
 
 
-public class RecipeDto {
+public class RecipeDto   {
     @JsonProperty("name")
     private String name = null;
 
@@ -57,8 +56,11 @@ public class RecipeDto {
     @Valid
     private List<StepDto> steps = null;
 
-    @JsonProperty("avgMark")
+    @JsonProperty("avg_mark")
     private Float avgMark = null;
+
+    @JsonProperty("user_mark")
+    private Short userMark = null;
 
     public RecipeDto name(String name) {
         this.name = name;
@@ -67,13 +69,11 @@ public class RecipeDto {
 
     /**
      * Get name
-     *
      * @return name
      **/
     @NotNull
 
-    @Size(max = 128)
-    public String getName() {
+    @Size(max=128)   public String getName() {
         return name;
     }
 
@@ -88,7 +88,6 @@ public class RecipeDto {
 
     /**
      * Get id
-     *
      * @return id
      **/
     @NotNull
@@ -108,7 +107,6 @@ public class RecipeDto {
 
     /**
      * Get media
-     *
      * @return media
      **/
     @NotNull
@@ -129,7 +127,6 @@ public class RecipeDto {
 
     /**
      * Get cookTimeMins
-     *
      * @return cookTimeMins
      **/
     @NotNull
@@ -149,13 +146,11 @@ public class RecipeDto {
 
     /**
      * Get authorUid
-     *
      * @return authorUid
      **/
     @NotNull
 
-    @Size(max = 32)
-    public String getAuthorUid() {
+    @Size(max=32)   public String getAuthorUid() {
         return authorUid;
     }
 
@@ -170,7 +165,6 @@ public class RecipeDto {
 
     /**
      * Get prepTimeMins
-     *
      * @return prepTimeMins
      **/
 
@@ -189,7 +183,6 @@ public class RecipeDto {
 
     /**
      * Get kilocalories
-     *
      * @return kilocalories
      **/
 
@@ -208,7 +201,6 @@ public class RecipeDto {
 
     /**
      * Get proteins
-     *
      * @return proteins
      **/
 
@@ -227,7 +219,6 @@ public class RecipeDto {
 
     /**
      * Get fats
-     *
      * @return fats
      **/
 
@@ -246,7 +237,6 @@ public class RecipeDto {
 
     /**
      * Get carbohydrates
-     *
      * @return carbohydrates
      **/
 
@@ -273,7 +263,6 @@ public class RecipeDto {
 
     /**
      * Get ingredientsDistributions
-     *
      * @return ingredientsDistributions
      **/
     @Valid
@@ -300,7 +289,6 @@ public class RecipeDto {
 
     /**
      * Get steps
-     *
      * @return steps
      **/
     @Valid
@@ -319,7 +307,6 @@ public class RecipeDto {
 
     /**
      * Get avgMark
-     *
      * @return avgMark
      **/
 
@@ -329,6 +316,24 @@ public class RecipeDto {
 
     public void setAvgMark(Float avgMark) {
         this.avgMark = avgMark;
+    }
+
+    public RecipeDto userMark(Short userMark) {
+        this.userMark = userMark;
+        return this;
+    }
+
+    /**
+     * Get userMark
+     * @return userMark
+     **/
+
+    public Short getUserMark() {
+        return userMark;
+    }
+
+    public void setUserMark(Short userMark) {
+        this.userMark = userMark;
     }
 
 
@@ -341,22 +346,25 @@ public class RecipeDto {
             return false;
         }
         RecipeDto recipeDto = (RecipeDto) o;
-        return Objects.equals(this.name, recipeDto.name) && Objects.equals(this.id, recipeDto.id) && Objects.equals(
-                this.media, recipeDto.media) && Objects.equals(this.cookTimeMins,
-                                                               recipeDto.cookTimeMins) && Objects.equals(this.authorUid,
-                                                                                                         recipeDto.authorUid) && Objects.equals(
-                this.prepTimeMins, recipeDto.prepTimeMins) && Objects.equals(this.kilocalories,
-                                                                             recipeDto.kilocalories) && Objects.equals(
-                this.proteins, recipeDto.proteins) && Objects.equals(this.fats, recipeDto.fats) && Objects.equals(
-                this.carbohydrates, recipeDto.carbohydrates) && Objects.equals(this.ingredientsDistributions,
-                                                                               recipeDto.ingredientsDistributions) && Objects.equals(
-                this.steps, recipeDto.steps) && Objects.equals(this.avgMark, recipeDto.avgMark);
+        return Objects.equals(this.name, recipeDto.name) &&
+                Objects.equals(this.id, recipeDto.id) &&
+                Objects.equals(this.media, recipeDto.media) &&
+                Objects.equals(this.cookTimeMins, recipeDto.cookTimeMins) &&
+                Objects.equals(this.authorUid, recipeDto.authorUid) &&
+                Objects.equals(this.prepTimeMins, recipeDto.prepTimeMins) &&
+                Objects.equals(this.kilocalories, recipeDto.kilocalories) &&
+                Objects.equals(this.proteins, recipeDto.proteins) &&
+                Objects.equals(this.fats, recipeDto.fats) &&
+                Objects.equals(this.carbohydrates, recipeDto.carbohydrates) &&
+                Objects.equals(this.ingredientsDistributions, recipeDto.ingredientsDistributions) &&
+                Objects.equals(this.steps, recipeDto.steps) &&
+                Objects.equals(this.avgMark, recipeDto.avgMark) &&
+                Objects.equals(this.userMark, recipeDto.userMark);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, id, media, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats,
-                            carbohydrates, ingredientsDistributions, steps, avgMark);
+        return Objects.hash(name, id, media, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps, avgMark, userMark);
     }
 
     @Override
@@ -377,6 +385,7 @@ public class RecipeDto {
         sb.append("    ingredientsDistributions: ").append(toIndentedString(ingredientsDistributions)).append("\n");
         sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
         sb.append("    avgMark: ").append(toIndentedString(avgMark)).append("\n");
+        sb.append("    userMark: ").append(toIndentedString(userMark)).append("\n");
         sb.append("}");
         return sb.toString();
     }

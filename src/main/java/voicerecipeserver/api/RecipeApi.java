@@ -26,7 +26,7 @@ public interface RecipeApi {
     @GetMapping(value = "/{id}")
     ResponseEntity<RecipeDto> recipeIdGet(
             @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
-            NotFoundException;
+            NotFoundException, AuthException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
@@ -47,5 +47,5 @@ public interface RecipeApi {
     ResponseEntity<List<RecipeDto>> recipeSearchNameGet(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
-            NotFoundException;
+            NotFoundException, AuthException;
 }

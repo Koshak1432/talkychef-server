@@ -12,13 +12,13 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import java.util.List;
 
 public interface RecipeService {
-    ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException;
+    ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException, AuthException;
 
     ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException;
 
     ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException;
 
-    ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException;
+    ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException, AuthException;
 
     ResponseEntity<Void> deleteRecipe(Long id) throws NotFoundException;
 }

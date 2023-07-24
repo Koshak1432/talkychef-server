@@ -27,7 +27,7 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<RecipeDto> recipeIdGet(Long id) throws NotFoundException {
+    public ResponseEntity<RecipeDto> recipeIdGet(Long id) throws NotFoundException, AuthException {
         return recipeService.getRecipeById(id);
     }
 
@@ -46,9 +46,8 @@ public class RecipeApiController implements RecipeApi {
         return recipeService.deleteRecipe(id);
     }
 
-    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit) throws NotFoundException {
+    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit) throws NotFoundException, AuthException {
         return recipeService.searchRecipesByName(name, limit);
     }
-
 
 }

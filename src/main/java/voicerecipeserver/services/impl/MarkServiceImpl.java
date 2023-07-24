@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.entities.Mark;
+import voicerecipeserver.model.entities.MarkKey;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
@@ -100,7 +101,8 @@ public class MarkServiceImpl implements MarkService {
         Optional<User> user = userRepository.findByUid(userUid);
         if (user.isPresent()) {
             Long userId = user.get().getId();
-            markRepository.deleteByIdUserIdAndIdRecipeId(userId, recipeId);
+            markRepository.deleteById(new MarkKey(userId, recipeId));
+//            markRepository.deleteByIdUserIdAndIdRecipeId(userId, recipeId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -108,8 +110,7 @@ public class MarkServiceImpl implements MarkService {
 
 
     private boolean markIsPresent(Mark mark) {
-        Optional<Mark> markOptional = markRepository.findByUserIdAndRecipeId(mark.getId().getUserId(),
-                                                                             mark.getId().getRecipeId());
+        Optional<Mark> markOptional = markRepository.findById(mark.getId());
         return markOptional.isPresent();
     }
 }
