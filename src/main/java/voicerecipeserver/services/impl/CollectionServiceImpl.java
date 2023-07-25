@@ -5,33 +5,46 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.entities.Collection;
-import voicerecipeserver.model.entities.Recipe;
+import voicerecipeserver.model.entities.*;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CollectionRepository;
+import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
+import voicerecipeserver.respository.UserRepository;
+import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.services.CollectionService;
 
 import java.util.List;
 import java.util.Optional;
 
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
+
 @Service
 public class CollectionServiceImpl implements CollectionService {
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
+    private final UserRepository userRepository;
+    private final MarkRepository markRepository;
+
 
     private final ModelMapper mapper;
 
     @Autowired
     public CollectionServiceImpl(CollectionRepository repository, RecipeRepository recipeRepository,
-                                 ModelMapper mapper) {
+                                 UserRepository userRepository,
+                                 MarkRepository markRepository, ModelMapper mapper) {
         this.collectionRepository = repository;
         this.recipeRepository = recipeRepository;
+        this.userRepository = userRepository;
+        this.markRepository = markRepository;
         this.mapper = mapper;
     }
 
@@ -68,7 +81,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> getCollectionPage(String name, Integer pageNum) throws NotFoundException {
+    public ResponseEntity<CollectionDto> getCollectionPage(String name, Integer pageNum) throws NotFoundException, AuthException {
         Optional<Collection> collectionOptional = collectionRepository.findByName(name);
 
         if (null == pageNum) {
@@ -89,6 +102,25 @@ public class CollectionServiceImpl implements CollectionService {
                                                                          pageNum * Constants.MAX_RECIPES_PER_PAGE,
                                                                          collection.getId()),
                 new TypeToken<List<RecipeDto>>() {}.getType()));
+        for (RecipeDto recipeDto : collectionDto.getRecipes()) {
+            setUserMark(recipeDto);
+        }
         return ResponseEntity.ok(collectionDto);
+    }
+
+    private void setUserMark(RecipeDto recipe) throws AuthException {
+        setUserMarkToRecipe(recipe, userRepository, markRepository);
+    }
+
+    static void setUserMarkToRecipe(RecipeDto recipe, UserRepository userRepository, MarkRepository markRepository) throws AuthException {
+        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+            JwtAuthentication principal = getAuthInfo();
+            if (principal == null) {
+                return;
+            }
+            User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
+            Optional<Mark> markOptional = markRepository.findById(new MarkKey(user.getId(), recipe.getId()));
+            markOptional.ifPresent(mark -> recipe.setUserMark(mark.getMark()));
+        }
     }
 }

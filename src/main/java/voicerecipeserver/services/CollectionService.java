@@ -2,6 +2,7 @@ package voicerecipeserver.services;
 
 import org.springframework.http.ResponseEntity;
 import voicerecipeserver.model.dto.CollectionDto;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
 public interface CollectionService {
@@ -9,5 +10,5 @@ public interface CollectionService {
 
     ResponseEntity<Void> addRecipeToCollection(Long recipe,String collection) throws NotFoundException;
 
-    ResponseEntity<CollectionDto> getCollectionPage(String name, Integer pageNum) throws NotFoundException;
+    ResponseEntity<CollectionDto> getCollectionPage(String name, Integer pageNum) throws NotFoundException, AuthException;
 }

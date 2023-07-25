@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CollectionDto;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
 import jakarta.validation.Valid;
@@ -29,5 +30,5 @@ public interface CollectionApi {
     @GetMapping(value = "/search")
     ResponseEntity<CollectionDto> collectionNameGet(@Size(max = 128) @RequestParam("name") @NotBlank String name,
                                                     @RequestParam(value = "page", required = false) @PositiveOrZero Integer pageNum) throws
-            NotFoundException;
+            NotFoundException, AuthException;
 }

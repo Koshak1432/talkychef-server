@@ -29,7 +29,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final MeasureUnitRepository measureUnitRepository;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private final AvgMarkRepository avgMarkRepository;
     private final StepRepository stepRepository;
     private final MarkRepository markRepository;
@@ -38,22 +38,19 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
                              AvgMarkRepository avgMarkRepository, StepRepository stepRepository,
-                             MarkRepository markRepository) {
+                             MarkRepository markRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.stepRepository = stepRepository;
         this.avgMarkRepository = avgMarkRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
         this.markRepository = markRepository;
     }
 
-    @Autowired
-    private void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException, AuthException {
@@ -226,7 +223,6 @@ public class RecipeServiceImpl implements RecipeService {
         }.getType());
         for (RecipeDto recipeDto : recipeDtos) {
             setUserMark(recipeDto);
-
         }
         return ResponseEntity.ok(recipeDtos);
     }
@@ -237,15 +233,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void setUserMark(RecipeDto recipe) throws AuthException {
-        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            JwtAuthentication principal = getAuthInfo();
-            if (principal == null) {
-                return;
-            }
-            User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
-            Optional<Mark> markOptional = markRepository.findById(new MarkKey(user.getId(), recipe.getId()));
-            markOptional.ifPresent(mark -> recipe.setUserMark(mark.getMark()));
-        }
+        CollectionServiceImpl.setUserMarkToRecipe(recipe, userRepository, markRepository);
     }
 
 

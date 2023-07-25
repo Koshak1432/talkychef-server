@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.CollectionApi;
 import voicerecipeserver.model.dto.CollectionDto;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.CollectionService;
 
@@ -35,7 +36,7 @@ public class CollectionApiController implements CollectionApi {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> collectionNameGet(String name, @Valid @PositiveOrZero Integer pageNum) throws NotFoundException {
+    public ResponseEntity<CollectionDto> collectionNameGet(String name, @Valid @PositiveOrZero Integer pageNum) throws NotFoundException, AuthException {
         return service.getCollectionPage(name, pageNum);
     }
 }
