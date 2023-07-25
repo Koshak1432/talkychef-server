@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import voicerecipeserver.model.dto.Error;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
-import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.model.exceptions.*;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -72,6 +69,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String message = e.getMessage();
         return new ResponseEntity<>(new Error().code(400).message("Authorization failed: " + message), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({UserException.class})
+    protected ResponseEntity<Object> handleUserException(Exception e) {
+        String message = e.getMessage();
+        return new ResponseEntity<>(new Error().code(400).message("Auntification failed: " + message), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({ExpiredJwtException.class})
     protected ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException e) {
         String message = e.getMessage();
@@ -90,6 +94,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error("Invalid token: {}", message, e);
         return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message), HttpStatus.UNAUTHORIZED);
     }
+
+
 
 
 }

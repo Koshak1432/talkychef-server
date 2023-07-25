@@ -8,6 +8,7 @@ import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
+import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.dto.JwtRequest;
@@ -95,7 +96,7 @@ public class AuthServiceImplMobile implements AuthService {
         return getJwtResponse(userFromDb.get());
     }
 
-    public JwtResponse changePassword(UserDto userDto) throws NotFoundException, AuthException {
+    public JwtResponse changePassword(UserDto userDto) throws NotFoundException, AuthException, BadRequestException {
         if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
             throw new AuthException("Невозможно изменить пароль");
         }

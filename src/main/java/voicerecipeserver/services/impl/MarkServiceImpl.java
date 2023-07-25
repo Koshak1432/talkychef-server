@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.entities.Mark;
+import voicerecipeserver.model.entities.MarkKey;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
@@ -21,6 +22,8 @@ import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.MarkService;
 
 import java.util.Optional;
+
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
 
 @Service
 
@@ -93,14 +96,13 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws BadRequestException {
-        if (!AuthServiceCommon.checkAuthorities(userUid)) {
-            throw new BadRequestException("Нет прав");
-        }
-        Optional<User> user = userRepository.findByUid(userUid);
+    public ResponseEntity<Void> deleteRecipeMark(Long recipeId) throws BadRequestException, AuthException {
+        JwtAuthentication principal = getAuthInfo();
+        if (principal == null) throw  new AuthException("Not authorized yet");
+        Optional<User> user = userRepository.findByUid(principal.getLogin());
         if (user.isPresent()) {
             Long userId = user.get().getId();
-            markRepository.deleteByIdUserIdAndIdRecipeId(userId, recipeId);
+            markRepository.deleteById(new MarkKey(userId, recipeId));
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -108,8 +110,7 @@ public class MarkServiceImpl implements MarkService {
 
 
     private boolean markIsPresent(Mark mark) {
-        Optional<Mark> markOptional = markRepository.findByUserIdAndRecipeId(mark.getId().getUserId(),
-                                                                             mark.getId().getRecipeId());
+        Optional<Mark> markOptional = markRepository.findById(mark.getId());
         return markOptional.isPresent();
     }
 }

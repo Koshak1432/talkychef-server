@@ -5,6 +5,8 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
@@ -13,10 +15,13 @@ import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
+import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.*;
+
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -27,11 +32,13 @@ public class RecipeServiceImpl implements RecipeService {
     private UserRepository userRepository;
     private final AvgMarkRepository avgMarkRepository;
     private final StepRepository stepRepository;
+    private final MarkRepository markRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
-                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository) {
+                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository,
+                             MarkRepository markRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
@@ -40,6 +47,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper = mapper;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
+        this.markRepository = markRepository;
     }
 
     @Autowired
@@ -48,10 +56,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException {
+    public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException, AuthException {
         Recipe recipe = findRecipe(id);
         setAvgMark(recipe);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
+        setUserMark(recipeDto);
         return ResponseEntity.ok(recipeDto);
     }
 
@@ -106,6 +115,7 @@ public class RecipeServiceImpl implements RecipeService {
         setAuthorToRecipe(recipe);
         recipe.setId(null);
         checkMediaUniqueness(recipe);
+        System.out.println(recipe.getMedia());
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
         for (Step step : recipe.getSteps()) {
@@ -200,7 +210,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException {
+    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException, AuthException {
         if (limit == null) {
             limit = 0;
         }
@@ -212,8 +222,12 @@ public class RecipeServiceImpl implements RecipeService {
         if (recipes.isEmpty()) {
             throw new NotFoundException("Не удалось найти рецепты с подстрокой: " + name);
         }
-        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
+        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {
+        }.getType());
+        for (RecipeDto recipeDto : recipeDtos) {
+            setUserMark(recipeDto);
 
+        }
         return ResponseEntity.ok(recipeDtos);
     }
 
@@ -221,6 +235,19 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<AvgMark> avgMarkOptional = avgMarkRepository.findById(recipe.getId());
         avgMarkOptional.ifPresent(recipe::setAvgMark);
     }
+
+    private void setUserMark(RecipeDto recipe) throws AuthException {
+        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+            JwtAuthentication principal = getAuthInfo();
+            if (principal == null) {
+                return;
+            }
+            User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
+            Optional<Mark> markOptional = markRepository.findById(new MarkKey(user.getId(), recipe.getId()));
+            markOptional.ifPresent(mark -> recipe.setUserMark(mark.getMark()));
+        }
+    }
+
 
     @Override
     public ResponseEntity<Void> deleteRecipe(Long recipeId) throws NotFoundException {

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.exceptions.AuthException;
+import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
@@ -72,16 +73,16 @@ public class AuthController {
     }
 
 
-    @PutMapping("/user/password/mobile")
+    @PutMapping("/profile/password/mobile")
     public ResponseEntity<JwtResponse> userUpdateMobile(@RequestBody UserDto userDto) throws NotFoundException,
-            AuthException {
+            AuthException, BadRequestException {
         final JwtResponse token = authServiceMobile.changePassword(userDto);
         return ResponseEntity.ok(token);
     }
 
-    @PutMapping("/user/password/web")
+    @PutMapping("/profile/password/web")
     public ResponseEntity<JwtResponse> userUpdateWeb(@RequestBody UserDto userDto) throws NotFoundException,
-            AuthException {
+            AuthException, BadRequestException {
         final JwtResponse token = authServiceWeb.changePassword(userDto);
         return ResponseEntity.ok(token);
     }

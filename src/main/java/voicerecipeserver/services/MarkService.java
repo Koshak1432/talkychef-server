@@ -12,5 +12,5 @@ public interface MarkService {
 
     ResponseEntity<IdDto> updateRecipeMark(MarkDto mark) throws NotFoundException, BadRequestException, AuthException;
 
-    ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws BadRequestException;
+    ResponseEntity<Void> deleteRecipeMark(Long recipeId) throws BadRequestException, AuthException;
 }
