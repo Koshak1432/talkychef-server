@@ -25,6 +25,9 @@ public class UserInfo {
     @Column(name = "vk_link")
     private String vkLink;
 
+    @Column(name = "display_name")
+    private String displayName;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @MapsId
@@ -34,5 +37,7 @@ public class UserInfo {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private Media image;
+
+
 
 }

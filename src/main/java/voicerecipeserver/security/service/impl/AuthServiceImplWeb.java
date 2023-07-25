@@ -16,6 +16,7 @@ import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
@@ -86,7 +87,7 @@ public class AuthServiceImplWeb implements AuthService {
     }
 
 
-    public JwtResponse registration(UserDto userDto) throws AuthException, NotFoundException {
+    public JwtResponse registration(UserDto userDto) throws AuthException, NotFoundException, UserException {
         Optional<User> userFromDb = userServiceImpl.getByLogin(userDto.getLogin());
         if (userFromDb.isPresent()) {
             throw new AuthException("Пользователь существует");
