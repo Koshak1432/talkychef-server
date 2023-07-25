@@ -17,6 +17,7 @@ import voicerecipeserver.model.dto.UserProfileDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.model.exceptions.UserException;
 
 import java.util.List;
 
@@ -30,6 +31,8 @@ public interface ProfileApi {
 
     @PutMapping
     ResponseEntity<IdDto> profilePut(@RequestBody UserProfileDto profileDto) throws BadRequestException, NotFoundException;
+   @PostMapping
+    ResponseEntity<IdDto> profilePost(@RequestBody UserProfileDto profileDto) throws BadRequestException, NotFoundException, UserException;
 
     @GetMapping("/{login}")
     ResponseEntity<UserProfileDto> profileByIdGet(@PathVariable("login") @PositiveOrZero String login) throws Exception;

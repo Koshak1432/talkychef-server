@@ -31,8 +31,8 @@ public class UserInfo {
     @ToString.Exclude
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
-    private Media profileImage;
+    private Media image;
 
 }

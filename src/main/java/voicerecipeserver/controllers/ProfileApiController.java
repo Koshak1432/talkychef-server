@@ -11,6 +11,7 @@ import voicerecipeserver.model.dto.UserProfileDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.security.service.UserService;
 import voicerecipeserver.services.RecipeService;
 
@@ -33,6 +34,10 @@ public class ProfileApiController implements ProfileApi {
     @Override
     public ResponseEntity<IdDto> profilePut(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
         return userService.profileUpdate(profileDto);
+    }
+    @Override
+    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException, UserException {
+        return userService.profilePost(profileDto);
     }
 
     @Override

@@ -115,6 +115,7 @@ public class RecipeServiceImpl implements RecipeService {
         setAuthorToRecipe(recipe);
         recipe.setId(null);
         checkMediaUniqueness(recipe);
+        System.out.println(recipe.getMedia());
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
         for (Step step : recipe.getSteps()) {

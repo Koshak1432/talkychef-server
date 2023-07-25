@@ -73,14 +73,14 @@ public class AuthController {
     }
 
 
-    @PutMapping("/user/password/mobile")
+    @PutMapping("/profile/password/mobile")
     public ResponseEntity<JwtResponse> userUpdateMobile(@RequestBody UserDto userDto) throws NotFoundException,
             AuthException, BadRequestException {
         final JwtResponse token = authServiceMobile.changePassword(userDto);
         return ResponseEntity.ok(token);
     }
 
-    @PutMapping("/user/password/web")
+    @PutMapping("/profile/password/web")
     public ResponseEntity<JwtResponse> userUpdateWeb(@RequestBody UserDto userDto) throws NotFoundException,
             AuthException, BadRequestException {
         final JwtResponse token = authServiceWeb.changePassword(userDto);

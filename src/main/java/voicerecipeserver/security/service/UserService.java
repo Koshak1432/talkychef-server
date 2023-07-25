@@ -9,6 +9,7 @@ import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.model.exceptions.UserException;
 
 import java.util.Optional;
 
@@ -22,4 +23,5 @@ public interface UserService {
 
 
     ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException, NotFoundException;
+    ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException, UserException;
 }

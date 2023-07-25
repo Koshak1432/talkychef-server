@@ -16,6 +16,7 @@ import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.model.exceptions.UserException;
+import voicerecipeserver.respository.MediaRepository;
 import voicerecipeserver.respository.RoleRepository;
 import voicerecipeserver.respository.UserInfoRepository;
 import voicerecipeserver.respository.UserRepository;
@@ -37,15 +38,18 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final BeanConfig passwordEncoder;
     private final ModelMapper mapper;
+    private final MediaRepository mediaRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, BeanConfig passwordEncoder, ModelMapper mapper,
-                           RoleRepository roleRepository, UserInfoRepository userInfoRepository) {
+                           RoleRepository roleRepository, UserInfoRepository userInfoRepository,
+                           MediaRepository mediaRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
         this.roleRepository = roleRepository;
         this.userInfoRepository = userInfoRepository;
+        this.mediaRepository = mediaRepository;
     }
 
 
@@ -78,7 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<UserProfileDto> getUserProfile() throws Exception {
         JwtAuthentication principal = getAuthInfo();
-        if (principal == null) throw  new AuthException("Not authorized yet");
+        if (principal == null) throw new AuthException("Not authorized yet");
         return getUserProfile(principal.getLogin());
     }
 
@@ -95,12 +99,37 @@ public class UserServiceImpl implements UserService {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("Нет прав");
         }
+        User user = findUserByLogin(profileDto.getUid());
+        UserInfo userInfo = user.getUserInfo();
+        if (userInfo == null) {
+            throw new NotFoundException("Информация пользователя не найдена");
+        }
+        userInfo.setInfo(profileDto.getInfo());
+        userInfo.setVkLink(profileDto.getVkLink());
+        userInfo.setTgLink(profileDto.getTgLink());
+        Media media = mediaRepository.findById(profileDto.getImage().getId()).orElseThrow(() -> new NotFoundException("Медиа не найдено"));
+        Long oldMediaId = userInfo.getImage().getId();
+        userInfo.setImage(media);
+        userInfoRepository.save(userInfo);
+        if (media.getId() != oldMediaId) {
+            mediaRepository.deleteById(oldMediaId);
+        }
+        return ResponseEntity.ok(new IdDto().id(userInfo.getId()));
+    }
+
+    @Override
+    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException, UserException {
+        if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
+            throw new BadRequestException("Нет прав");
+        }
         UserInfo userInfo = mapper.map(profileDto, UserInfo.class);
         User user = findUserByLogin(profileDto.getUid());
+        if (user.getUserInfo() != null) {
+            throw new UserException("Информация о пользователе существует");
+        }
         userInfo.setUser(user);
-        System.out.println(userInfo);
-        userInfoRepository.save(userInfo);
-        return ResponseEntity.ok(new IdDto().id(1L)); //userInfo.getId()));
+        UserInfo newUser = userInfoRepository.save(userInfo);
+        return ResponseEntity.ok(new IdDto().id(newUser.getId()));
     }
 
     public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) throws NotFoundException, BadRequestException {
