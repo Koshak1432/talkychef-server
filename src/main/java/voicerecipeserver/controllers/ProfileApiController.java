@@ -15,6 +15,8 @@ import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.security.service.UserService;
 import voicerecipeserver.services.RecipeService;
 
+import java.util.List;
+
 @CrossOrigin(maxAge = 1440)
 @RestController
 public class ProfileApiController implements ProfileApi {
@@ -41,7 +43,7 @@ public class ProfileApiController implements ProfileApi {
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> profileByIdGet(String login) throws Exception {
-        return userService.getUserProfile(login);
+    public ResponseEntity<List<UserProfileDto>> profileByUidGet(String login, Integer limit) throws Exception {
+        return userService.getUserProfile(login, limit);
     }
 }

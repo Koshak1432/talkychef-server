@@ -24,9 +24,7 @@ import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.UserService;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
 
@@ -83,16 +81,44 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<UserProfileDto> getUserProfile() throws Exception {
         JwtAuthentication principal = getAuthInfo();
         if (principal == null) throw new AuthException("Not authorized yet");
-        return getUserProfile(principal.getLogin());
+        User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
+        UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(() -> new UserException("Нет информации о пользователе"));
+        UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
+        userDto.setUid(user.getUid());
+        userDto.setDisplayName(user.getDisplayName());
+        return ResponseEntity.ok(userDto);
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> getUserProfile(String login) throws Exception {
-        User user = userRepository.findByUid(login).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
-        UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(() -> new UserException("Нет информации о пользователе"));
-        UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
-        return ResponseEntity.ok(userDto);
+    public ResponseEntity<List<UserProfileDto>> getUserProfile(String login, Integer limit) throws Exception {
+        if (limit == null) {
+            limit = 0;
+        }
+        List<User> users = userRepository.findByUidContaining(login, limit);
+        List<UserProfileDto> userProfileDtos = new ArrayList<>();
+        if (users.isEmpty()) {
+            throw new NotFoundException("Не удалось найти пользователей с подстрокой: " + login);
+        }
+        for (User user : users) {
+            getUserProfileInfo(userProfileDtos, user);
+        }
+
+        return ResponseEntity.ok(userProfileDtos);
     }
+
+    private void getUserProfileInfo(List<UserProfileDto> userProfileDtos, User user) {
+        Optional<UserInfo> userInfo = userInfoRepository.findById(user.getId());
+        UserProfileDto userProfileDto;
+        if (userInfo.isPresent()) {
+            userProfileDto = mapper.map(userInfo, UserProfileDto.class);
+        } else {
+            userProfileDto = new UserProfileDto();
+        }
+        userProfileDto.setUid(user.getUid());
+        userProfileDto.setDisplayName(user.getDisplayName());
+        userProfileDtos.add(userProfileDto);
+    }
+
 
     @Override
     public ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
@@ -104,9 +130,7 @@ public class UserServiceImpl implements UserService {
         if (userInfo == null) {
             throw new NotFoundException("Информация пользователя не найдена");
         }
-        userInfo.setInfo(profileDto.getInfo());
-        userInfo.setVkLink(profileDto.getVkLink());
-        userInfo.setTgLink(profileDto.getTgLink());
+        setUserInfo(profileDto, userInfo);
         Media media = mediaRepository.findById(profileDto.getImage().getId()).orElseThrow(() -> new NotFoundException("Медиа не найдено"));
         Long oldMediaId = userInfo.getImage().getId();
         userInfo.setImage(media);
@@ -115,6 +139,12 @@ public class UserServiceImpl implements UserService {
             mediaRepository.deleteById(oldMediaId);
         }
         return ResponseEntity.ok(new IdDto().id(userInfo.getId()));
+    }
+
+    private static void setUserInfo(UserProfileDto profileDto, UserInfo userInfo) {
+        userInfo.setInfo(profileDto.getInfo());
+        userInfo.setVkLink(profileDto.getVkLink());
+        userInfo.setTgLink(profileDto.getTgLink());
     }
 
     @Override

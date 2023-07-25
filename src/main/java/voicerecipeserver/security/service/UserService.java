@@ -11,6 +11,7 @@ import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.model.exceptions.UserException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -19,7 +20,7 @@ public interface UserService {
     ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException, BadRequestException;
 
     ResponseEntity<UserProfileDto> getUserProfile() throws Exception;
-    ResponseEntity<UserProfileDto> getUserProfile(String login) throws Exception;
+    ResponseEntity<List<UserProfileDto>>getUserProfile(String login, Integer limit) throws Exception;
 
 
     ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException, NotFoundException;

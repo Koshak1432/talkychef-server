@@ -31,11 +31,14 @@ public interface ProfileApi {
 
     @PutMapping
     ResponseEntity<IdDto> profilePut(@RequestBody UserProfileDto profileDto) throws BadRequestException, NotFoundException;
-   @PostMapping
+
+    @PostMapping
     ResponseEntity<IdDto> profilePost(@RequestBody UserProfileDto profileDto) throws BadRequestException, NotFoundException, UserException;
 
     @GetMapping("/{login}")
-    ResponseEntity<UserProfileDto> profileByIdGet(@PathVariable("login") @PositiveOrZero String login) throws Exception;
+    ResponseEntity<List<UserProfileDto>> profileByUidGet(
+            @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login,
+            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws Exception;
 
 
 }
