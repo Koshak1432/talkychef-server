@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException {
+    public ResponseEntity<IdDto> postUser(UserDto userDto) throws UserException, NotFoundException {
         User user = mapper.map(userDto, User.class);
         user.setId(null);
         user.setUid(userDto.getLogin());
@@ -74,6 +74,13 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(user.getPassword()));
         User savedUser = userRepository.save(user);
+        if (savedUser.getUserInfo() != null) {
+            throw new UserException("Информация о пользователе существует");
+        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUser(user);
+        userInfo.setDisplayName(userDto.getDisplayName());
+        userInfoRepository.save(userInfo);
         return ResponseEntity.ok(new IdDto().id(savedUser.getId()));
     }
 
@@ -85,7 +92,7 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(() -> new UserException("Нет информации о пользователе"));
         UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
         userDto.setUid(user.getUid());
-        userDto.setDisplayName(user.getDisplayName());
+//        userDto.setDisplayName(user.getDisplayName());
         return ResponseEntity.ok(userDto);
     }
 
@@ -115,7 +122,7 @@ public class UserServiceImpl implements UserService {
             userProfileDto = new UserProfileDto();
         }
         userProfileDto.setUid(user.getUid());
-        userProfileDto.setDisplayName(user.getDisplayName());
+//        userProfileDto.setDisplayName(user.getDisplayName());
         userProfileDtos.add(userProfileDto);
     }
 
@@ -132,10 +139,13 @@ public class UserServiceImpl implements UserService {
         }
         setUserInfo(profileDto, userInfo);
         Media media = mediaRepository.findById(profileDto.getImage().getId()).orElseThrow(() -> new NotFoundException("Медиа не найдено"));
-        Long oldMediaId = userInfo.getImage().getId();
+        Long oldMediaId = null;
+        if (userInfo.getImage()!= null) {
+             oldMediaId = userInfo.getImage().getId();
+        }
         userInfo.setImage(media);
         userInfoRepository.save(userInfo);
-        if (media.getId() != oldMediaId) {
+        if (oldMediaId != null &&  media.getId() != oldMediaId) {
             mediaRepository.deleteById(oldMediaId);
         }
         return ResponseEntity.ok(new IdDto().id(userInfo.getId()));
@@ -145,6 +155,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setInfo(profileDto.getInfo());
         userInfo.setVkLink(profileDto.getVkLink());
         userInfo.setTgLink(profileDto.getTgLink());
+        userInfo.setDisplayName(profileDto.getDisplayName());
     }
 
     @Override

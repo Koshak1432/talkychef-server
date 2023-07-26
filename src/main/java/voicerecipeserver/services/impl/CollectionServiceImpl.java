@@ -19,7 +19,6 @@ import voicerecipeserver.services.CollectionService;
 import voicerecipeserver.utils.FindUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CollectionServiceImpl implements CollectionService {
@@ -58,7 +57,8 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> getCollectionPage(String collectionName, Integer pageNum) throws NotFoundException {
+    public ResponseEntity<CollectionDto> getCollectionPage(String collectionName, Integer pageNum) throws
+            NotFoundException {
         if (null == pageNum) {
             pageNum = 0;
         }

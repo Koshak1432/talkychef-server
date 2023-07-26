@@ -25,33 +25,27 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
     private final MeasureUnitRepository measureUnitRepository;
-    private UserRepository userRepository;
-    private final AvgMarkRepository avgMarkRepository;
+    private final UserRepository userRepository;
     private final StepRepository stepRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
-                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository) {
+                             StepRepository stepRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.stepRepository = stepRepository;
-        this.avgMarkRepository = avgMarkRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
     }
 
-    @Autowired
-    private void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, id);
-        setAvgMark(recipe);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
         return ResponseEntity.ok(recipeDto);
     }
@@ -205,11 +199,6 @@ public class RecipeServiceImpl implements RecipeService {
         List<Recipe> recipes = findRecipesByName(name, limit);
         List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
         return ResponseEntity.ok(recipeDtos);
-    }
-
-    private void setAvgMark(Recipe recipe) {
-        Optional<AvgMark> avgMarkOptional = avgMarkRepository.findById(recipe.getId());
-        avgMarkOptional.ifPresent(recipe::setAvgMark);
     }
 
     @Override

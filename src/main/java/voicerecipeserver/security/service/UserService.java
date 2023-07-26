@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface UserService {
     Optional<User> getByLogin(@NonNull String login);
 
-    ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException, BadRequestException;
+    ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException, BadRequestException, UserException;
 
     ResponseEntity<UserProfileDto> getUserProfile() throws Exception;
     ResponseEntity<List<UserProfileDto>>getUserProfile(String login, Integer limit) throws Exception;

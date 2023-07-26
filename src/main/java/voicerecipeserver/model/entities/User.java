@@ -26,9 +26,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "display_name")
-    private String displayName;
-
     @OneToMany(mappedBy = "author")
     @ToString.Exclude
     private List<Recipe> recipes;
@@ -54,7 +51,6 @@ public class User {
     public User(String uid, String password, String displayName, Set<Role> roles) {
         this.uid = uid;
         this.password = password;
-        this.displayName = displayName;
         this.roles = roles;
     }
 
