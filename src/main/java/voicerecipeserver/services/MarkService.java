@@ -8,9 +8,12 @@ import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
 public interface MarkService {
+
+    ResponseEntity<MarkDto> getRecipeMark(String userUid, Long recipeId) throws NotFoundException;
     ResponseEntity<IdDto> addRecipeMark(MarkDto mark) throws NotFoundException, AuthException, BadRequestException;
 
     ResponseEntity<IdDto> updateRecipeMark(MarkDto mark) throws NotFoundException, BadRequestException, AuthException;
 
-    ResponseEntity<Void> deleteRecipeMark(Long recipeId) throws BadRequestException, AuthException;
+    ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws AuthException, NotFoundException,
+            BadRequestException;
 }

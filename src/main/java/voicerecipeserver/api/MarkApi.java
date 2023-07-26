@@ -17,6 +17,9 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 @Validated
 public interface MarkApi {
 
+    @GetMapping
+    ResponseEntity<MarkDto> getMark(@RequestParam("user_uid") String userUid, @RequestParam("recipe_id") Long recipeId);
+
     @PostMapping
     ResponseEntity<IdDto> markPost(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException, AuthException;
 
@@ -26,5 +29,5 @@ public interface MarkApi {
 
     @DeleteMapping
     ResponseEntity<Void> markDelete(@RequestParam("user_uid") String userUid, @RequestParam("recipe_id") Long recipeId) throws
-            NotFoundException, BadRequestException, AuthException;
+            NotFoundException, AuthException, BadRequestException;
 }

@@ -16,6 +16,7 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CollectionRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.services.CollectionService;
+import voicerecipeserver.utils.FindUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,20 +47,9 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> addRecipeToCollection(Long recipe, String collection) throws NotFoundException {
-        Optional<Collection> collectionOptional = collectionRepository.findByName(collection);
-        if (collectionOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти коллекцию с именем: " + collection);
-        }
-
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipe);
-
-        if (recipeOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепт с id: " + recipe);
-        }
-
-        Collection collection1 = collectionOptional.get();
-        Recipe recipe1 = recipeOptional.get();
+    public ResponseEntity<Void> addRecipeToCollection(Long recipeId, String collectionName) throws NotFoundException {
+        Collection collection1 = FindUtils.findCollection(collectionRepository, collectionName);
+        Recipe recipe1 = FindUtils.findRecipe(recipeRepository, recipeId);
 
         //после этой операции коллекция становится невалидной (да и в рецепте множество коллекций тоже)
         collectionRepository.addRecipeToCollection(recipe1.getId(), collection1.getId());
@@ -68,20 +58,13 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> getCollectionPage(String name, Integer pageNum) throws NotFoundException {
-        Optional<Collection> collectionOptional = collectionRepository.findByName(name);
-
+    public ResponseEntity<CollectionDto> getCollectionPage(String collectionName, Integer pageNum) throws NotFoundException {
         if (null == pageNum) {
             pageNum = 0;
         }
-        if (collectionOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти коллекцию с именем: " + name);
-        }
-
-        Collection collection = collectionOptional.get();
-
+        Collection collection = FindUtils.findCollection(collectionRepository, collectionName);
         CollectionDto collectionDto = new CollectionDto();
-        collectionDto.setName(name);
+        collectionDto.setName(collectionName);
         collectionDto.setNumber(collection.getNumber());
 
         collectionDto.setRecipes(mapper.map(
