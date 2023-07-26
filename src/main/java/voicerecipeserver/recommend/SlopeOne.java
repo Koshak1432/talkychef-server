@@ -1,24 +1,35 @@
 package voicerecipeserver.recommend;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.Mark;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
+import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.respository.MarkRepository;
+import voicerecipeserver.respository.UserRepository;
+import voicerecipeserver.security.domain.JwtAuthentication;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
 
 /**
  * Slope One algorithm implementation
  */
 @Service
 public class SlopeOne {
+    private final ModelMapper mapper;
+    private final UserRepository userRepository;
     private final MarkRepository markRepository;
     private  Map<Recipe, Map<Recipe, Double>> diff = new HashMap<>();
     private  Map<Recipe, Map<Recipe, Integer>> freq = new HashMap<>();
@@ -26,16 +37,22 @@ public class SlopeOne {
     private  Map<User, HashMap<Recipe, Double>> outputData = new HashMap<>();
 
     @Autowired
-    public SlopeOne(MarkRepository markRepository) {
+    public SlopeOne(ModelMapper mapper, UserRepository userRepository, MarkRepository markRepository) {
+        this.mapper = mapper;
+        this.userRepository = userRepository;
         this.markRepository = markRepository;
     }
 
-    public  void slopeOne() {
+    public List<RecipeDto> slopeOne(Integer limit) throws AuthException {
+        if (limit == null) {
+            limit = 100;
+        }
         inputData = initializeData();
         System.out.println("Slope One - Before the Prediction\n");
         buildDifferencesMatrix(inputData);
         System.out.println("\nSlope One - With Predictions\n");
-        predict(inputData);
+
+        return predict(inputData, limit);
     }
 
     private  Map<User, HashMap<Recipe, Double>> initializeData() {
@@ -111,9 +128,10 @@ public class SlopeOne {
      * Based on existing data predict all missing ratings. If prediction is not
      * possible, the value will be equal to -1
      *
-     * @param data existing user data and their items' ratings
+     * @param data  existing user data and their items' ratings
+     * @param limit
      */
-    private  void predict(Map<User, HashMap<Recipe, Double>> data) {
+    private  List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data, Integer limit) throws AuthException {
         HashMap<Recipe, Double> uPred = new HashMap<Recipe, Double>();
         HashMap<Recipe, Integer> uFreq = new HashMap<Recipe, Integer>();
         for (Recipe j : diff.keySet()) {
@@ -151,6 +169,24 @@ public class SlopeOne {
             outputData.put(e.getKey(), clean);
         }
         printData(outputData);
+
+        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+            JwtAuthentication principal = getAuthInfo();
+            if (principal == null) {
+                return null;
+            }
+            User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
+
+            List<Recipe> sortedList = outputData.get(user).entrySet().stream()
+                    .sorted(Map.Entry.<Recipe, Double>comparingByValue().reversed())
+                    .limit(limit)
+                    .map(Map.Entry::getKey)
+                    .toList();
+            List<RecipeDto> recipeDtos =  mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
+            }.getType());
+            return recipeDtos;
+        }
+        return null;
     }
 
     private  void printData(Map<User, HashMap<Recipe, Double>> data) {

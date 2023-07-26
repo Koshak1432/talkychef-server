@@ -52,4 +52,10 @@ public class RecipeApiController implements RecipeApi {
         return recipeService.searchRecipesByName(name, limit);
     }
 
+    @Override
+    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit) throws NotFoundException, AuthException {
+        return recipeService.filterContent(limit);
+    }
+
+
 }

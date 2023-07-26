@@ -132,21 +132,20 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException {
-         final SlopeOne slopeOne = new SlopeOne(markRepository);
-        slopeOne.slopeOne();
-//        if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
-//            throw new AuthException("Нет прав");
-//        }
-//        Recipe oldRecipe = findRecipe(recipeDto.getId());
-//        Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-//
-//        newRecipe.setId(recipeDto.getId());
-//        setAuthorToRecipe(newRecipe);
-//        setSteps(oldRecipe, newRecipe);
-//        checkMediaUniqueness(newRecipe);
-//        setDistribution(newRecipe);
-//        recipeRepository.save(newRecipe);
-        return ResponseEntity.ok(new IdDto().id(2L)); //newRecipe.getId()));
+
+        if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
+            throw new AuthException("Нет прав");
+        }
+        Recipe oldRecipe = findRecipe(recipeDto.getId());
+        Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
+
+        newRecipe.setId(recipeDto.getId());
+        setAuthorToRecipe(newRecipe);
+        setSteps(oldRecipe, newRecipe);
+        checkMediaUniqueness(newRecipe);
+        setDistribution(newRecipe);
+        recipeRepository.save(newRecipe);
+        return ResponseEntity.ok(new IdDto().id(newRecipe.getId()));
     }
 
     private void setDistribution(Recipe recipe) throws BadRequestException {
@@ -242,5 +241,11 @@ public class RecipeServiceImpl implements RecipeService {
             recipeRepository.deleteById(recipeId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit) throws AuthException {
+        SlopeOne slopeOne = new SlopeOne(mapper, userRepository, markRepository);
+         return ResponseEntity.ok(slopeOne.slopeOne(limit));
     }
 }
