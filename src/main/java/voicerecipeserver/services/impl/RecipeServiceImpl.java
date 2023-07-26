@@ -203,10 +203,6 @@ public class RecipeServiceImpl implements RecipeService {
             limit = 0;
         }
         List<Recipe> recipes = findRecipesByName(name, limit);
-        for (Recipe recipe : recipes) {
-            setAvgMark(recipe);
-        }
-
         List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
         return ResponseEntity.ok(recipeDtos);
     }
