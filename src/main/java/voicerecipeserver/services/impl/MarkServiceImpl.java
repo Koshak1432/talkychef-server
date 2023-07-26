@@ -62,6 +62,9 @@ public class MarkServiceImpl implements MarkService {
             mark.setUser(author.get());
         }
     }
+    // 79 1 - soda, 80 2- snacks,
+    // 81 3- drink, 82 4- candy
+    // 83 5- popcorn
 
     @Override
     public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException,

@@ -10,6 +10,7 @@ import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class RecipeApiController implements RecipeApi {
     public RecipeApiController(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
+
 
     @Override
     public ResponseEntity<RecipeDto> recipeIdGet(Long id) throws NotFoundException, AuthException {

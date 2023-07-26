@@ -5,8 +5,6 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
@@ -14,14 +12,12 @@ import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.respository.*;
-import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.*;
-
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -136,19 +132,21 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException {
-        if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
-            throw new AuthException("Нет прав");
-        }
-        Recipe oldRecipe = findRecipe(recipeDto.getId());
-        Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
-
-        newRecipe.setId(recipeDto.getId());
-        setAuthorToRecipe(newRecipe);
-        setSteps(oldRecipe, newRecipe);
-        checkMediaUniqueness(newRecipe);
-        setDistribution(newRecipe);
-        recipeRepository.save(newRecipe);
-        return ResponseEntity.ok(new IdDto().id(newRecipe.getId()));
+         final SlopeOne slopeOne = new SlopeOne(markRepository);
+        slopeOne.slopeOne();
+//        if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
+//            throw new AuthException("Нет прав");
+//        }
+//        Recipe oldRecipe = findRecipe(recipeDto.getId());
+//        Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
+//
+//        newRecipe.setId(recipeDto.getId());
+//        setAuthorToRecipe(newRecipe);
+//        setSteps(oldRecipe, newRecipe);
+//        checkMediaUniqueness(newRecipe);
+//        setDistribution(newRecipe);
+//        recipeRepository.save(newRecipe);
+        return ResponseEntity.ok(new IdDto().id(2L)); //newRecipe.getId()));
     }
 
     private void setDistribution(Recipe recipe) throws BadRequestException {
