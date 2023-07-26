@@ -23,7 +23,12 @@ public class MarkApiController implements MarkApi {
     }
 
     @Override
-    public ResponseEntity<MarkDto> getMark(String userUid, Long recipeId) {
+    public ResponseEntity<Float> getAvgMark(Long id) throws NotFoundException {
+        return markService.getAvgMark(id);
+    }
+
+    @Override
+    public ResponseEntity<MarkDto> getMark(String userUid, Long recipeId) throws NotFoundException {
         return markService.getRecipeMark(userUid, recipeId);
     }
 
