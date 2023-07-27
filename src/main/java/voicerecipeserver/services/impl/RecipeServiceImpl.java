@@ -228,7 +228,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit) throws AuthException {
+    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit) throws NotFoundException {
         SlopeOne recommendAlgSlopeOne = new SlopeOne(mapper, userRepository, markRepository, recipeRepository);
         return ResponseEntity.ok(recommendAlgSlopeOne.recommendAlgSlopeOne(limit));
     }

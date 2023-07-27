@@ -11,10 +11,12 @@ import voicerecipeserver.model.entities.Mark;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
+import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
+import voicerecipeserver.utils.FindUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,10 +36,9 @@ public class SlopeOne {
     private final ModelMapper mapper;
     private final UserRepository userRepository;
     private final MarkRepository markRepository;
-    private Map<Recipe, Map<Recipe, Double>> diff = new HashMap<>();
-    private Map<Recipe, Map<Recipe, Integer>> freq = new HashMap<>();
-    private Map<User, HashMap<Recipe, Double>> inputData;
-    private Map<User, HashMap<Recipe, Double>> outputData = new HashMap<>();
+    private final Map<Recipe, Map<Recipe, Double>> diff = new HashMap<>();
+    private final Map<Recipe, Map<Recipe, Integer>> freq = new HashMap<>();
+    private final Map<User, HashMap<Recipe, Double>> outputData = new HashMap<>();
     private final RecipeRepository recipeRepository;
     private Integer limit;
 
@@ -50,9 +51,9 @@ public class SlopeOne {
         this.recipeRepository = recipeRepository;
     }
 
-    public List<RecipeDto> recommendAlgSlopeOne(Integer limit) throws AuthException {
+    public List<RecipeDto> recommendAlgSlopeOne(Integer limit) throws NotFoundException {
         this.limit = (limit == null) ? 100 : limit;
-        inputData = initializeData();
+        Map<User, HashMap<Recipe, Double>> inputData = initializeData();
         buildDifferencesMatrix(inputData);
         return predict(inputData);
     }
@@ -109,9 +110,8 @@ public class SlopeOne {
      * possible, the value will be equal to -1
      *
      * @param data  existing user data and their items' ratings
-     * @param limit
      */
-    private List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data) throws AuthException {
+    private List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data) throws NotFoundException {
         // Initialize the uPred and uFreq maps
         HashMap<Recipe, Double> uPred = new HashMap<>();
         HashMap<Recipe, Integer> uFreq = new HashMap<>();
@@ -168,26 +168,29 @@ public class SlopeOne {
         });
     }
 
-    private List<RecipeDto> getSortedRecipeDtos(Integer limit) throws AuthException {
+    private List<RecipeDto> getSortedRecipeDtos(Integer limit) throws NotFoundException {
         List<RecipeDto> recipeDtos;
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
             JwtAuthentication principal = getAuthInfo();
-            if (principal == null) {
-                return Collections.emptyList();
+            User user = FindUtils.findUser(userRepository, principal.getLogin());
+            HashMap<Recipe, Double> outputUserData = outputData.get(user);
+            if (outputUserData != null) {
+                List<Recipe> sortedList = outputUserData.entrySet().stream()
+                        .sorted(Map.Entry.<Recipe, Double>comparingByValue().reversed())
+                        .limit(limit)
+                        .map(Map.Entry::getKey)
+                        .toList();
+                recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
+                }.getType());
+            } else {
+                recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimit(limit), new TypeToken<List<RecipeDto>>() {
+                }.getType());
             }
-            User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
-
-            List<Recipe> sortedList = outputData.get(user).entrySet().stream()
-                    .sorted(Map.Entry.<Recipe, Double>comparingByValue().reversed())
-                    .limit(limit)
-                    .map(Map.Entry::getKey)
-                    .toList();
-            recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
-            }.getType());
         } else {
             recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimit(limit), new TypeToken<List<RecipeDto>>() {
             }.getType());
         }
+
         List<RecipeDto> recipes = mapper.map(recipeRepository.findRandomWithLimit(limit - recipeDtos.size()), new TypeToken<List<RecipeDto>>() {
         }.getType());
         recipeDtos.addAll(recipes);
