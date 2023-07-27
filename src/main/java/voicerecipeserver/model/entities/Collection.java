@@ -19,6 +19,11 @@ public class Collection {
 
     private Integer number;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    @ToString.Exclude
+    private User author;
+
 /**
  * @deprecated
  * Будет подгружаться вся коллекция. Если во всей коллекции нет нужды, лучше использовать другие методы

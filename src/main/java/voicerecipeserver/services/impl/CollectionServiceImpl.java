@@ -14,12 +14,14 @@ import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.AuthException;
+import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CollectionRepository;
 import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.CollectionService;
 
 import java.util.List;
@@ -33,6 +35,8 @@ public class CollectionServiceImpl implements CollectionService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final MarkRepository markRepository;
+
+
 
 
     private final ModelMapper mapper;
@@ -51,6 +55,11 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public ResponseEntity<Void> addCollection(String name) {
         Collection collection = new Collection();
+        JwtAuthentication principal = getAuthInfo();
+        if (principal == null) {
+            return null;
+        }
+        collection.setAuthor(userRepository.findByUid(principal.getLogin()).orElseThrow(new ));
         collection.setName(name);
         collection.setNumber(0);
         collectionRepository.save(collection);
