@@ -40,7 +40,7 @@ public class Media {
     private Step step;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "media", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserInfo userInfo;
 
 

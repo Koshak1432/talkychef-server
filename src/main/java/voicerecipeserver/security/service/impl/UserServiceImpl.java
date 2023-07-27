@@ -4,14 +4,14 @@ import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.dto.UserProfileDto;
-import voicerecipeserver.model.entities.*;
+import voicerecipeserver.model.entities.Media;
+import voicerecipeserver.model.entities.Role;
+import voicerecipeserver.model.entities.User;
+import voicerecipeserver.model.entities.UserInfo;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
@@ -23,6 +23,7 @@ import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.UserService;
+import voicerecipeserver.utils.FindUtils;
 
 import java.util.*;
 
@@ -87,12 +88,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<UserProfileDto> getUserProfile() throws Exception {
         JwtAuthentication principal = getAuthInfo();
-        if (principal == null) throw new AuthException("Not authorized yet");
-        User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
-        UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(() -> new UserException("Нет информации о пользователе"));
+        if (principal == null) {
+            throw new AuthException("Not authorized yet");
+        }
+        User user = FindUtils.findUser(userRepository, principal.getLogin());
+        UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(
+                () -> new UserException("Нет информации о пользователе"));
         UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
         userDto.setUid(user.getUid());
-//        userDto.setDisplayName(user.getDisplayName());
+        System.out.println("USER DTO: " + userDto);
+        System.out.println("USER: " + user);
         return ResponseEntity.ok(userDto);
     }
 
@@ -128,7 +133,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException,
+            NotFoundException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("Нет прав");
         }
@@ -138,15 +144,22 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("Информация пользователя не найдена");
         }
         setUserInfo(profileDto, userInfo);
-        Media media = mediaRepository.findById(profileDto.getMediaId()).orElseThrow(() -> new NotFoundException("Медиа не найдено"));
+        Media media = null;
         Long oldMediaId = null;
-        if (userInfo.getImage()!= null) {
-             oldMediaId = userInfo.getImage().getId();
+        Long mediaId = profileDto.getMediaId();
+        if (mediaId != null) {
+            media = mediaRepository.findById(mediaId).orElseThrow(
+                    () -> new NotFoundException("Медиа не найдено"));
         }
-        userInfo.setImage(media);
+        userInfo.setMedia(media);
+        if (userInfo.getMedia() != null) {
+            oldMediaId = userInfo.getMedia().getId();
+        }
         userInfoRepository.save(userInfo);
-        if (oldMediaId != null &&  media.getId() != oldMediaId) {
-            mediaRepository.deleteById(oldMediaId);
+        if (oldMediaId != null) {
+            if (media == null || !Objects.equals(media.getId(), oldMediaId)) {
+                mediaRepository.deleteById(oldMediaId);
+            }
         }
         return ResponseEntity.ok(new IdDto().id(userInfo.getId()));
     }
@@ -159,7 +172,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException, UserException {
+    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException,
+            UserException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("Нет прав");
         }

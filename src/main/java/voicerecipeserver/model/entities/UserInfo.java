@@ -36,7 +36,8 @@ public class UserInfo {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
-    private Media image;
+    @ToString.Exclude
+    private Media media;
 
 
 
