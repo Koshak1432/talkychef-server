@@ -16,6 +16,7 @@ import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
+import voicerecipeserver.utils.FindUtils;
 
 import java.util.*;
 
@@ -26,56 +27,39 @@ public class RecipeServiceImpl implements RecipeService {
     private final IngredientRepository ingredientRepository;
     private final MeasureUnitRepository measureUnitRepository;
     private final UserRepository userRepository;
-    private final AvgMarkRepository avgMarkRepository;
     private final StepRepository stepRepository;
-    private final MarkRepository markRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
-                             AvgMarkRepository avgMarkRepository, StepRepository stepRepository,
-                             MarkRepository markRepository, UserRepository userRepository) {
+                             StepRepository stepRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
         this.stepRepository = stepRepository;
-        this.avgMarkRepository = avgMarkRepository;
         this.mapper = mapper;
         this.userRepository = userRepository;
-        this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
-                m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
-        this.markRepository = markRepository;
     }
 
 
     @Override
-    public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException, AuthException {
-        Recipe recipe = findRecipe(id);
-        setAvgMark(recipe);
+    public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException {
+        Recipe recipe = FindUtils.findRecipe(recipeRepository, id);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
-        setUserMark(recipeDto);
         return ResponseEntity.ok(recipeDto);
-    }
-
-    private Recipe findRecipe(Long id) throws NotFoundException {
-        Optional<Recipe> recipeOptional = recipeRepository.findById(id);
-        if (recipeOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепт с id: " + id);
-        }
-        return recipeOptional.get();
     }
 
     private void checkRecipeMediaUniqByStep(Step step) throws BadRequestException {
         Optional<Recipe> recipeOptional = recipeRepository.findRecipeByMediaId(step.getMedia().getId());
         if (recipeOptional.isPresent()) {
-            throw new BadRequestException("ID медиа должно быть уникальным");
+            throw new BadRequestException("Media id must be unique");
         }
     }
 
     private void checkStepMediaUniqByRecipe(Recipe recipe) throws BadRequestException {
         Optional<Step> stepOptional = stepRepository.findStepByMediaId(recipe.getMedia().getId());
         if (stepOptional.isPresent()) {
-            throw new BadRequestException("ID медиа должно быть уникальным");
+            throw new BadRequestException("Media id must be unique");
         }
     }
 
@@ -91,7 +75,7 @@ public class RecipeServiceImpl implements RecipeService {
             checkRecipeMediaUniqByStep(step);
             Long mediaId = step.getMedia().getId();
             if (mediaIds.contains(mediaId)) {
-                throw new BadRequestException("ID медиа должно быть уникальным");
+                throw new BadRequestException("Media id must be unique");
             } else {
                 mediaIds.add(mediaId);
             }
@@ -121,12 +105,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
-        Optional<User> author = userRepository.findByUid(recipe.getAuthor().getUid());
-        if (author.isEmpty()) {
-            throw new NotFoundException("Не удалось найти автора с uid: " + recipe.getAuthor().getUid());
-        } else {
-            recipe.setAuthor(author.get());
-        }
+        User author = FindUtils.findUser(userRepository, recipe.getAuthor().getUid());
+        recipe.setAuthor(author);
     }
 
     @Override
@@ -136,7 +116,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
             throw new AuthException("Нет прав");
         }
-        Recipe oldRecipe = findRecipe(recipeDto.getId());
+        Recipe oldRecipe = FindUtils.findRecipe(recipeRepository, recipeDto.getId());
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
 
         newRecipe.setId(recipeDto.getId());
@@ -203,40 +183,27 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    @Override
-    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException, AuthException {
-        if (limit == null) {
-            limit = 0;
-        }
+    private List<Recipe> findRecipesByName(String name, int limit) throws NotFoundException {
         List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit);
-        for (Recipe recipe : recipes) {
-            setAvgMark(recipe);
-        }
-
         if (recipes.isEmpty()) {
             throw new NotFoundException("Не удалось найти рецепты с подстрокой: " + name);
         }
-        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {
-        }.getType());
-        for (RecipeDto recipeDto : recipeDtos) {
-            setUserMark(recipeDto);
+        return recipes;
+    }
+
+    @Override
+    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException {
+        if (limit == null) {
+            limit = 0;
         }
+        List<Recipe> recipes = findRecipesByName(name, limit);
+        List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
 
-    private void setAvgMark(Recipe recipe) {
-        Optional<AvgMark> avgMarkOptional = avgMarkRepository.findById(recipe.getId());
-        avgMarkOptional.ifPresent(recipe::setAvgMark);
-    }
-
-    private void setUserMark(RecipeDto recipe) throws AuthException {
-        CollectionServiceImpl.setUserMarkToRecipe(recipe, userRepository, markRepository);
-    }
-
-
     @Override
     public ResponseEntity<Void> deleteRecipe(Long recipeId) throws NotFoundException {
-        Recipe recipe = findRecipe(recipeId);
+        Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         if (AuthServiceCommon.checkAuthorities(recipe.getAuthor().getUid())) {
             recipeRepository.deleteById(recipeId);
         }

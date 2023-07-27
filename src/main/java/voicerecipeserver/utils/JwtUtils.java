@@ -1,4 +1,4 @@
-package voicerecipeserver.security.service;
+package voicerecipeserver.utils;
 
 import io.jsonwebtoken.Claims;
 import voicerecipeserver.model.entities.Role;

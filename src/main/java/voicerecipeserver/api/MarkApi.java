@@ -1,6 +1,6 @@
 package voicerecipeserver.api;
 
-import org.springframework.data.jpa.repository.Query;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -12,19 +12,31 @@ import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
-@PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
 @RequestMapping(Constants.BASE_API_PATH + "/marks")
 @Validated
 public interface MarkApi {
 
+    @GetMapping("/{id}")
+    ResponseEntity<Float> getAvgMark(@PathVariable("id") @Positive Long id) throws NotFoundException;
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    ResponseEntity<MarkDto> getMark(@RequestParam("user_uid") String userUid,
+                                    @RequestParam("recipe_id") Long recipeId) throws NotFoundException;
+
     @PostMapping
-    ResponseEntity<IdDto> markPost(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException, AuthException;
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    ResponseEntity<IdDto> markPost(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException,
+            AuthException;
 
     @PutMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<IdDto> markUpdate(@RequestBody MarkDto mark) throws BadRequestException, NotFoundException,
             AuthException;
 
     @DeleteMapping
-    ResponseEntity<Void> markDelete(@RequestParam("user_uid") String userUid, @RequestParam("recipe_id") Long recipeId) throws
-            NotFoundException, BadRequestException, AuthException;
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    ResponseEntity<Void> markDelete(@RequestParam("user_uid") String userUid,
+                                    @RequestParam("recipe_id") Long recipeId) throws NotFoundException, AuthException,
+            BadRequestException;
 }

@@ -12,18 +12,17 @@ import voicerecipeserver.model.entities.MarkKey;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.MarkService;
+import voicerecipeserver.utils.FindUtils;
 
 import java.util.Optional;
 
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.checkAuthorities;
 
 @Service
 
@@ -31,7 +30,6 @@ public class MarkServiceImpl implements MarkService {
     private final ModelMapper mapper;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
-
     private final MarkRepository markRepository;
 
     @Autowired
@@ -44,31 +42,38 @@ public class MarkServiceImpl implements MarkService {
     }
 
     private void setRecipeToMark(Mark mark, Long recipeId) throws NotFoundException {
-        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
-        if (recipe.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепт с id: " + mark.getId().getRecipeId());
-        } else {
-            mark.getId().setRecipeId(recipe.get().getId());
-            mark.setRecipe(recipe.get());
-        }
+        Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
+        mark.getId().setRecipeId(recipe.getId());
+        mark.setRecipe(recipe);
     }
 
     private void setAuthorToMark(Mark mark, String uid) throws NotFoundException {
-        Optional<User> author = userRepository.findByUid(uid);
-        if (author.isEmpty()) {
-            throw new NotFoundException("Не удалось найти пользователя с uid: " + mark.getId().getUserId());
-        } else {
-            mark.getId().setUserId(author.get().getId());
-            mark.setUser(author.get());
-        }
+        User author = FindUtils.findUser(userRepository, uid);
+        mark.getId().setUserId(author.getId());
+        mark.setUser(author);
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException,
-            BadRequestException {
+    public ResponseEntity<Float> getAvgMark(Long recipeId) throws NotFoundException {
+        Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
+        return ResponseEntity.ok(recipe.getAvgMark().getAvgMark());
+    }
+
+    @Override
+    public ResponseEntity<MarkDto> getRecipeMark(String userUid, Long recipeId) throws NotFoundException {
+        User user = FindUtils.findUser(userRepository, userUid);
+        Optional<Mark> mark = markRepository.findById(new MarkKey(user.getId(), recipeId));
+        if (mark.isEmpty()) {
+            throw new NotFoundException("Couldn't find mark by " + userUid + " for recipe with id: " + recipeId);
+        }
+        return ResponseEntity.ok(mapper.map(mark, MarkDto.class));
+    }
+
+    @Override
+    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException {
         Mark mark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.isSamePerson(markDto.getUserUid())) {
-            throw new BadRequestException("Нельзя добавлять комментарии от чужого имени");
+            throw new AuthException("Нельзя добавлять комментарии от чужого имени");
         }
         setRecipeToMark(mark, markDto.getRecipeId());
         setAuthorToMark(mark, markDto.getUserUid());
@@ -79,11 +84,10 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException, BadRequestException,
-            AuthException {
+    public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException, AuthException {
         Mark newMark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.checkAuthorities(markDto.getUserUid())) {
-            throw new BadRequestException("Нет прав");
+            throw new AuthException("Нет прав");
         }
         setRecipeToMark(newMark, markDto.getRecipeId());
         setAuthorToMark(newMark, markDto.getUserUid());
@@ -96,18 +100,15 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipeMark(Long recipeId) throws BadRequestException, AuthException {
-        JwtAuthentication principal = getAuthInfo();
-        if (principal == null) throw  new AuthException("Not authorized yet");
-        Optional<User> user = userRepository.findByUid(principal.getLogin());
-        if (user.isPresent()) {
-            Long userId = user.get().getId();
-            markRepository.deleteById(new MarkKey(userId, recipeId));
+    public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws AuthException,
+            NotFoundException {
+        if (!checkAuthorities(userUid)) {
+            throw new AuthException("Нет прав");
         }
+        User user = FindUtils.findUser(userRepository, userUid);
+        markRepository.deleteById(new MarkKey(user.getId(), recipeId));
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 
     private boolean markIsPresent(Mark mark) {
         Optional<Mark> markOptional = markRepository.findById(mark.getId());

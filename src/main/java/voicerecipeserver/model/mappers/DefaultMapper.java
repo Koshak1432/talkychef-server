@@ -2,7 +2,6 @@ package voicerecipeserver.model.mappers;
 
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.Provider;
 import org.springframework.stereotype.Component;
 import voicerecipeserver.model.dto.*;
 import voicerecipeserver.model.dto.IngredientsDistributionDto;
@@ -37,5 +36,9 @@ public class DefaultMapper extends ModelMapper {
             mapper.map(src -> src.getIngredient().getName(), IngredientsDistributionDto::setName);
         });
 
+        this.typeMap(Recipe.class, RecipeDto.class).addMappings(
+                m -> {
+                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
+                });
     }
 }

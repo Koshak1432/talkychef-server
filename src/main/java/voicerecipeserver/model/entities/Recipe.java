@@ -73,7 +73,6 @@ public class Recipe {
     @OneToOne(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.ALL)
     private AvgMark avgMark;
 
-
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Comment> comments;
