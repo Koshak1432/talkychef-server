@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import voicerecipeserver.recommend.SlopeOne;
 
 import java.util.List;
 
@@ -46,6 +47,11 @@ public interface RecipeApi {
     @GetMapping(value = "/search/{name}")
     ResponseEntity<List<RecipeDto>> recipeSearchNameGet(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
+            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
+            NotFoundException, AuthException;
+
+    @GetMapping
+    ResponseEntity<List<RecipeDto>> getRecipesRecommendations(
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
             NotFoundException, AuthException;
 }

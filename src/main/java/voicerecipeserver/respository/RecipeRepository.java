@@ -41,4 +41,25 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
     Optional<Recipe> findRecipeByMediaId(Long mediaId);
 
 
+    @Query(value = """
+                    WITH avg_limit AS (
+                        SELECT recipe_id FROM avg_marks
+                        ORDER BY avg_mark DESC
+                    )
+                    SELECT * FROM recipes
+                    WHERE id not in (SELECT * from avg_limit)
+                    ORDER BY random()
+                    LIMIT :limit
+            """, nativeQuery = true)
+    List<Recipe>  findRandomWithLimit(int limit);
+
+
+    @Query(value = """
+                   SELECT recipes.*
+                   FROM recipes
+                   JOIN avg_marks ON recipes.id = avg_marks.recipe_id
+                   ORDER BY avg_mark DESC
+                   LIMIT :limit
+            """, nativeQuery = true)
+    List<Recipe> findTopRecipesWithLimit(Integer limit);
 }

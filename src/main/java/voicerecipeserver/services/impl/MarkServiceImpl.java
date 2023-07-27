@@ -79,6 +79,8 @@ public class MarkServiceImpl implements MarkService {
         setAuthorToMark(mark, markDto.getUserUid());
         if (!markIsPresent(mark)) {
             markRepository.save(mark);
+        } else {
+            throw new BadRequestException("Оценка уже поставлена");
         }
         return ResponseEntity.ok(new IdDto().id(mark.getId().getRecipeId()));
     }

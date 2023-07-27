@@ -6,6 +6,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +75,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleUserException(Exception e) {
         String message = e.getMessage();
         return new ResponseEntity<>(new Error().code(400).message("Auntification failed: " + message), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    protected ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        String message = e.getMessage();
+        return new ResponseEntity<>(new Error().code(400).message("Saving to db failed: " + message), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ExpiredJwtException.class})
