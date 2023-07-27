@@ -39,7 +39,10 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper = mapper;
         this.userRepository = userRepository;
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
-                m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
+                m -> {
+                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
+                    m.map(src -> src.getMedia().getId(), RecipeDto::setMedia);
+                });
     }
 
 
@@ -197,7 +200,7 @@ public class RecipeServiceImpl implements RecipeService {
             limit = 0;
         }
         List<Recipe> recipes = findRecipesByName(name, limit);
-        List<RecipeDto> recipeDtos = mapper.map(recipes, new TypeToken<List<RecipeDto>>() {}.getType());
+        List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
 
