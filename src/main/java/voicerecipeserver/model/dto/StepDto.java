@@ -2,7 +2,7 @@ package voicerecipeserver.model.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -11,12 +11,12 @@ import jakarta.validation.constraints.*;
  * StepDto
  */
 @Validated
-@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-01-22T10:56:17.279Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T02:48:13.656840513Z[GMT]")
 
 
 public class StepDto   {
   @JsonProperty("media")
-  private IdDto media = null;
+  private Long media = null;
 
   @JsonProperty("description")
   private String description = null;
@@ -27,7 +27,7 @@ public class StepDto   {
   @JsonProperty("wait_time_mins")
   private Integer waitTimeMins = null;
 
-  public StepDto media(IdDto media) {
+  public StepDto media(Long media) {
     this.media = media;
     return this;
   }
@@ -37,12 +37,11 @@ public class StepDto   {
    * @return media
    **/
   
-    @Valid
-    public IdDto getMedia() {
+    public Long getMedia() {
     return media;
   }
 
-  public void setMedia(IdDto media) {
+  public void setMedia(Long media) {
     this.media = media;
   }
 
