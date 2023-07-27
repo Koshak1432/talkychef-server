@@ -12,6 +12,7 @@ import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.respository.MarkRepository;
+import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
 
@@ -31,16 +32,19 @@ public class SlopeOne {
     private final ModelMapper mapper;
     private final UserRepository userRepository;
     private final MarkRepository markRepository;
-    private  Map<Recipe, Map<Recipe, Double>> diff = new HashMap<>();
-    private  Map<Recipe, Map<Recipe, Integer>> freq = new HashMap<>();
-    private  Map<User, HashMap<Recipe, Double>> inputData;
-    private  Map<User, HashMap<Recipe, Double>> outputData = new HashMap<>();
+    private Map<Recipe, Map<Recipe, Double>> diff = new HashMap<>();
+    private Map<Recipe, Map<Recipe, Integer>> freq = new HashMap<>();
+    private Map<User, HashMap<Recipe, Double>> inputData;
+    private Map<User, HashMap<Recipe, Double>> outputData = new HashMap<>();
+    private final RecipeRepository recipeRepository;
 
     @Autowired
-    public SlopeOne(ModelMapper mapper, UserRepository userRepository, MarkRepository markRepository) {
+    public SlopeOne(ModelMapper mapper, UserRepository userRepository, MarkRepository markRepository,
+                    RecipeRepository recipeRepository) {
         this.mapper = mapper;
         this.userRepository = userRepository;
         this.markRepository = markRepository;
+        this.recipeRepository = recipeRepository;
     }
 
     public List<RecipeDto> slopeOne(Integer limit) throws AuthException {
@@ -55,7 +59,7 @@ public class SlopeOne {
         return predict(inputData, limit);
     }
 
-    private  Map<User, HashMap<Recipe, Double>> initializeData() {
+    private Map<User, HashMap<Recipe, Double>> initializeData() {
         List<Mark> markList = StreamSupport.stream(markRepository.findAll().spliterator(), false).toList();
         HashMap<Recipe, Double> userRecipesMarked;
         Map<User, HashMap<Recipe, Double>> data = new HashMap<>();
@@ -66,7 +70,7 @@ public class SlopeOne {
             } else {
                 userRecipesMarked = new HashMap<Recipe, Double>();
             }
-            userRecipesMarked.put(m.getRecipe(),(double)  m.getMark());
+            userRecipesMarked.put(m.getRecipe(), (double) m.getMark());
             data.put(m.getUser(), userRecipesMarked);
         }
 //
@@ -92,7 +96,7 @@ public class SlopeOne {
      *
      * @param data existing user data and their items' ratings
      */
-    private  void buildDifferencesMatrix(Map<User, HashMap<Recipe, Double>> data) {
+    private void buildDifferencesMatrix(Map<User, HashMap<Recipe, Double>> data) {
         for (HashMap<Recipe, Double> user : data.values()) {
             for (Entry<Recipe, Double> e : user.entrySet()) {
                 if (!diff.containsKey(e.getKey())) {
@@ -131,7 +135,7 @@ public class SlopeOne {
      * @param data  existing user data and their items' ratings
      * @param limit
      */
-    private  List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data, Integer limit) throws AuthException {
+    private List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data, Integer limit) throws AuthException {
         HashMap<Recipe, Double> uPred = new HashMap<Recipe, Double>();
         HashMap<Recipe, Integer> uFreq = new HashMap<Recipe, Integer>();
         for (Recipe j : diff.keySet()) {
@@ -150,13 +154,12 @@ public class SlopeOne {
                     }
                 }
             }
-            HashMap<Recipe, Double> clean = new HashMap<Recipe, Double>();
+            HashMap<Recipe, Double> clean = new HashMap<>();
             for (Recipe j : uPred.keySet()) {
                 if (uFreq.get(j) > 0) {
                     clean.put(j, uPred.get(j).doubleValue() / uFreq.get(j).intValue());
                 }
             }
-//            InputData inputDataa = new InputData(); //todo получаем рецепты
             List<Mark> markList = StreamSupport.stream(markRepository.findAll().spliterator(), false).toList();
 
             for (Mark j : markList) {
@@ -169,11 +172,11 @@ public class SlopeOne {
             outputData.put(e.getKey(), clean);
         }
         printData(outputData);
-
+        List<RecipeDto> recipeDtos;
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
             JwtAuthentication principal = getAuthInfo();
             if (principal == null) {
-                return null;
+                return Collections.emptyList();
             }
             User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
 
@@ -182,21 +185,27 @@ public class SlopeOne {
                     .limit(limit)
                     .map(Map.Entry::getKey)
                     .toList();
-            List<RecipeDto> recipeDtos =  mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
+            recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
             }.getType());
-            return recipeDtos;
+
+        } else {
+            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimit(limit), new TypeToken<List<RecipeDto>>() {
+            }.getType());
         }
-        return null;
+        List<RecipeDto> recipes = mapper.map(recipeRepository.findRandomWithLimit(limit - recipeDtos.size()), new TypeToken<List<RecipeDto>>() {
+        }.getType());
+        recipeDtos.addAll(recipes);
+        return recipeDtos;
     }
 
-    private  void printData(Map<User, HashMap<Recipe, Double>> data) {
+    private void printData(Map<User, HashMap<Recipe, Double>> data) {
         for (User user : data.keySet()) {
             System.out.println(user.getUid() + ":");
             print(data.get(user));
         }
     }
 
-    private  void print(HashMap<Recipe, Double> hashMap) {
+    private void print(HashMap<Recipe, Double> hashMap) {
         NumberFormat formatter = new DecimalFormat("#0.000");
         for (Recipe j : hashMap.keySet()) {
             System.out.println(" " + j.getName() + " --> " + formatter.format(hashMap.get(j).doubleValue()));
