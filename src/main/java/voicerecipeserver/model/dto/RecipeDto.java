@@ -17,7 +17,7 @@ import java.util.Objects;
 @jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-24T04:20:59.334595174Z[GMT]")
 
 
-public class RecipeDto {
+public class RecipeDto   {
     @JsonProperty("name")
     private String name = null;
 
@@ -69,13 +69,11 @@ public class RecipeDto {
 
     /**
      * Get name
-     *
      * @return name
      **/
     @NotNull
 
-    @Size(max = 128)
-    public String getName() {
+    @Size(max=128)   public String getName() {
         return name;
     }
 
@@ -90,7 +88,6 @@ public class RecipeDto {
 
     /**
      * Get id
-     *
      * @return id
      **/
     @NotNull
@@ -110,7 +107,6 @@ public class RecipeDto {
 
     /**
      * Get media
-     *
      * @return media
      **/
     @NotNull
@@ -131,7 +127,6 @@ public class RecipeDto {
 
     /**
      * Get cookTimeMins
-     *
      * @return cookTimeMins
      **/
     @NotNull
@@ -151,13 +146,11 @@ public class RecipeDto {
 
     /**
      * Get authorUid
-     *
      * @return authorUid
      **/
     @NotNull
 
-    @Size(max = 32)
-    public String getAuthorUid() {
+    @Size(max=32)   public String getAuthorUid() {
         return authorUid;
     }
 
@@ -172,7 +165,6 @@ public class RecipeDto {
 
     /**
      * Get prepTimeMins
-     *
      * @return prepTimeMins
      **/
 
@@ -191,7 +183,6 @@ public class RecipeDto {
 
     /**
      * Get kilocalories
-     *
      * @return kilocalories
      **/
 
@@ -210,7 +201,6 @@ public class RecipeDto {
 
     /**
      * Get proteins
-     *
      * @return proteins
      **/
 
@@ -229,7 +219,6 @@ public class RecipeDto {
 
     /**
      * Get fats
-     *
      * @return fats
      **/
 
@@ -248,7 +237,6 @@ public class RecipeDto {
 
     /**
      * Get carbohydrates
-     *
      * @return carbohydrates
      **/
 
@@ -275,7 +263,6 @@ public class RecipeDto {
 
     /**
      * Get ingredientsDistributions
-     *
      * @return ingredientsDistributions
      **/
     @Valid
@@ -302,7 +289,6 @@ public class RecipeDto {
 
     /**
      * Get steps
-     *
      * @return steps
      **/
     @Valid
@@ -321,7 +307,6 @@ public class RecipeDto {
 
     /**
      * Get avgMark
-     *
      * @return avgMark
      **/
 
@@ -340,7 +325,6 @@ public class RecipeDto {
 
     /**
      * Get userMark
-     *
      * @return userMark
      **/
 
@@ -383,36 +367,28 @@ public class RecipeDto {
         return Objects.hash(name, id, media, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps, avgMark, userMark);
     }
 
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(toIndentedString(name)).append(" ");
-        sb.append(toIndentedString(avgMark)).append("\n");
+        sb.append("class RecipeDto {\n");
+
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    media: ").append(toIndentedString(media)).append("\n");
+        sb.append("    cookTimeMins: ").append(toIndentedString(cookTimeMins)).append("\n");
+        sb.append("    authorUid: ").append(toIndentedString(authorUid)).append("\n");
+        sb.append("    prepTimeMins: ").append(toIndentedString(prepTimeMins)).append("\n");
+        sb.append("    kilocalories: ").append(toIndentedString(kilocalories)).append("\n");
+        sb.append("    proteins: ").append(toIndentedString(proteins)).append("\n");
+        sb.append("    fats: ").append(toIndentedString(fats)).append("\n");
+        sb.append("    carbohydrates: ").append(toIndentedString(carbohydrates)).append("\n");
+        sb.append("    ingredientsDistributions: ").append(toIndentedString(ingredientsDistributions)).append("\n");
+        sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
+        sb.append("    avgMark: ").append(toIndentedString(avgMark)).append("\n");
+        sb.append("    userMark: ").append(toIndentedString(userMark)).append("\n");
+        sb.append("}");
         return sb.toString();
     }
-//    @Override
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("class RecipeDto {\n");
-//
-//        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-//        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-//        sb.append("    media: ").append(toIndentedString(media)).append("\n");
-//        sb.append("    cookTimeMins: ").append(toIndentedString(cookTimeMins)).append("\n");
-//        sb.append("    authorUid: ").append(toIndentedString(authorUid)).append("\n");
-//        sb.append("    prepTimeMins: ").append(toIndentedString(prepTimeMins)).append("\n");
-//        sb.append("    kilocalories: ").append(toIndentedString(kilocalories)).append("\n");
-//        sb.append("    proteins: ").append(toIndentedString(proteins)).append("\n");
-//        sb.append("    fats: ").append(toIndentedString(fats)).append("\n");
-//        sb.append("    carbohydrates: ").append(toIndentedString(carbohydrates)).append("\n");
-//        sb.append("    ingredientsDistributions: ").append(toIndentedString(ingredientsDistributions)).append("\n");
-//        sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
-//        sb.append("    avgMark: ").append(toIndentedString(avgMark)).append("\n");
-//        sb.append("    userMark: ").append(toIndentedString(userMark)).append("\n");
-//        sb.append("}");
-//        return sb.toString();
-//    }
 
     /**
      * Convert the given object to string with each line indented by 4 spaces
