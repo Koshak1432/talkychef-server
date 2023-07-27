@@ -38,11 +38,6 @@ public class RecipeServiceImpl implements RecipeService {
         this.stepRepository = stepRepository;
         this.mapper = mapper;
         this.userRepository = userRepository;
-        this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
-                m -> {
-                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
-                    m.map(src -> src.getMedia().getId(), RecipeDto::setMedia);
-                });
     }
 
 

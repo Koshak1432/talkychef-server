@@ -37,5 +37,11 @@ public class DefaultMapper extends ModelMapper {
             mapper.map(src -> src.getIngredient().getName(), IngredientsDistributionDto::setName);
         });
 
+        this.typeMap(Recipe.class, RecipeDto.class).addMappings(
+                m -> {
+                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
+                    m.map(src -> src.getMedia().getId(), RecipeDto::setMedia);
+                });
+
     }
 }
