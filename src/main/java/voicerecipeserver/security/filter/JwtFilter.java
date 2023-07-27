@@ -3,7 +3,7 @@ package voicerecipeserver.security.filter;
 
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.JwtProviderImpl;
-import voicerecipeserver.security.service.JwtUtils;
+import voicerecipeserver.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,17 +1,17 @@
 package voicerecipeserver.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.validation.annotation.Validated;
-
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * UserProfileDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-24T05:31:24.713175498Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T02:48:13.656840513Z[GMT]")
 
 
 public class UserProfileDto   {
@@ -22,7 +22,7 @@ public class UserProfileDto   {
   private String displayName = null;
 
   @JsonProperty("image")
-  private IdDto image = null;
+  private Long image = null;
 
   @JsonProperty("info")
   private String info = null;
@@ -71,7 +71,7 @@ public class UserProfileDto   {
     this.displayName = displayName;
   }
 
-  public UserProfileDto image(IdDto image) {
+  public UserProfileDto image(Long image) {
     this.image = image;
     return this;
   }
@@ -82,12 +82,11 @@ public class UserProfileDto   {
    **/
       @NotNull
 
-    @Valid
-    public IdDto getImage() {
+    public Long getImage() {
     return image;
   }
 
-  public void setImage(IdDto image) {
+  public void setImage(Long image) {
     this.image = image;
   }
 
@@ -119,7 +118,7 @@ public class UserProfileDto   {
    * Get tgLink
    * @return tgLink
    **/
-
+  
     public String getTgLink() {
     return tgLink;
   }
@@ -137,7 +136,7 @@ public class UserProfileDto   {
    * Get vkLink
    * @return vkLink
    **/
-
+  
     public String getVkLink() {
     return vkLink;
   }
@@ -173,7 +172,7 @@ public class UserProfileDto   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserProfileDto {\n");
-
+    
     sb.append("    uid: ").append(toIndentedString(uid)).append("\n");
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    image: ").append(toIndentedString(image)).append("\n");
