@@ -12,6 +12,7 @@ import voicerecipeserver.model.entities.MarkKey;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
+import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
@@ -70,7 +71,8 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException {
+    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException,
+            BadRequestException {
         Mark mark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.isSamePerson(markDto.getUserUid())) {
             throw new AuthException("Нельзя добавлять комментарии от чужого имени");
