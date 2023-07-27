@@ -17,7 +17,7 @@ import java.util.Objects;
 @jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-24T04:20:59.334595174Z[GMT]")
 
 
-public class RecipeDto   {
+public class RecipeDto {
     @JsonProperty("name")
     private String name = null;
 
@@ -69,11 +69,13 @@ public class RecipeDto   {
 
     /**
      * Get name
+     *
      * @return name
      **/
     @NotNull
 
-    @Size(max=128)   public String getName() {
+    @Size(max = 128)
+    public String getName() {
         return name;
     }
 
@@ -88,6 +90,7 @@ public class RecipeDto   {
 
     /**
      * Get id
+     *
      * @return id
      **/
     @NotNull
@@ -107,6 +110,7 @@ public class RecipeDto   {
 
     /**
      * Get media
+     *
      * @return media
      **/
     @NotNull
@@ -127,6 +131,7 @@ public class RecipeDto   {
 
     /**
      * Get cookTimeMins
+     *
      * @return cookTimeMins
      **/
     @NotNull
@@ -146,11 +151,13 @@ public class RecipeDto   {
 
     /**
      * Get authorUid
+     *
      * @return authorUid
      **/
     @NotNull
 
-    @Size(max=32)   public String getAuthorUid() {
+    @Size(max = 32)
+    public String getAuthorUid() {
         return authorUid;
     }
 
@@ -165,6 +172,7 @@ public class RecipeDto   {
 
     /**
      * Get prepTimeMins
+     *
      * @return prepTimeMins
      **/
 
@@ -183,6 +191,7 @@ public class RecipeDto   {
 
     /**
      * Get kilocalories
+     *
      * @return kilocalories
      **/
 
@@ -201,6 +210,7 @@ public class RecipeDto   {
 
     /**
      * Get proteins
+     *
      * @return proteins
      **/
 
@@ -219,6 +229,7 @@ public class RecipeDto   {
 
     /**
      * Get fats
+     *
      * @return fats
      **/
 
@@ -237,6 +248,7 @@ public class RecipeDto   {
 
     /**
      * Get carbohydrates
+     *
      * @return carbohydrates
      **/
 
@@ -263,6 +275,7 @@ public class RecipeDto   {
 
     /**
      * Get ingredientsDistributions
+     *
      * @return ingredientsDistributions
      **/
     @Valid
@@ -289,6 +302,7 @@ public class RecipeDto   {
 
     /**
      * Get steps
+     *
      * @return steps
      **/
     @Valid
@@ -307,6 +321,7 @@ public class RecipeDto   {
 
     /**
      * Get avgMark
+     *
      * @return avgMark
      **/
 
@@ -325,6 +340,7 @@ public class RecipeDto   {
 
     /**
      * Get userMark
+     *
      * @return userMark
      **/
 

@@ -39,7 +39,7 @@ public class SlopeOne {
     private Map<User, HashMap<Recipe, Double>> inputData;
     private Map<User, HashMap<Recipe, Double>> outputData = new HashMap<>();
     private final RecipeRepository recipeRepository;
-    private  Integer limit;
+    private Integer limit;
 
     @Autowired
     public SlopeOne(ModelMapper mapper, UserRepository userRepository, MarkRepository markRepository,
@@ -51,7 +51,7 @@ public class SlopeOne {
     }
 
     public List<RecipeDto> recommendAlgSlopeOne(Integer limit) throws AuthException {
-        this.limit = (limit == null)?100:limit;
+        this.limit = (limit == null) ? 100 : limit;
         inputData = initializeData();
         buildDifferencesMatrix(inputData);
         return predict(inputData);
@@ -130,7 +130,7 @@ public class SlopeOne {
         return getSortedRecipeDtos(limit);
     }
 
-    private void updateUPredAndUFreq( Entry<User, HashMap<Recipe, Double>> e,
+    private void updateUPredAndUFreq(Entry<User, HashMap<Recipe, Double>> e,
                                      HashMap<Recipe, Double> uPred, HashMap<Recipe, Integer> uFreq) {
         for (Recipe j : e.getValue().keySet()) {
             for (Recipe k : diff.keySet()) {
@@ -182,15 +182,17 @@ public class SlopeOne {
                     .limit(limit)
                     .map(Map.Entry::getKey)
                     .toList();
-            recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {}.getType());
+            recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
+            }.getType());
         } else {
-            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimit(limit), new TypeToken<List<RecipeDto>>() {}.getType());
+            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimit(limit), new TypeToken<List<RecipeDto>>() {
+            }.getType());
         }
-        List<RecipeDto> recipes = mapper.map(recipeRepository.findRandomWithLimit(limit - recipeDtos.size()), new TypeToken<List<RecipeDto>>() {}.getType());
+        List<RecipeDto> recipes = mapper.map(recipeRepository.findRandomWithLimit(limit - recipeDtos.size()), new TypeToken<List<RecipeDto>>() {
+        }.getType());
         recipeDtos.addAll(recipes);
         return recipeDtos;
     }
-
 
 
 }
