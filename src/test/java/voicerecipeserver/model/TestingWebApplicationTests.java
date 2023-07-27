@@ -121,7 +121,7 @@ public class TestingWebApplicationTests {
         RecipeDto recipeDto = new RecipeDto().id(1L).name("Super dish").cookTimeMins(3).ingredientsDistributions(
                 Collections.singletonList(
                         new IngredientsDistributionDto().ingredientId(3L).name("salt").measureUnitName(
-                                "th"))).authorUid("user").media(new IdDto().id(3L)).steps(
+                                "th"))).authorUid("user").mediaId(3L).steps(
                 Collections.singletonList(new StepDto().stepNum(1).description("some")));
         Recipe recipe = Recipe.builder().id(1L).author(User.builder().uid("user").id(2L).build()).name(
                 "Super dish").cookTimeMins(30).build();

@@ -15,7 +15,7 @@ import jakarta.validation.constraints.*;
  * RecipeDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T02:48:13.656840513Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T05:11:52.897277956Z[GMT]")
 
 
 public class RecipeDto   {
@@ -25,8 +25,8 @@ public class RecipeDto   {
   @JsonProperty("id")
   private Long id = null;
 
-  @JsonProperty("media")
-  private Long media = null;
+  @JsonProperty("media_id")
+  private Long mediaId = null;
 
   @JsonProperty("cook_time_mins")
   private Integer cookTimeMins = null;
@@ -95,23 +95,22 @@ public class RecipeDto   {
     this.id = id;
   }
 
-  public RecipeDto media(Long media) {
-    this.media = media;
+  public RecipeDto mediaId(Long mediaId) {
+    this.mediaId = mediaId;
     return this;
   }
 
   /**
-   * Get media
-   * @return media
+   * Get mediaId
+   * @return mediaId
    **/
-      @NotNull
-
-    public Long getMedia() {
-    return media;
+  
+    public Long getMediaId() {
+    return mediaId;
   }
 
-  public void setMedia(Long media) {
-    this.media = media;
+  public void setMediaId(Long mediaId) {
+    this.mediaId = mediaId;
   }
 
   public RecipeDto cookTimeMins(Integer cookTimeMins) {
@@ -306,7 +305,7 @@ public class RecipeDto   {
     RecipeDto recipeDto = (RecipeDto) o;
     return Objects.equals(this.name, recipeDto.name) &&
         Objects.equals(this.id, recipeDto.id) &&
-        Objects.equals(this.media, recipeDto.media) &&
+        Objects.equals(this.mediaId, recipeDto.mediaId) &&
         Objects.equals(this.cookTimeMins, recipeDto.cookTimeMins) &&
         Objects.equals(this.authorUid, recipeDto.authorUid) &&
         Objects.equals(this.prepTimeMins, recipeDto.prepTimeMins) &&
@@ -320,7 +319,7 @@ public class RecipeDto   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, id, media, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps);
+    return Objects.hash(name, id, mediaId, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps);
   }
 
   @Override
@@ -330,7 +329,7 @@ public class RecipeDto   {
     
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    media: ").append(toIndentedString(media)).append("\n");
+    sb.append("    mediaId: ").append(toIndentedString(mediaId)).append("\n");
     sb.append("    cookTimeMins: ").append(toIndentedString(cookTimeMins)).append("\n");
     sb.append("    authorUid: ").append(toIndentedString(authorUid)).append("\n");
     sb.append("    prepTimeMins: ").append(toIndentedString(prepTimeMins)).append("\n");

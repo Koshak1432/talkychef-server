@@ -11,12 +11,12 @@ import jakarta.validation.constraints.*;
  * StepDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T02:48:13.656840513Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T05:11:52.897277956Z[GMT]")
 
 
 public class StepDto   {
-  @JsonProperty("media")
-  private Long media = null;
+  @JsonProperty("media_id")
+  private Long mediaId = null;
 
   @JsonProperty("description")
   private String description = null;
@@ -27,22 +27,22 @@ public class StepDto   {
   @JsonProperty("wait_time_mins")
   private Integer waitTimeMins = null;
 
-  public StepDto media(Long media) {
-    this.media = media;
+  public StepDto mediaId(Long mediaId) {
+    this.mediaId = mediaId;
     return this;
   }
 
   /**
-   * Get media
-   * @return media
+   * Get mediaId
+   * @return mediaId
    **/
   
-    public Long getMedia() {
-    return media;
+    public Long getMediaId() {
+    return mediaId;
   }
 
-  public void setMedia(Long media) {
-    this.media = media;
+  public void setMediaId(Long mediaId) {
+    this.mediaId = mediaId;
   }
 
   public StepDto description(String description) {
@@ -111,7 +111,7 @@ public class StepDto   {
       return false;
     }
     StepDto stepDto = (StepDto) o;
-    return Objects.equals(this.media, stepDto.media) &&
+    return Objects.equals(this.mediaId, stepDto.mediaId) &&
         Objects.equals(this.description, stepDto.description) &&
         Objects.equals(this.stepNum, stepDto.stepNum) &&
         Objects.equals(this.waitTimeMins, stepDto.waitTimeMins);
@@ -119,7 +119,7 @@ public class StepDto   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(media, description, stepNum, waitTimeMins);
+    return Objects.hash(mediaId, description, stepNum, waitTimeMins);
   }
 
   @Override
@@ -127,7 +127,7 @@ public class StepDto   {
     StringBuilder sb = new StringBuilder();
     sb.append("class StepDto {\n");
     
-    sb.append("    media: ").append(toIndentedString(media)).append("\n");
+    sb.append("    mediaId: ").append(toIndentedString(mediaId)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    stepNum: ").append(toIndentedString(stepNum)).append("\n");
     sb.append("    waitTimeMins: ").append(toIndentedString(waitTimeMins)).append("\n");
