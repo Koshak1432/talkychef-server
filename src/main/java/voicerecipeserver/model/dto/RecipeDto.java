@@ -18,9 +18,9 @@ import jakarta.validation.constraints.*;
 @jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T05:11:52.897277956Z[GMT]")
 
 
-public class RecipeDto   {
-  @JsonProperty("name")
-  private String name = null;
+public class RecipeDto {
+    @JsonProperty("name")
+    private String name = null;
 
   @JsonProperty("id")
   private Long id = null;
@@ -354,3 +354,4 @@ public class RecipeDto   {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

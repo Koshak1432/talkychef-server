@@ -21,10 +21,13 @@ public class Mark {
     private Short mark;
 
     @ManyToOne
+    @ToString.Exclude
+
     @MapsId("userId")
     private User user;
 
     @ManyToOne
+    @ToString.Exclude
     @MapsId("recipeId")
     private Recipe recipe;
     @Override

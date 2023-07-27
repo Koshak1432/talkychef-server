@@ -12,6 +12,7 @@ import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
@@ -111,6 +112,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException {
+
         if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
             throw new AuthException("Нет прав");
         }
@@ -206,5 +208,11 @@ public class RecipeServiceImpl implements RecipeService {
             recipeRepository.deleteById(recipeId);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit) throws AuthException {
+        SlopeOne recommendAlgSlopeOne = new SlopeOne(mapper, userRepository, markRepository, recipeRepository);
+        return ResponseEntity.ok(recommendAlgSlopeOne.recommendAlgSlopeOne(limit));
     }
 }

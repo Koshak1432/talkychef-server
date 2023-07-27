@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -12,6 +13,7 @@ import java.util.Set;
 @Builder
 @Getter
 @Setter
+
 @ToString
 @Entity
 @Table(name = "users")
@@ -48,10 +50,21 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private UserInfo userInfo;
 
-    public User(String uid, String password, String displayName, Set<Role> roles) {
+    public User(String uid, String password, Set<Role> roles) {
         this.uid = uid;
         this.password = password;
         this.roles = roles;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId());
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
