@@ -3,6 +3,7 @@ package voicerecipeserver.services.impl;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
@@ -29,12 +31,14 @@ public class RecipeServiceImpl implements RecipeService {
     private final AvgMarkRepository avgMarkRepository;
     private final StepRepository stepRepository;
     private final MarkRepository markRepository;
+    private final MediaRepository mediaRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
                              AvgMarkRepository avgMarkRepository, StepRepository stepRepository,
-                             MarkRepository markRepository, UserRepository userRepository) {
+                             MarkRepository markRepository, UserRepository userRepository,
+                             MediaRepository mediaRepository) {
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.measureUnitRepository = measureUnitRepository;
@@ -45,6 +49,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
         this.markRepository = markRepository;
+        this.mediaRepository = mediaRepository;
     }
 
 
@@ -108,7 +113,6 @@ public class RecipeServiceImpl implements RecipeService {
         setAuthorToRecipe(recipe);
         recipe.setId(null);
         checkMediaUniqueness(recipe);
-        System.out.println(recipe.getMedia());
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
         for (Step step : recipe.getSteps()) {
@@ -116,9 +120,15 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         setDistribution(recipe);
-        Recipe savedRecipe = recipeRepository.save(recipe);
+        if (mediaRepository.findById(recipe.getMedia().getId()).isEmpty()) {
+            throw new BadRequestException("Это изображение не было добавлено в пул картинок");
+        }
+        Recipe savedRecipe;
+        savedRecipe = recipeRepository.save(recipe);
         return ResponseEntity.ok(new IdDto().id(savedRecipe.getId()));
+
     }
+
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
         Optional<User> author = userRepository.findByUid(recipe.getAuthor().getUid());
