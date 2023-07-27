@@ -67,11 +67,11 @@ public class CollectionServiceImpl implements CollectionService {
         collectionDto.setName(collectionName);
         collectionDto.setNumber(collection.getNumber());
 
-        collectionDto.setRecipes(mapper.map(
-                recipeRepository.findRecipesWithOffsetFromCollectionById(Constants.MAX_RECIPES_PER_PAGE,
-                                                                         pageNum * Constants.MAX_RECIPES_PER_PAGE,
-                                                                         collection.getId()),
-                new TypeToken<List<RecipeDto>>() {}.getType()));
+        List<Recipe> recipes = recipeRepository.findRecipesWithOffsetFromCollectionById(Constants.MAX_RECIPES_PER_PAGE,
+                                                                                        pageNum * Constants.MAX_RECIPES_PER_PAGE,
+                                                                                        collection.getId());
+        List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
+        collectionDto.setRecipes(recipeDtos);
         return ResponseEntity.ok(collectionDto);
     }
 }
