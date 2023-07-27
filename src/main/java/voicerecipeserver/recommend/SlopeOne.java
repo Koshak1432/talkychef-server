@@ -16,9 +16,10 @@ import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.StreamSupport;
 
@@ -29,6 +30,7 @@ import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthI
  */
 @Service
 public class SlopeOne {
+
     private final ModelMapper mapper;
     private final UserRepository userRepository;
     private final MarkRepository markRepository;
@@ -37,6 +39,7 @@ public class SlopeOne {
     private Map<User, HashMap<Recipe, Double>> inputData;
     private Map<User, HashMap<Recipe, Double>> outputData = new HashMap<>();
     private final RecipeRepository recipeRepository;
+    private  Integer limit;
 
     @Autowired
     public SlopeOne(ModelMapper mapper, UserRepository userRepository, MarkRepository markRepository,
@@ -47,46 +50,26 @@ public class SlopeOne {
         this.recipeRepository = recipeRepository;
     }
 
-    public List<RecipeDto> slopeOne(Integer limit) throws AuthException {
-        if (limit == null) {
-            limit = 100;
-        }
+    public List<RecipeDto> recommendAlgSlopeOne(Integer limit) throws AuthException {
+        this.limit = (limit == null)?100:limit;
         inputData = initializeData();
-        System.out.println("Slope One - Before the Prediction\n");
         buildDifferencesMatrix(inputData);
-        System.out.println("\nSlope One - With Predictions\n");
-
-        return predict(inputData, limit);
+        return predict(inputData);
     }
 
     private Map<User, HashMap<Recipe, Double>> initializeData() {
         List<Mark> markList = StreamSupport.stream(markRepository.findAll().spliterator(), false).toList();
-        HashMap<Recipe, Double> userRecipesMarked;
         Map<User, HashMap<Recipe, Double>> data = new HashMap<>();
         for (Mark m : markList) {
-            System.out.println(m);
+            HashMap<Recipe, Double> userRecipesMarked;
             if (data.containsKey(m.getUser())) {
                 userRecipesMarked = data.get(m.getUser());
             } else {
-                userRecipesMarked = new HashMap<Recipe, Double>();
+                userRecipesMarked = new HashMap<>();
             }
             userRecipesMarked.put(m.getRecipe(), (double) m.getMark());
             data.put(m.getUser(), userRecipesMarked);
         }
-//
-//        HashMap<Recipe, Double> newUser;
-//        Set<Recipe> newRecommendationSet;
-//        for (int i = 0; i < numberOfUsers; i++) {
-//            newUser = new HashMap<Recipe, Double>();
-//            newRecommendationSet = new HashSet<>();
-//            for (int j = 0; j < 3; j++) {
-//                newRecommendationSet.add(items.get((int) (Math.random() * 5)));
-//            }
-//            for (Recipe Recipe : newRecommendationSet) {
-//                newUser.put(Recipe, Math.random());
-//            }
-//            data.put(new User("User " + i), newUser);
-//        }
         return data;
     }
 
@@ -97,35 +80,28 @@ public class SlopeOne {
      * @param data existing user data and their items' ratings
      */
     private void buildDifferencesMatrix(Map<User, HashMap<Recipe, Double>> data) {
-        for (HashMap<Recipe, Double> user : data.values()) {
-            for (Entry<Recipe, Double> e : user.entrySet()) {
-                if (!diff.containsKey(e.getKey())) {
-                    diff.put(e.getKey(), new HashMap<Recipe, Double>());
-                    freq.put(e.getKey(), new HashMap<Recipe, Integer>());
+        data.values().forEach(user -> {
+            user.forEach((recipe1, rating1) -> {
+                if (!diff.containsKey(recipe1)) {
+                    diff.put(recipe1, new HashMap<>());
+                    freq.put(recipe1, new HashMap<>());
                 }
-                for (Entry<Recipe, Double> e2 : user.entrySet()) {
-                    int oldCount = 0;
-                    if (freq.get(e.getKey()).containsKey(e2.getKey())) {
-                        oldCount = freq.get(e.getKey()).get(e2.getKey()).intValue();
-                    }
-                    double oldDiff = 0.0;
-                    if (diff.get(e.getKey()).containsKey(e2.getKey())) {
-                        oldDiff = diff.get(e.getKey()).get(e2.getKey()).doubleValue();
-                    }
-                    double observedDiff = e.getValue() - e2.getValue();
-                    freq.get(e.getKey()).put(e2.getKey(), oldCount + 1);
-                    diff.get(e.getKey()).put(e2.getKey(), oldDiff + observedDiff);
-                }
-            }
-        }
-        for (Recipe j : diff.keySet()) {
-            for (Recipe i : diff.get(j).keySet()) {
-                double oldValue = diff.get(j).get(i).doubleValue();
-                int count = freq.get(j).get(i).intValue();
-                diff.get(j).put(i, oldValue / count);
-            }
-        }
-        printData(data);
+                user.forEach((recipe2, rating2) -> {
+                    int oldCount = freq.get(recipe1).getOrDefault(recipe2, 0);
+                    double oldDiff = diff.get(recipe1).getOrDefault(recipe2, 0.0);
+                    double observedDiff = rating1 - rating2;
+                    freq.get(recipe1).put(recipe2, oldCount + 1);
+                    diff.get(recipe1).put(recipe2, oldDiff + observedDiff);
+                });
+            });
+        });
+
+        diff.forEach((recipe1, innerMap) -> {
+            innerMap.forEach((recipe2, value) -> {
+                int count = freq.get(recipe1).get(recipe2);
+                innerMap.put(recipe2, value / count);
+            });
+        });
     }
 
     /**
@@ -135,43 +111,64 @@ public class SlopeOne {
      * @param data  existing user data and their items' ratings
      * @param limit
      */
-    private List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data, Integer limit) throws AuthException {
-        HashMap<Recipe, Double> uPred = new HashMap<Recipe, Double>();
-        HashMap<Recipe, Integer> uFreq = new HashMap<Recipe, Integer>();
-        for (Recipe j : diff.keySet()) {
+    private List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data) throws AuthException {
+        // Initialize the uPred and uFreq maps
+        HashMap<Recipe, Double> uPred = new HashMap<>();
+        HashMap<Recipe, Integer> uFreq = new HashMap<>();
+        diff.keySet().forEach(j -> {
             uFreq.put(j, 0);
             uPred.put(j, 0.0);
-        }
-        for (Entry<User, HashMap<Recipe, Double>> e : data.entrySet()) {
-            for (Recipe j : e.getValue().keySet()) {
-                for (Recipe k : diff.keySet()) {
-                    try {
-                        double predictedValue = diff.get(k).get(j).doubleValue() + e.getValue().get(j).doubleValue();
-                        double finalValue = predictedValue * freq.get(k).get(j).intValue();
-                        uPred.put(k, uPred.get(k) + finalValue);
-                        uFreq.put(k, uFreq.get(k) + freq.get(k).get(j).intValue());
-                    } catch (NullPointerException e1) {
-                    }
-                }
-            }
-            HashMap<Recipe, Double> clean = new HashMap<>();
-            for (Recipe j : uPred.keySet()) {
-                if (uFreq.get(j) > 0) {
-                    clean.put(j, uPred.get(j).doubleValue() / uFreq.get(j).intValue());
-                }
-            }
-            List<Mark> markList = StreamSupport.stream(markRepository.findAll().spliterator(), false).toList();
+        });
 
-            for (Mark j : markList) {
-                if (e.getValue().containsKey(j.getRecipe())) {
-                    clean.put(j.getRecipe(), e.getValue().get(j.getRecipe()));
-                } else if (!clean.containsKey(j.getRecipe())) {
-                    clean.put(j.getRecipe(), -1.0);
-                }
-            }
+        for (Entry<User, HashMap<Recipe, Double>> e : data.entrySet()) {
+            updateUPredAndUFreq(e, uPred, uFreq);
+            HashMap<Recipe, Double> clean = calculateCleanMap(uPred, uFreq);
+            fillMissingRatings(e, clean);
             outputData.put(e.getKey(), clean);
         }
-        printData(outputData);
+
+        return getSortedRecipeDtos(limit);
+    }
+
+    private void updateUPredAndUFreq( Entry<User, HashMap<Recipe, Double>> e,
+                                     HashMap<Recipe, Double> uPred, HashMap<Recipe, Integer> uFreq) {
+        for (Recipe j : e.getValue().keySet()) {
+            for (Recipe k : diff.keySet()) {
+                double diffValue = diff.getOrDefault(k, Collections.emptyMap()).getOrDefault(j, 0.0);
+                double userValue = e.getValue().getOrDefault(j, 0.0);
+                int freqValue = freq.getOrDefault(k, Collections.emptyMap()).getOrDefault(j, 0);
+
+                double predictedValue = diffValue + userValue;
+                double finalValue = predictedValue * freqValue;
+                uPred.put(k, uPred.getOrDefault(k, 0.0) + finalValue);
+                uFreq.put(k, uFreq.getOrDefault(k, 0) + freqValue);
+            }
+        }
+    }
+
+    private HashMap<Recipe, Double> calculateCleanMap(HashMap<Recipe, Double> uPred, HashMap<Recipe, Integer> uFreq) {
+        HashMap<Recipe, Double> clean = new HashMap<>();
+        uPred.keySet().forEach(j -> {
+            if (uFreq.get(j) > 0) {
+                clean.put(j, uPred.get(j) / uFreq.get(j));
+            }
+        });
+        return clean;
+    }
+
+    private void fillMissingRatings(Entry<User, HashMap<Recipe, Double>> e, HashMap<Recipe, Double> clean) {
+        List<Mark> markList = StreamSupport.stream(markRepository.findAll().spliterator(), false).toList();
+        markList.forEach(j -> {
+            Recipe recipe = j.getRecipe();
+            if (e.getValue().containsKey(recipe)) {
+                clean.put(recipe, e.getValue().get(recipe));
+            } else if (!clean.containsKey(recipe)) {
+                clean.put(recipe, -1.0);
+            }
+        });
+    }
+
+    private List<RecipeDto> getSortedRecipeDtos(Integer limit) throws AuthException {
         List<RecipeDto> recipeDtos;
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
             JwtAuthentication principal = getAuthInfo();
@@ -185,32 +182,16 @@ public class SlopeOne {
                     .limit(limit)
                     .map(Map.Entry::getKey)
                     .toList();
-            recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
-            }.getType());
-
+            recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {}.getType());
         } else {
-            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimit(limit), new TypeToken<List<RecipeDto>>() {
-            }.getType());
+            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimit(limit), new TypeToken<List<RecipeDto>>() {}.getType());
         }
-        List<RecipeDto> recipes = mapper.map(recipeRepository.findRandomWithLimit(limit - recipeDtos.size()), new TypeToken<List<RecipeDto>>() {
-        }.getType());
+        List<RecipeDto> recipes = mapper.map(recipeRepository.findRandomWithLimit(limit - recipeDtos.size()), new TypeToken<List<RecipeDto>>() {}.getType());
         recipeDtos.addAll(recipes);
         return recipeDtos;
     }
 
-    private void printData(Map<User, HashMap<Recipe, Double>> data) {
-        for (User user : data.keySet()) {
-            System.out.println(user.getUid() + ":");
-            print(data.get(user));
-        }
-    }
 
-    private void print(HashMap<Recipe, Double> hashMap) {
-        NumberFormat formatter = new DecimalFormat("#0.000");
-        for (Recipe j : hashMap.keySet()) {
-            System.out.println(" " + j.getName() + " --> " + formatter.format(hashMap.get(j).doubleValue()));
-        }
-    }
 
 }
 

@@ -42,7 +42,12 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
 
     @Query(value = """
+                    WITH avg_limit AS (
+                        SELECT recipe_id FROM avg_marks
+                        ORDER BY avg_mark DESC
+                    )
                     SELECT * FROM recipes
+                    WHERE id not in (SELECT * from avg_limit)
                     ORDER BY random()
                     LIMIT :limit
             """, nativeQuery = true)
