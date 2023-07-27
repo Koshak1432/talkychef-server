@@ -11,7 +11,7 @@ import jakarta.validation.constraints.*;
  * UserProfileDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T02:48:13.656840513Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T07:34:19.182164167Z[GMT]")
 
 
 public class UserProfileDto   {
@@ -21,8 +21,8 @@ public class UserProfileDto   {
   @JsonProperty("display_name")
   private String displayName = null;
 
-  @JsonProperty("image")
-  private Long image = null;
+  @JsonProperty("media_id")
+  private Long mediaId = null;
 
   @JsonProperty("info")
   private String info = null;
@@ -71,23 +71,23 @@ public class UserProfileDto   {
     this.displayName = displayName;
   }
 
-  public UserProfileDto image(Long image) {
-    this.image = image;
+  public UserProfileDto mediaId(Long mediaId) {
+    this.mediaId = mediaId;
     return this;
   }
 
   /**
-   * Get image
-   * @return image
+   * Get mediaId
+   * @return mediaId
    **/
       @NotNull
 
-    public Long getImage() {
-    return image;
+    public Long getMediaId() {
+    return mediaId;
   }
 
-  public void setImage(Long image) {
-    this.image = image;
+  public void setMediaId(Long mediaId) {
+    this.mediaId = mediaId;
   }
 
   public UserProfileDto info(String info) {
@@ -157,7 +157,7 @@ public class UserProfileDto   {
     UserProfileDto userProfileDto = (UserProfileDto) o;
     return Objects.equals(this.uid, userProfileDto.uid) &&
         Objects.equals(this.displayName, userProfileDto.displayName) &&
-        Objects.equals(this.image, userProfileDto.image) &&
+        Objects.equals(this.mediaId, userProfileDto.mediaId) &&
         Objects.equals(this.info, userProfileDto.info) &&
         Objects.equals(this.tgLink, userProfileDto.tgLink) &&
         Objects.equals(this.vkLink, userProfileDto.vkLink);
@@ -165,7 +165,7 @@ public class UserProfileDto   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(uid, displayName, image, info, tgLink, vkLink);
+    return Objects.hash(uid, displayName, mediaId, info, tgLink, vkLink);
   }
 
   @Override
@@ -175,7 +175,7 @@ public class UserProfileDto   {
     
     sb.append("    uid: ").append(toIndentedString(uid)).append("\n");
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
-    sb.append("    image: ").append(toIndentedString(image)).append("\n");
+    sb.append("    mediaId: ").append(toIndentedString(mediaId)).append("\n");
     sb.append("    info: ").append(toIndentedString(info)).append("\n");
     sb.append("    tgLink: ").append(toIndentedString(tgLink)).append("\n");
     sb.append("    vkLink: ").append(toIndentedString(vkLink)).append("\n");

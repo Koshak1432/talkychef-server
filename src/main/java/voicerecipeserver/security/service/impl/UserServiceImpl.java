@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("Информация пользователя не найдена");
         }
         setUserInfo(profileDto, userInfo);
-        Media media = mediaRepository.findById(profileDto.getImage()).orElseThrow(() -> new NotFoundException("Медиа не найдено"));
+        Media media = mediaRepository.findById(profileDto.getMediaId()).orElseThrow(() -> new NotFoundException("Медиа не найдено"));
         Long oldMediaId = null;
         if (userInfo.getImage()!= null) {
              oldMediaId = userInfo.getImage().getId();
