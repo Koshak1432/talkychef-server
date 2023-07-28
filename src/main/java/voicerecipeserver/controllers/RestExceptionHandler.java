@@ -83,12 +83,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String message = e.getMessage();
         return new ResponseEntity<>(new Error().code(400).message("Saving to db failed: " + message), HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler({TransactionRequiredException.class})
-    protected ResponseEntity<Object> handleTransactionRequiredException(TransactionRequiredException e) {
-        String message = e.getMessage();
-        return new ResponseEntity<>(new Error().code(400).message("Deleting from db failed: " + message), HttpStatus.BAD_REQUEST);
-    }
+//
+//    @ExceptionHandler({TransactionRequiredException.class})
+//    protected ResponseEntity<Object> handleTransactionRequiredException(TransactionRequiredException e) {
+//        String message = e.getMessage();
+//        return new ResponseEntity<>(new Error().code(400).message("Deleting from db failed: " + message), HttpStatus.BAD_REQUEST);
+//    }
 
 
 

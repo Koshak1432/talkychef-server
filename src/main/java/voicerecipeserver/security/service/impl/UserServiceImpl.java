@@ -3,6 +3,7 @@ package voicerecipeserver.security.service.impl;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
@@ -28,6 +29,8 @@ import voicerecipeserver.utils.FindUtils;
 import java.util.*;
 
 import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getUserLogin;
+import static voicerecipeserver.utils.FindUtils.*;
 
 
 @Service
@@ -38,17 +41,20 @@ public class UserServiceImpl implements UserService {
     private final BeanConfig passwordEncoder;
     private final ModelMapper mapper;
     private final MediaRepository mediaRepository;
+    private final MailSender mailSender;
+
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, BeanConfig passwordEncoder, ModelMapper mapper,
                            RoleRepository roleRepository, UserInfoRepository userInfoRepository,
-                           MediaRepository mediaRepository) {
+                           MediaRepository mediaRepository, MailSender mailSender) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
         this.roleRepository = roleRepository;
         this.userInfoRepository = userInfoRepository;
         this.mediaRepository = mediaRepository;
+        this.mailSender = mailSender;
     }
 
 
@@ -91,7 +97,7 @@ public class UserServiceImpl implements UserService {
         if (principal == null) {
             throw new AuthException("Not authorized yet");
         }
-        User user = FindUtils.findUser(userRepository, principal.getLogin());
+        User user = findUser(userRepository, principal.getLogin());
         UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(
                 () -> new UserException("Нет информации о пользователе"));
         UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
@@ -138,7 +144,7 @@ public class UserServiceImpl implements UserService {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("Нет прав");
         }
-        User user = findUserByLogin(profileDto.getUid());
+        User user = findUser(userRepository, profileDto.getUid());
         UserInfo userInfo = user.getUserInfo();
         if (userInfo == null) {
             throw new NotFoundException("Информация пользователя не найдена");
@@ -169,6 +175,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setVkLink(profileDto.getVkLink());
         userInfo.setTgLink(profileDto.getTgLink());
         userInfo.setDisplayName(profileDto.getDisplayName());
+        userInfo.setEmail(profileDto.getEmail());
     }
 
     @Override
@@ -178,7 +185,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Нет прав");
         }
         UserInfo userInfo = mapper.map(profileDto, UserInfo.class);
-        User user = findUserByLogin(profileDto.getUid());
+        User user = findUser(userRepository, profileDto.getUid());
         if (user.getUserInfo() != null) {
             throw new UserException("Информация о пользователе существует");
         }
@@ -187,22 +194,51 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(new IdDto().id(newUser.getId()));
     }
 
+    @Override
+    public ResponseEntity<Void> sendEmailInstructions(String email) throws NotFoundException {
+        UserInfo user = findUserByEmail(userInfoRepository, email);
+        String token = UUID.randomUUID().toString();
+        user.setToken(token);
+        userInfoRepository.save(user);
+        sendMessage(user, token);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> verifyCode(String token) throws NotFoundException, BadRequestException {
+        UserInfo userFromToken = findUserByToken(userInfoRepository, token);
+        return ResponseEntity.ok(new IdDto().id(userFromToken.getId()));
+    }
+
+    @Override
+    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, AuthException {
+        UserInfo userFromToken = findUserByToken(userInfoRepository, token);
+        userFromToken.setToken(null);
+        userInfoRepository.save(userFromToken);
+        User user = userRepository.findById(userFromToken.getId()).orElseThrow(() -> new AuthException("No such user"));
+        user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    private void sendMessage(UserInfo userInfo, String token) {
+        if (!userInfo.getEmail().isEmpty()) {
+            String message = String.format("Hello, %s\n" +
+                            "You sent an issue to change your password. Please, confirm your email: http://localhost:8080/restore-password/%s",
+                    userInfo.getDisplayName(), token);
+            mailSender.send(userInfo.getEmail(), "Activation code", message);
+        }
+    }
+
     public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) throws NotFoundException, BadRequestException {
         if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
             throw new BadRequestException("Нет прав");
         }
-        User user = findUserByLogin(userDto.getLogin());
+        User user = findUser(userRepository, userDto.getLogin());
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(new IdDto().id(savedUser.getId()));
     }
 
-    User findUserByLogin(String login) throws NotFoundException {
-        Optional<User> userOptional = userRepository.findByUid(login);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти пользователя с логином: " + login);
-        }
-
-        return userOptional.get();
-    }
 }

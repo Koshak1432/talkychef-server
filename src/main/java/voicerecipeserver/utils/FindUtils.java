@@ -1,14 +1,8 @@
 package voicerecipeserver.utils;
 
-import voicerecipeserver.model.entities.Collection;
-import voicerecipeserver.model.entities.Comment;
-import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.User;
+import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.CollectionRepository;
-import voicerecipeserver.respository.CommentRepository;
-import voicerecipeserver.respository.RecipeRepository;
-import voicerecipeserver.respository.UserRepository;
+import voicerecipeserver.respository.*;
 
 import java.util.Optional;
 
@@ -23,6 +17,15 @@ public class FindUtils {
         }
         return userOptional.get();
     }
+
+    public static UserInfo findUserByToken(UserInfoRepository userInfoRepository, String token) throws NotFoundException {
+        Optional<UserInfo> userOptional = userInfoRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("Couldn't find user with token: " + token);
+        }
+        return userOptional.get();
+    }
+
 
     public static Recipe findRecipe(RecipeRepository repository, Long id) throws NotFoundException {
         Optional<Recipe> recipeOptional = repository.findById(id);
@@ -56,5 +59,15 @@ public class FindUtils {
             throw new NotFoundException("Не удалось найти рецепт в коллекции с id: " + collectionId);
         }
         return true;
+    }
+
+
+
+    public static UserInfo findUserByEmail(UserInfoRepository userInfoRepository, String email) throws NotFoundException {
+        Optional<UserInfo> userOptional = userInfoRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти пользователя with email: " + email);
+        }
+        return userOptional.get();
     }
 }

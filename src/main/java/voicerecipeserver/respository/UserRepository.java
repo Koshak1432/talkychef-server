@@ -1,5 +1,7 @@
 package voicerecipeserver.respository;
 
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +25,19 @@ public interface UserRepository extends CrudRepository<User, Long> {
             """, nativeQuery = true)
     List<User> findByUidContaining(@Param("namePart") String inline, @Param("limit") Integer limit);
 
+
+
+//    @Transactional
+//    @Modifying
+//    @Query(value = """
+//                    INSERT INTO email_tokens(token, user_id) VALUES (:token, :id)
+//            """, nativeQuery = true)
+//    void setActivateToken(String token, Long id);
+//
+//    @Transactional
+//    @Modifying
+//    @Query(value = """
+//                    INSERT INTO email_tokens(token, user_id) VALUES (:token, :id)
+//            """, nativeQuery = true)
+//    void fin(String token, Long id);
 }

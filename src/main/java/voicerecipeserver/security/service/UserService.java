@@ -25,4 +25,10 @@ public interface UserService {
 
     ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException, NotFoundException;
     ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException, UserException;
+
+    ResponseEntity<Void> sendEmailInstructions(String email) throws NotFoundException;
+
+    ResponseEntity<IdDto> verifyCode(String token) throws NotFoundException, BadRequestException;
+
+    ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, AuthException;
 }
