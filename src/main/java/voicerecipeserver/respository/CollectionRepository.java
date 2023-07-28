@@ -44,9 +44,9 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
     List<Collection> findByAuthorId(Long id);
 
     @Query(value = """
-          SELECT * FROM collections
+          SELECT * FROM collections 
           JOIN collections_distribution cd ON collections.id = cd.collection_id
-          WHERE recipe_id =:recipeId AND collection_id=:collectionI
+          WHERE recipe_id =:recipeId AND collection_id=:collectionId
             """, nativeQuery = true)
     Optional<Collection> findRecipe(Long recipeId, Long collectionId);
 
