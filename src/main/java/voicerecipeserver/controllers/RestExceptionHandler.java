@@ -3,6 +3,7 @@ package voicerecipeserver.controllers;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.persistence.TransactionRequiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -82,6 +83,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String message = e.getMessage();
         return new ResponseEntity<>(new Error().code(400).message("Saving to db failed: " + message), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({TransactionRequiredException.class})
+    protected ResponseEntity<Object> handleTransactionRequiredException(TransactionRequiredException e) {
+        String message = e.getMessage();
+        return new ResponseEntity<>(new Error().code(400).message("Deleting from db failed: " + message), HttpStatus.BAD_REQUEST);
+    }
+
+
 
     @ExceptionHandler({ExpiredJwtException.class})
     protected ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException e) {

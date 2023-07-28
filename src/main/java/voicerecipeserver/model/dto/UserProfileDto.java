@@ -1,17 +1,17 @@
 package voicerecipeserver.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.validation.annotation.Validated;
-
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * UserProfileDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-24T05:31:24.713175498Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T07:34:19.182164167Z[GMT]")
 
 
 public class UserProfileDto   {
@@ -21,8 +21,8 @@ public class UserProfileDto   {
   @JsonProperty("display_name")
   private String displayName = null;
 
-  @JsonProperty("image")
-  private IdDto image = null;
+  @JsonProperty("media_id")
+  private Long mediaId = null;
 
   @JsonProperty("info")
   private String info = null;
@@ -71,24 +71,23 @@ public class UserProfileDto   {
     this.displayName = displayName;
   }
 
-  public UserProfileDto image(IdDto image) {
-    this.image = image;
+  public UserProfileDto mediaId(Long mediaId) {
+    this.mediaId = mediaId;
     return this;
   }
 
   /**
-   * Get image
-   * @return image
+   * Get mediaId
+   * @return mediaId
    **/
       @NotNull
 
-    @Valid
-    public IdDto getImage() {
-    return image;
+    public Long getMediaId() {
+    return mediaId;
   }
 
-  public void setImage(IdDto image) {
-    this.image = image;
+  public void setMediaId(Long mediaId) {
+    this.mediaId = mediaId;
   }
 
   public UserProfileDto info(String info) {
@@ -119,7 +118,7 @@ public class UserProfileDto   {
    * Get tgLink
    * @return tgLink
    **/
-
+  
     public String getTgLink() {
     return tgLink;
   }
@@ -137,7 +136,7 @@ public class UserProfileDto   {
    * Get vkLink
    * @return vkLink
    **/
-
+  
     public String getVkLink() {
     return vkLink;
   }
@@ -158,7 +157,7 @@ public class UserProfileDto   {
     UserProfileDto userProfileDto = (UserProfileDto) o;
     return Objects.equals(this.uid, userProfileDto.uid) &&
         Objects.equals(this.displayName, userProfileDto.displayName) &&
-        Objects.equals(this.image, userProfileDto.image) &&
+        Objects.equals(this.mediaId, userProfileDto.mediaId) &&
         Objects.equals(this.info, userProfileDto.info) &&
         Objects.equals(this.tgLink, userProfileDto.tgLink) &&
         Objects.equals(this.vkLink, userProfileDto.vkLink);
@@ -166,17 +165,17 @@ public class UserProfileDto   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(uid, displayName, image, info, tgLink, vkLink);
+    return Objects.hash(uid, displayName, mediaId, info, tgLink, vkLink);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserProfileDto {\n");
-
+    
     sb.append("    uid: ").append(toIndentedString(uid)).append("\n");
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
-    sb.append("    image: ").append(toIndentedString(image)).append("\n");
+    sb.append("    mediaId: ").append(toIndentedString(mediaId)).append("\n");
     sb.append("    info: ").append(toIndentedString(info)).append("\n");
     sb.append("    tgLink: ").append(toIndentedString(tgLink)).append("\n");
     sb.append("    vkLink: ").append(toIndentedString(vkLink)).append("\n");

@@ -43,6 +43,7 @@ public class Media {
     @OneToOne(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserInfo userInfo;
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

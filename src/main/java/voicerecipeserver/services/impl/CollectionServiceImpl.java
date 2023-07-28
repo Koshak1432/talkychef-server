@@ -1,65 +1,59 @@
 package voicerecipeserver.services.impl;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CollectionDto;
+import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.entities.*;
+import voicerecipeserver.model.entities.Collection;
+import voicerecipeserver.model.entities.Recipe;
+import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CollectionRepository;
-import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.CollectionService;
+import voicerecipeserver.utils.FindUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getUserLogin;
+import static voicerecipeserver.utils.FindUtils.*;
 
 @Service
 public class CollectionServiceImpl implements CollectionService {
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
-    private final MarkRepository markRepository;
-
-
 
 
     private final ModelMapper mapper;
 
     @Autowired
     public CollectionServiceImpl(CollectionRepository repository, RecipeRepository recipeRepository,
-                                 UserRepository userRepository,
-                                 MarkRepository markRepository, ModelMapper mapper) {
+                                 UserRepository userRepository, ModelMapper mapper) {
         this.collectionRepository = repository;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
-        this.markRepository = markRepository;
         this.mapper = mapper;
     }
 
     @Override
-    public ResponseEntity<Void> addCollection(String name) {
+    public ResponseEntity<IdDto> addCollection(String name) throws NotFoundException {
         Collection collection = new Collection();
         JwtAuthentication principal = getAuthInfo();
         if (principal == null) {
             return null;
         }
-        collection.setAuthor(userRepository.findByUid(principal.getLogin()).orElseThrow(new ));
+        collection.setAuthor(findUser(userRepository, principal.getLogin()));
         collection.setName(name);
         collection.setNumber(0);
         collectionRepository.save(collection);
@@ -68,68 +62,87 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> addRecipeToCollection(Long recipe, String collection) throws NotFoundException {
-        Optional<Collection> collectionOptional = collectionRepository.findByName(collection);
-        if (collectionOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти коллекцию с именем: " + collection);
+    public ResponseEntity<Void> addRecipeToCollection(Long recipeId, Long collectionId) throws NotFoundException, AuthException {
+        User user = findUser(userRepository, getUserLogin());
+        Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
+        if (!user.equals(collection.getAuthor())) {
+            throw new AuthException("Недостаточно прав");
         }
-
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipe);
-
-        if (recipeOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепт с id: " + recipe);
-        }
-
-        Collection collection1 = collectionOptional.get();
-        Recipe recipe1 = recipeOptional.get();
-
-        //после этой операции коллекция становится невалидной (да и в рецепте множество коллекций тоже)
-        collectionRepository.addRecipeToCollection(recipe1.getId(), collection1.getId());
-
+        Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
+        collectionRepository.addRecipeToCollection(recipe.getId(), collection.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<CollectionDto> getCollectionPage(String name, Integer pageNum) throws NotFoundException, AuthException {
-        Optional<Collection> collectionOptional = collectionRepository.findByName(name);
-
-        if (null == pageNum) {
-            pageNum = 0;
-        }
-        if (collectionOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти коллекцию с именем: " + name);
-        }
-
-        Collection collection = collectionOptional.get();
-
-        CollectionDto collectionDto = new CollectionDto();
-        collectionDto.setName(name);
-        collectionDto.setNumber(collection.getNumber());
-
-        collectionDto.setRecipes(mapper.map(
-                recipeRepository.findRecipesWithOffsetFromCollectionById(Constants.MAX_RECIPES_PER_PAGE,
-                                                                         pageNum * Constants.MAX_RECIPES_PER_PAGE,
-                                                                         collection.getId()),
-                new TypeToken<List<RecipeDto>>() {}.getType()));
-        for (RecipeDto recipeDto : collectionDto.getRecipes()) {
-            setUserMark(recipeDto);
-        }
+    public ResponseEntity<CollectionDto> getCollectionPage(Long collectionId) throws
+            NotFoundException {
+        Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
+        CollectionDto collectionDto = mapper.map(collection, CollectionDto.class);
         return ResponseEntity.ok(collectionDto);
     }
 
-    private void setUserMark(RecipeDto recipe) throws AuthException {
-        setUserMarkToRecipe(recipe, userRepository, markRepository);
+    @Override
+    public ResponseEntity<Void> deleteCollection(Long id) throws NotFoundException, AuthException {
+        User user = findUser(userRepository, getUserLogin());
+        Collection collection = findCollection(collectionRepository, id);
+        if (collection.getAuthor() == null || !collection.getAuthor().equals(user)) {
+            throw new AuthException("Нет прав");
+        }
+        collectionRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    static void setUserMarkToRecipe(RecipeDto recipe, UserRepository userRepository, MarkRepository markRepository) throws AuthException {
-        if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            JwtAuthentication principal = getAuthInfo();
-            if (principal == null) {
-                return;
-            }
-            User user = userRepository.findByUid(principal.getLogin()).orElseThrow(() -> new AuthException("Такой пользователь не зарегистрирован"));
-            Optional<Mark> markOptional = markRepository.findById(new MarkKey(user.getId(), recipe.getId()));
-            markOptional.ifPresent(mark -> recipe.setUserMark(mark.getMark()));
+    @Override
+    public ResponseEntity<IdDto> putCollection(Long id, String name) throws AuthException, NotFoundException {
+        User user = findUser(userRepository, getUserLogin());
+        Collection collection = findCollection(collectionRepository, id);
+        if (collection.getAuthor() == null || !collection.getAuthor().equals(user)) {
+            throw new AuthException("Нет прав");
         }
+        collection.setName(name);
+        Collection savedCollection = collectionRepository.save(collection);
+        return ResponseEntity.ok(new IdDto().id(savedCollection.getId()));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteRecipeFromCollection(Long recipeId, Long collectionId) throws NotFoundException, AuthException {
+        User user = findUser(userRepository, getUserLogin());
+        Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
+        if (collection.getAuthor() == null || !user.equals(collection.getAuthor())) {
+            throw new AuthException("Нет прав");
+        }
+        Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
+        if (!findCollectionRecipe(collectionRepository,recipeId, collectionId)) {
+            throw new NotFoundException("Нет такого рецепта в коллекции");
+        }
+        collectionRepository.deleteRecipeFromCollection(recipe.getId(), collection.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<CollectionDto>> getCollection(String login) throws NotFoundException {
+        if (login == null) login = getUserLogin();
+        User user = findUser(userRepository, login);
+        List<Collection> collections = collectionRepository.findByAuthorId(user.getId());
+        List<CollectionDto> collectionDtos = collections.stream().map(collection -> mapper.map(collection, CollectionDto.class)).toList();
+        return ResponseEntity.ok(collectionDtos);
+    }
+
+    @Override
+    public ResponseEntity<List<CollectionDto>> getCollectionPageByName(String name, Long limit) throws NotFoundException {
+        if (null == limit) {
+            limit = 0L;
+        }
+        List<Collection> collections = findCollectionsByName(name, limit);
+        List<CollectionDto> collectionDtos = collections.stream().map(collection -> mapper.map(collection, CollectionDto.class)).toList();
+        return ResponseEntity.ok(collectionDtos);
+    }
+
+    private  List<Collection> findCollectionsByName(String name, Long limit) throws NotFoundException {
+        List<Collection> collections = collectionRepository.findByNameContaining(limit, name);
+        if (collections.isEmpty()) {
+            throw new NotFoundException("Не удалось найти коллекции с подстрокой: " + name);
+        }
+        return collections;
     }
 }

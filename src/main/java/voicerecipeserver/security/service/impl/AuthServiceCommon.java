@@ -3,9 +3,13 @@ package voicerecipeserver.security.service.impl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import voicerecipeserver.model.entities.User;
 import voicerecipeserver.security.domain.JwtAuthentication;
 
 import java.util.Collection;
+
+import static voicerecipeserver.utils.FindUtils.findUser;
+
 @Component
 public class AuthServiceCommon {
     public static JwtAuthentication getAuthInfo() {
@@ -17,6 +21,14 @@ public class AuthServiceCommon {
             return false;
         }
         return isContainsRole(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(login);
+    }
+
+    public static String getUserLogin() {
+        JwtAuthentication principal = getAuthInfo();
+        if (principal == null) {
+            return null;
+        }
+        return  principal.getLogin();
     }
 
     private static boolean isContainsRole(Collection<? extends GrantedAuthority> authorities, String name) {

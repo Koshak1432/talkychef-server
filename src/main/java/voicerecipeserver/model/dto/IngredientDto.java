@@ -2,7 +2,7 @@ package voicerecipeserver.model.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Generated;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -11,7 +11,7 @@ import jakarta.validation.constraints.*;
  * IngredientDto
  */
 @Validated
-@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-01-22T10:56:17.279Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T02:48:13.656840513Z[GMT]")
 
 
 public class IngredientDto   {
@@ -49,7 +49,8 @@ public class IngredientDto   {
    * Get id
    * @return id
    **/
-  
+      @NotNull
+
     public Long getId() {
     return id;
   }
