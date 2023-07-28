@@ -1,39 +1,31 @@
 package voicerecipeserver.model.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import voicerecipeserver.model.dto.RecipeDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * CollectionDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T02:48:13.656840513Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-28T05:58:02.208132775Z[GMT]")
 
 
 public class CollectionDto   {
-  @JsonProperty("id")
-  private Long id;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("number")
   private Integer number = null;
+
+  @JsonProperty("id")
+  private Integer id = null;
 
   @JsonProperty("recipes")
   @Valid
@@ -48,7 +40,7 @@ public class CollectionDto   {
    * Get name
    * @return name
    **/
-      @NotNull
+  @NotNull
 
   @Size(max=128)   public String getName() {
     return name;
@@ -67,14 +59,33 @@ public class CollectionDto   {
    * Get number
    * @return number
    **/
-      @NotNull
+  @NotNull
 
-    public Integer getNumber() {
+  public Integer getNumber() {
     return number;
   }
 
   public void setNumber(Integer number) {
     this.number = number;
+  }
+
+  public CollectionDto id(Integer id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Get id
+   * @return id
+   **/
+  @NotNull
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public CollectionDto recipes(List<RecipeDto> recipes) {
@@ -91,9 +102,9 @@ public class CollectionDto   {
    * Get recipes
    * @return recipes
    **/
-      @NotNull
-    @Valid
-    public List<RecipeDto> getRecipes() {
+  @NotNull
+  @Valid
+  public List<RecipeDto> getRecipes() {
     return recipes;
   }
 
@@ -112,22 +123,24 @@ public class CollectionDto   {
     }
     CollectionDto collectionDto = (CollectionDto) o;
     return Objects.equals(this.name, collectionDto.name) &&
-        Objects.equals(this.number, collectionDto.number) &&
-        Objects.equals(this.recipes, collectionDto.recipes);
+            Objects.equals(this.number, collectionDto.number) &&
+            Objects.equals(this.id, collectionDto.id) &&
+            Objects.equals(this.recipes, collectionDto.recipes);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, number, recipes);
+    return Objects.hash(name, number, id, recipes);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CollectionDto {\n");
-    
+
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    number: ").append(toIndentedString(number)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    recipes: ").append(toIndentedString(recipes)).append("\n");
     sb.append("}");
     return sb.toString();

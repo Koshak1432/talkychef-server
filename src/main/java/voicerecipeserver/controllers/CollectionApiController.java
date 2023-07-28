@@ -62,11 +62,11 @@ public class CollectionApiController implements CollectionApi {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> collectionIdGet(Long collectionId) throws NotFoundException, AuthException, BadRequestException {
+    public ResponseEntity<CollectionDto> collectionGetByName(Long collectionId) throws NotFoundException, AuthException, BadRequestException {
             return service.getCollectionPage(collectionId);
     }
     @Override
-    public ResponseEntity<List<CollectionDto>> collectionIdGet( String name, @Valid @PositiveOrZero Long limit) throws NotFoundException, AuthException, BadRequestException {
+    public ResponseEntity<List<CollectionDto>> collectionGetByName(String name, @Valid @PositiveOrZero Long limit) throws NotFoundException, AuthException, BadRequestException {
         return service.getCollectionPageByName(name, limit);
     }
 }

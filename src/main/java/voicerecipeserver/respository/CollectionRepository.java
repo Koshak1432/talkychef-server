@@ -40,10 +40,6 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
             """, nativeQuery = true)
     void deleteRecipeFromCollection(Long recipeId, Long collectionId);
 
-    @Query(value = """
-          SELECT * FROM collections
-          WHERE  author_id =:id
-            """, nativeQuery = true)
     List<Collection> findByAuthorId(Long id);
 
 

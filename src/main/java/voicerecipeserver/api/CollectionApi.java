@@ -13,7 +13,6 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ import java.util.List;
 public interface CollectionApi {
 
     @GetMapping
-    ResponseEntity<List<CollectionDto>> collectionGet(@RequestParam(value = "name", required = false) String login) throws NotFoundException;
+    ResponseEntity<List<CollectionDto>> collectionGet(@RequestParam(value = "login", required = false) String login) throws NotFoundException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
@@ -48,10 +47,11 @@ public interface CollectionApi {
                                                  @RequestParam("collection_id") @NotBlank Long collectionId) throws NotFoundException, AuthException;
 
     @GetMapping(value = "/search")
-    ResponseEntity<CollectionDto> collectionIdGet(@RequestParam(value = "collection_id") Long collectionId)
+    ResponseEntity<CollectionDto> collectionGetByName(@RequestParam(value = "collection_id") Long collectionId)
             throws NotFoundException, AuthException, BadRequestException;
+
     @GetMapping(value = "/search/{name}")
-    ResponseEntity<List<CollectionDto>> collectionIdGet(@PathVariable(value = "name") String name,
-                                                  @RequestParam(value = "limit", required = false) @PositiveOrZero Long limit)
+    ResponseEntity<List<CollectionDto>> collectionGetByName(@PathVariable(value = "name") String name,
+                                                            @RequestParam(value = "limit", required = false) @PositiveOrZero Long limit)
             throws NotFoundException, AuthException, BadRequestException;
 }
