@@ -79,14 +79,14 @@ public class MarkServiceImpl implements MarkService {
             BadRequestException {
         Mark mark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.isSamePerson(markDto.getUserUid())) {
-            throw new AuthException("Нельзя добавлять комментарии от чужого имени");
+            throw new AuthException("You cannot add mark from another user");
         }
         setRecipeToMark(mark, markDto.getRecipeId());
         setAuthorToMark(mark, markDto.getUserUid());
         if (!markIsPresent(mark)) {
             markRepository.save(mark);
         } else {
-            throw new BadRequestException("Оценка уже поставлена");
+            throw new BadRequestException("The mark already exist");
         }
         return ResponseEntity.ok(new IdDto().id(mark.getId().getRecipeId()));
     }
@@ -95,14 +95,14 @@ public class MarkServiceImpl implements MarkService {
     public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException, AuthException {
         Mark newMark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.checkAuthorities(markDto.getUserUid())) {
-            throw new AuthException("Нет прав");
+            throw new AuthException("No rights");
         }
         setRecipeToMark(newMark, markDto.getRecipeId());
         setAuthorToMark(newMark, markDto.getUserUid());
         if (markIsPresent(newMark)) {
             markRepository.save(newMark);
         } else {
-            throw new NotFoundException("Предыдущая оценка не найдена");
+            throw new NotFoundException("Couldn't find previous mark");
         }
         return ResponseEntity.ok(new IdDto().id(newMark.getId().getRecipeId()));
     }
@@ -111,7 +111,7 @@ public class MarkServiceImpl implements MarkService {
     public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws AuthException,
             NotFoundException {
         if (!checkAuthorities(userUid)) {
-            throw new AuthException("Нет прав");
+            throw new AuthException("No rights");
         }
         User user = FindUtils.findUser(userRepository, userUid);
         markRepository.deleteById(new MarkKey(user.getId(), recipeId));

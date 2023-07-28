@@ -6,10 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.Collection;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
@@ -62,11 +60,12 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> addRecipeToCollection(Long recipeId, Long collectionId) throws NotFoundException, AuthException {
+    public ResponseEntity<Void> addRecipeToCollection(Long recipeId, Long collectionId) throws NotFoundException,
+            AuthException {
         User user = findUser(userRepository, getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
         if (!user.equals(collection.getAuthor())) {
-            throw new AuthException("Недостаточно прав");
+            throw new AuthException("No rights");
         }
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         collectionRepository.addRecipeToCollection(recipe.getId(), collection.getId());
@@ -74,8 +73,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> getCollectionPage(Long collectionId) throws
-            NotFoundException {
+    public ResponseEntity<CollectionDto> getCollectionPage(Long collectionId) throws NotFoundException {
         Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
         CollectionDto collectionDto = mapper.map(collection, CollectionDto.class);
         return ResponseEntity.ok(collectionDto);
@@ -86,7 +84,7 @@ public class CollectionServiceImpl implements CollectionService {
         User user = findUser(userRepository, getUserLogin());
         Collection collection = findCollection(collectionRepository, id);
         if (collection.getAuthor() == null || !collection.getAuthor().equals(user)) {
-            throw new AuthException("Нет прав");
+            throw new AuthException("No rights");
         }
         collectionRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -97,7 +95,7 @@ public class CollectionServiceImpl implements CollectionService {
         User user = findUser(userRepository, getUserLogin());
         Collection collection = findCollection(collectionRepository, id);
         if (collection.getAuthor() == null || !collection.getAuthor().equals(user)) {
-            throw new AuthException("Нет прав");
+            throw new AuthException("No rights");
         }
         collection.setName(name);
         Collection savedCollection = collectionRepository.save(collection);
@@ -105,43 +103,46 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipeFromCollection(Long recipeId, Long collectionId) throws NotFoundException, AuthException {
+    public ResponseEntity<Void> deleteRecipeFromCollection(Long recipeId, Long collectionId) throws NotFoundException,
+            AuthException {
         User user = findUser(userRepository, getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
         if (collection.getAuthor() == null || !user.equals(collection.getAuthor())) {
-            throw new AuthException("Нет прав");
+            throw new AuthException("No rights");
         }
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
-        if (!findCollectionRecipe(collectionRepository,recipeId, collectionId)) {
-            throw new NotFoundException("Нет такого рецепта в коллекции");
-        }
         collectionRepository.deleteRecipeFromCollection(recipe.getId(), collection.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<CollectionDto>> getCollection(String login) throws NotFoundException {
-        if (login == null) login = getUserLogin();
+        if (login == null) {
+            login = getUserLogin();
+        }
         User user = findUser(userRepository, login);
         List<Collection> collections = collectionRepository.findByAuthorId(user.getId());
-        List<CollectionDto> collectionDtos = collections.stream().map(collection -> mapper.map(collection, CollectionDto.class)).toList();
+        List<CollectionDto> collectionDtos = collections.stream().map(
+                collection -> mapper.map(collection, CollectionDto.class)).toList();
         return ResponseEntity.ok(collectionDtos);
     }
 
     @Override
-    public ResponseEntity<List<CollectionDto>> getCollectionPageByName(String name, Long limit) throws NotFoundException {
+    public ResponseEntity<List<CollectionDto>> getCollectionPageByName(String name, Long limit) throws
+            NotFoundException {
         if (null == limit) {
             limit = 0L;
         }
         List<Collection> collections = findCollectionsByName(name, limit);
-        List<CollectionDto> collectionDtos = collections.stream().map(collection -> mapper.map(collection, CollectionDto.class)).toList();
+        List<CollectionDto> collectionDtos = collections.stream().map(
+                collection -> mapper.map(collection, CollectionDto.class)).toList();
         return ResponseEntity.ok(collectionDtos);
     }
 
-    private  List<Collection> findCollectionsByName(String name, Long limit) throws NotFoundException {
+    private List<Collection> findCollectionsByName(String name, Long limit) throws NotFoundException {
         List<Collection> collections = collectionRepository.findByNameContaining(limit, name);
         if (collections.isEmpty()) {
-            throw new NotFoundException("Не удалось найти коллекции с подстрокой: " + name);
+            throw new NotFoundException("Couldn't find collections with substring: " + name);
         }
         return collections;
     }
