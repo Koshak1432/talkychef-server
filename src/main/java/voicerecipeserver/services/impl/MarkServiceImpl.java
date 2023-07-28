@@ -57,7 +57,11 @@ public class MarkServiceImpl implements MarkService {
     @Override
     public ResponseEntity<Float> getAvgMark(Long recipeId) throws NotFoundException {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
-        return ResponseEntity.ok(recipe.getAvgMark().getAvgMark());
+        Float res = 0f;
+        if (recipe.getAvgMark() != null) {
+            res = recipe.getAvgMark().getAvgMark();
+        }
+        return ResponseEntity.ok(res);
     }
 
     @Override
