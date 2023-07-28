@@ -33,7 +33,7 @@ public class MediaServiceImpl implements MediaService {
     public ResponseEntity<byte[]> getMediaById(Long id) throws NotFoundException {
         Optional<Media> media = mediaRepository.findById(id);
         if (media.isEmpty()) {
-            throw new NotFoundException("Не удалось найти медиа с id: " + id);
+            throw new NotFoundException("Couldn't find media with id: " + id);
         }
 
         byte[] data = media.get().getFileData();

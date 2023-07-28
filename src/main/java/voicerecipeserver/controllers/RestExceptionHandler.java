@@ -75,7 +75,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({UserException.class})
     protected ResponseEntity<Object> handleUserException(Exception e) {
         String message = e.getMessage();
-        return new ResponseEntity<>(new Error().code(400).message("Auntification failed: " + message), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new Error().code(400).message("Authentication failed: " + message), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({DataIntegrityViolationException.class})
