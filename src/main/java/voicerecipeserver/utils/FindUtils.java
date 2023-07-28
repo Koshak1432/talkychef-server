@@ -40,12 +40,21 @@ public class FindUtils {
         return commentOptional.get();
     }
 
-    public static Collection findCollection(CollectionRepository repository, String collectionName) throws
+    public static Collection findCollection(CollectionRepository repository, Long collectionId) throws
             NotFoundException {
-        Optional<Collection> collectionOptional = repository.findByName(collectionName);
+        Optional<Collection> collectionOptional = repository.findById(collectionId);
         if (collectionOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти коллекцию с именем: " + collectionName);
+            throw new NotFoundException("Не удалось найти коллекцию с id: " + collectionId);
         }
         return collectionOptional.get();
+    }
+
+    public static boolean findCollectionRecipe(CollectionRepository repository, Long recipeId,  Long collectionId) throws
+            NotFoundException {
+        Optional<Collection> collectionOptional = repository.findRecipe(recipeId, collectionId);
+        if (collectionOptional.isEmpty()) {
+            throw new NotFoundException("Не удалось найти рецепт в коллекции с id: " + collectionId);
+        }
+        return true;
     }
 }
