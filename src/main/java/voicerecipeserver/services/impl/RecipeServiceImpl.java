@@ -101,6 +101,9 @@ public class RecipeServiceImpl implements RecipeService {
             throw new AuthException("Нет прав");
         }
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
+        System.out.println(recipe.getMedia());
+        System.out.println("recipe: " + recipe);
+        System.out.println("recipe dto: " + recipeDto);
         setAuthorToRecipe(recipe);
         recipe.setId(null);
         checkMediaUniqueness(recipe);
