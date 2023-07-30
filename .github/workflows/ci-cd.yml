@@ -14,7 +14,7 @@ permissions:
 env:
       DB_NAME: postgresql
       POSTGRES_DB_NAME: talkyChef
-      DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ env.POSTGRES_DB_NAME }}
+      DATASOURCE_URL: jdbc:postgresql://localhost:5432/talkyChef
       DATASOURCE_USERNAME: ${{secrets.DATASOURCE_USERNAME}}
       DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
       SCHEMA_NAME: public
@@ -62,7 +62,5 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-    - name: Grant execute permission
-      run: chmod +x gradlew
     - name: Run build(with test task)
       run: ./gradlew build
