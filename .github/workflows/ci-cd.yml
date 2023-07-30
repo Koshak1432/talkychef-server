@@ -13,7 +13,8 @@ permissions:
 
 env:
       DB_NAME: postgresql
-      DATASOURCE_URL: jdbc:postgresql://localhost:5432/talkyChef
+      POSTGRES_DB_NAME: talkyChef
+      DATASOURCE_URL: jdbc:postgresql://localhost:5432/${{ env.POSTGRES_DB_NAME }}
       DATASOURCE_USERNAME: ${{secrets.DATASOURCE_USERNAME}}
       DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
       SCHEMA_NAME: public
@@ -34,7 +35,7 @@ jobs:
         env:
           POSTGRES_USER: ${{ env.DATASOURCE_USERNAME }}
           POSTGRES_PASSWORD: ${{ env.DATASOURCE_PASSWORD }}
-          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB_NAME }}
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
