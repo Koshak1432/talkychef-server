@@ -1,0 +1,54 @@
+plugins {
+    id 'org.springframework.boot' version '3.1.1'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'io.freefair.lombok' version '6.5.1'
+    id "org.flywaydb.flyway" version "9.20.0"
+    id 'java'
+}
+
+group = 'com'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+flyway {
+    url = "${System.getenv('DATASOURCE_URL')}"
+    user = "${System.getenv('DATASOURCE_USERNAME')}"
+    password = "${System.getenv('DATASOURCE_PASSWORD')}"
+    schemas = 'public'
+    locations = ['filesystem:src/main/resources/db']
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starters:2.2.13.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.8'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.8'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.8'
+    implementation 'org.flywaydb:flyway-core:9.7.0'
+    implementation 'org.postgresql:postgresql:42.6.0'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.0.8'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.springframework.security:spring-security-test:6.1.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.1'
+    testImplementation 'org.flywaydb.flyway-test-extensions:flyway-spring-test:9.5.0'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0-RC1'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
