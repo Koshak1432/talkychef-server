@@ -51,6 +51,9 @@ jobs:
         distribution: 'oracle'
     - name: Setup Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+    - name: Create PostgreSQL Database
+      run: |
+        psql -h localhost -U ${{ env.DATASOURCE_USERNAME }} -c "CREATE DATABASE ${env.POSTGRES_DB_NAME};"
     - name: Database Migration with Flyway
       run: ./gradlew flywayMigrate
     - name: Cache Gradle dependencies
