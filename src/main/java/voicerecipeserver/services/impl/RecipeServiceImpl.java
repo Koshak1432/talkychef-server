@@ -124,10 +124,6 @@ public class RecipeServiceImpl implements RecipeService {
             throw new NotFoundException("Couldn't find media with id: " + recipe.getMedia().getId());
         }
         Recipe savedRecipe = recipeRepository.save(recipe);
-        JwtAuthentication principal = getAuthInfo();
-        if (principal == null) {
-            return null;
-        }
         Collection recipeCollection = findUserRecipesCollection(author.getId());
         if (recipeCollection == null) {
             Collection collection = new Collection("Мои рецепты", 0, author);
@@ -139,7 +135,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private Collection findUserRecipesCollection(Long id) {
-        Optional<Collection> optionalCollection = collectionRepository.findByAuthorIdUserRecipeCollection(id);
+        Optional<Collection> optionalCollection = collectionRepository.findByAuthorIdUserRecipeCollection(id, "Мои рецепты");
         return optionalCollection.orElse(null);
     }
 

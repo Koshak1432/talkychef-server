@@ -10,12 +10,11 @@ import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.Mark;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
-import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.MarkRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.domain.JwtAuthentication;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.utils.FindUtils;
 
 import java.util.Collections;
@@ -24,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.StreamSupport;
-
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
 
 /**
  * Slope One algorithm implementation
@@ -171,8 +168,7 @@ public class SlopeOne {
     private List<RecipeDto> getSortedRecipeDtos(Integer limit) throws NotFoundException {
         List<RecipeDto> recipeDtos;
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            JwtAuthentication principal = getAuthInfo();
-            User user = FindUtils.findUser(userRepository, principal.getLogin());
+            User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
             HashMap<Recipe, Double> outputUserData = outputData.get(user);
             if (outputUserData != null) {
                 List<Recipe> sortedList = outputUserData.entrySet().stream()

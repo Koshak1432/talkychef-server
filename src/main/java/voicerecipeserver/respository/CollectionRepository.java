@@ -53,7 +53,7 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
 
     @Query(value = """
           SELECT * FROM collections 
-          WHERE author_id =:id AND name='Мои рецепты'
+          WHERE author_id =:id AND name=:name
             """, nativeQuery = true)
-    Optional<Collection> findByAuthorIdUserRecipeCollection(Long id);
+    Optional<Collection> findByAuthorIdUserRecipeCollection(Long id, String name);
 }

@@ -84,11 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<UserProfileDto> getUserProfile() throws Exception {
-        JwtAuthentication principal = getAuthInfo();
-        if (principal == null) {
-            throw new AuthException("Not authorized yet");
-        }
-        User user = FindUtils.findUser(userRepository, principal.getLogin());
+        User user = FindUtils.findUser(userRepository,AuthServiceCommon.getUserLogin());
         UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(
                 () -> new UserException("Couldn't find user info"));
         UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
