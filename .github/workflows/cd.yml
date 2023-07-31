@@ -43,4 +43,3 @@ jobs:
           
           #SSH into the server and restart the application
           ssh -o StrictHostKeyChecking=no -i  ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP "cd $REMOTE_APP_DIR && ./stop.sh && nohup ./start.sh > logs.out 2>&1 &"
-          sleep 7
