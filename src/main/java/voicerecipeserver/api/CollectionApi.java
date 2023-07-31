@@ -50,6 +50,10 @@ public interface CollectionApi {
     ResponseEntity<CollectionDto> collectionGetByName(@RequestParam(value = "collection_id") Long collectionId)
             throws NotFoundException, AuthException, BadRequestException;
 
+    @GetMapping(value = "/name/{name}")
+    ResponseEntity<CollectionDto> collectionFromParticularUser(@PathVariable(value = "name") String name, @RequestParam(value = "login", required = false) String login)
+            throws NotFoundException, AuthException, BadRequestException;
+
     @GetMapping(value = "/search/{name}")
     ResponseEntity<List<CollectionDto>> collectionGetByName(@PathVariable(value = "name") String name,
                                                             @RequestParam(value = "limit", required = false) @PositiveOrZero Long limit)

@@ -16,15 +16,12 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CollectionRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.domain.JwtAuthentication;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.CollectionService;
 import voicerecipeserver.utils.FindUtils;
 
 import java.util.List;
 
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.getUserLogin;
-import static voicerecipeserver.utils.FindUtils.*;
 
 @Service
 public class CollectionServiceImpl implements CollectionService {
@@ -46,14 +43,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public ResponseEntity<IdDto> addCollection(String name) throws NotFoundException {
-        Collection collection = new Collection();
-        JwtAuthentication principal = getAuthInfo();
-        if (principal == null) {
-            return null;
-        }
-        collection.setAuthor(findUser(userRepository, principal.getLogin()));
-        collection.setName(name);
-        collection.setNumber(0);
+        Collection collection = new Collection(name, 0, FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin()));
         collectionRepository.save(collection);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -62,7 +52,7 @@ public class CollectionServiceImpl implements CollectionService {
     @Transactional
     public ResponseEntity<Void> addRecipeToCollection(Long recipeId, Long collectionId) throws NotFoundException,
             AuthException {
-        User user = findUser(userRepository, getUserLogin());
+        User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
         if (!user.equals(collection.getAuthor())) {
             throw new AuthException("No rights");
@@ -81,8 +71,8 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public ResponseEntity<Void> deleteCollection(Long id) throws NotFoundException, AuthException {
-        User user = findUser(userRepository, getUserLogin());
-        Collection collection = findCollection(collectionRepository, id);
+        User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
+        Collection collection = FindUtils.findCollection(collectionRepository, id);
         if (collection.getAuthor() == null || !collection.getAuthor().equals(user)) {
             throw new AuthException("No rights");
         }
@@ -92,8 +82,8 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public ResponseEntity<IdDto> putCollection(Long id, String name) throws AuthException, NotFoundException {
-        User user = findUser(userRepository, getUserLogin());
-        Collection collection = findCollection(collectionRepository, id);
+        User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
+        Collection collection = FindUtils.findCollection(collectionRepository, id);
         if (collection.getAuthor() == null || !collection.getAuthor().equals(user)) {
             throw new AuthException("No rights");
         }
@@ -105,7 +95,7 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public ResponseEntity<Void> deleteRecipeFromCollection(Long recipeId, Long collectionId) throws NotFoundException,
             AuthException {
-        User user = findUser(userRepository, getUserLogin());
+        User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
         if (collection.getAuthor() == null || !user.equals(collection.getAuthor())) {
             throw new AuthException("No rights");
@@ -118,9 +108,9 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public ResponseEntity<List<CollectionDto>> getCollection(String login) throws NotFoundException {
         if (login == null) {
-            login = getUserLogin();
+            login = AuthServiceCommon.getUserLogin();
         }
-        User user = findUser(userRepository, login);
+        User user = FindUtils.findUser(userRepository, login);
         List<Collection> collections = collectionRepository.findByAuthorId(user.getId());
         List<CollectionDto> collectionDtos = collections.stream().map(
                 collection -> mapper.map(collection, CollectionDto.class)).toList();
@@ -137,6 +127,18 @@ public class CollectionServiceImpl implements CollectionService {
         List<CollectionDto> collectionDtos = collections.stream().map(
                 collection -> mapper.map(collection, CollectionDto.class)).toList();
         return ResponseEntity.ok(collectionDtos);
+    }
+
+    @Override
+    public ResponseEntity<CollectionDto> getCollectionByName(String name, String login) throws NotFoundException {
+        if (login == null) {
+            login = AuthServiceCommon.getUserLogin();
+        }
+        User user = FindUtils.findUser(userRepository, login);
+        Collection collection = collectionRepository.findByAuthorIdUserRecipeCollection(user.getId(), name).orElseThrow(
+            () -> new NotFoundException("Collection with name: " + name + " from user with login: " + user.getUid() + " not found"));
+        CollectionDto collectionDto = mapper.map(collection, CollectionDto.class);
+        return ResponseEntity.ok(collectionDto);
     }
 
     private List<Collection> findCollectionsByName(String name, Long limit) throws NotFoundException {

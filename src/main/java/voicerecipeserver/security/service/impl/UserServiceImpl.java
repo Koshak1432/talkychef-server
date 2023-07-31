@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.dto.UserProfileDto;
+import voicerecipeserver.model.entities.Collection;
 import voicerecipeserver.model.entities.Media;
 import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
@@ -17,10 +18,7 @@ import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.model.exceptions.UserException;
-import voicerecipeserver.respository.MediaRepository;
-import voicerecipeserver.respository.RoleRepository;
-import voicerecipeserver.respository.UserInfoRepository;
-import voicerecipeserver.respository.UserRepository;
+import voicerecipeserver.respository.*;
 import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.UserService;
@@ -86,11 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<UserProfileDto> getUserProfile() throws Exception {
-        JwtAuthentication principal = getAuthInfo();
-        if (principal == null) {
-            throw new AuthException("Not authorized yet");
-        }
-        User user = FindUtils.findUser(userRepository, principal.getLogin());
+        User user = FindUtils.findUser(userRepository,AuthServiceCommon.getUserLogin());
         UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(
                 () -> new UserException("Couldn't find user info"));
         UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
@@ -229,4 +223,6 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(new IdDto().id(savedUser.getId()));
     }
+
+
 }

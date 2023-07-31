@@ -25,6 +25,7 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
     Optional<Collection> findByName(String name);
 
     @Modifying()
+    @Transactional
     @Query(value = """
             INSERT INTO collections_distribution(collection_id, recipe_id) VALUES (:collectionId, :recipeId);
             UPDATE collections
@@ -50,4 +51,9 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
             """, nativeQuery = true)
     Optional<Collection> findRecipe(Long recipeId, Long collectionId);
 
+    @Query(value = """
+          SELECT * FROM collections 
+          WHERE author_id =:id AND name=:name
+            """, nativeQuery = true)
+    Optional<Collection> findByAuthorIdUserRecipeCollection(Long id, String name);
 }
