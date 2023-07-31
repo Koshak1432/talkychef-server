@@ -25,19 +25,4 @@ public interface UserRepository extends CrudRepository<User, Long> {
             """, nativeQuery = true)
     List<User> findByUidContaining(@Param("namePart") String inline, @Param("limit") Integer limit);
 
-
-
-//    @Transactional
-//    @Modifying
-//    @Query(value = """
-//                    INSERT INTO email_tokens(token, user_id) VALUES (:token, :id)
-//            """, nativeQuery = true)
-//    void setActivateToken(String token, Long id);
-//
-//    @Transactional
-//    @Modifying
-//    @Query(value = """
-//                    INSERT INTO email_tokens(token, user_id) VALUES (:token, :id)
-//            """, nativeQuery = true)
-//    void fin(String token, Long id);
 }
