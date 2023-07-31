@@ -3,7 +3,6 @@ package voicerecipeserver.utils;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
-import java.util.Optional;
 
 
 public class FindUtils {
@@ -16,11 +15,7 @@ public class FindUtils {
     }
 
     public static UserInfo findUserByToken(UserInfoRepository userInfoRepository, String token) throws NotFoundException {
-        Optional<UserInfo> userOptional = userInfoRepository.findByToken(token);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("Couldn't find user with token: " + token);
-        }
-        return userOptional.get();
+        return userInfoRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Couldn't find user with token: " + token));
     }
 
 
@@ -45,10 +40,7 @@ public class FindUtils {
     }
 
     public static UserInfo findUserByEmail(UserInfoRepository userInfoRepository, String email) throws NotFoundException {
-        Optional<UserInfo> userOptional = userInfoRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти пользователя with email: " + email);
-        }
-        return userOptional.get();
+        return userInfoRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Не удалось найти пользователя with email: " + email));
     }
 }
