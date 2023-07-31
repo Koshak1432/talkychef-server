@@ -40,5 +40,9 @@ public class Collection {
     @Deprecated()
     private Set<Recipe> recipes;
 
-
+    public Collection(String name, Integer number, User author) {
+        this.name = name;
+        this.number = number;
+        this.author = author;
+    }
 }

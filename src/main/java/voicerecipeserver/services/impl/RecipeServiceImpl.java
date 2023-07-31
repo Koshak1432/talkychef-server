@@ -8,16 +8,21 @@ import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
+import voicerecipeserver.model.entities.Collection;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.respository.*;
+import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
 import voicerecipeserver.utils.FindUtils;
 
 import java.util.*;
+
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
+import static voicerecipeserver.utils.FindUtils.findUser;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -29,13 +34,15 @@ public class RecipeServiceImpl implements RecipeService {
     private final StepRepository stepRepository;
     private final MarkRepository markRepository;
     private final MediaRepository mediaRepository;
+    private final CollectionRepository collectionRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
                              AvgMarkRepository avgMarkRepository, StepRepository stepRepository,
                              MarkRepository markRepository, UserRepository userRepository,
-                             MediaRepository mediaRepository) {
+                             MediaRepository mediaRepository,
+                             CollectionRepository collectionRepository) {
 
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
@@ -48,6 +55,7 @@ public class RecipeServiceImpl implements RecipeService {
                 m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
         this.markRepository = markRepository;
         this.mediaRepository = mediaRepository;
+        this.collectionRepository = collectionRepository;
     }
 
 
@@ -101,7 +109,8 @@ public class RecipeServiceImpl implements RecipeService {
             throw new BadRequestException("Media id must be present");
         }
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
-        setAuthorToRecipe(recipe);
+        User author = FindUtils.findUser(userRepository, recipe.getAuthor().getUid());
+        recipe.setAuthor(author);
         recipe.setId(null);
         checkMediaUniqueness(recipe);
         // через маппер можно сделать путем добавления конвертера. Только вот код
@@ -115,8 +124,23 @@ public class RecipeServiceImpl implements RecipeService {
             throw new NotFoundException("Couldn't find media with id: " + recipe.getMedia().getId());
         }
         Recipe savedRecipe = recipeRepository.save(recipe);
+        JwtAuthentication principal = getAuthInfo();
+        if (principal == null) {
+            return null;
+        }
+        Collection recipeCollection = findUserRecipesCollection(author.getId());
+        if (recipeCollection == null) {
+            Collection collection = new Collection("Мои рецепты", 0, author);
+            recipeCollection = collectionRepository.save(collection);
+        }
+        collectionRepository.addRecipeToCollection(savedRecipe.getId(), recipeCollection.getId());
         return ResponseEntity.ok(new IdDto().id(savedRecipe.getId()));
 
+    }
+
+    private Collection findUserRecipesCollection(Long id) {
+        Optional<Collection> optionalCollection = collectionRepository.findByAuthorIdUserRecipeCollection(id);
+        return optionalCollection.orElse(null);
     }
 
 

@@ -25,4 +25,5 @@ public interface CollectionService {
 
     ResponseEntity<List<CollectionDto>> getCollectionPageByName(String name, Long pageNum) throws NotFoundException;
 
+    ResponseEntity<CollectionDto> getCollectionByName(String name, String login) throws NotFoundException;
 }
