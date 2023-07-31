@@ -17,12 +17,11 @@ configurations {
 }
 
 flyway {
-    url = 'jdbc:postgresql://localhost:5432/talkyChef'
-    user = 'postgres'
-    password = ''
+    url = "${System.getenv('DATASOURCE_URL')}"
+    user = "${System.getenv('DATASOURCE_USERNAME')}"
+    password = "${System.getenv('DATASOURCE_PASSWORD')}"
     schemas = 'public'
     locations = ['filesystem:src/main/resources/db']
-    // other configuration options...
 }
 
 repositories {

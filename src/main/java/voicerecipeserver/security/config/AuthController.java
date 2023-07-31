@@ -28,27 +28,29 @@ public class AuthController {
 
     @PostMapping("/registration/mobile")
     public ResponseEntity<JwtResponse> registrationMobile(@RequestBody UserDto user) throws AuthException,
-            NotFoundException, UserException {
+            NotFoundException, UserException, BadRequestException {
         final JwtResponse token = authServiceMobile.registration(user);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/registration/web")
     public ResponseEntity<JwtResponse> registrationWeb(@RequestBody UserDto user) throws AuthException,
-            NotFoundException, UserException {
+            NotFoundException, UserException, BadRequestException {
         final JwtResponse token = authServiceWeb.registration(user);
         return ResponseEntity.ok(token);
     }
 
 
     @PostMapping("/login/mobile")
-    public ResponseEntity<JwtResponse> loginMobile(@RequestBody JwtRequest authRequest) throws AuthException {
+    public ResponseEntity<JwtResponse> loginMobile(@RequestBody JwtRequest authRequest) throws AuthException,
+            NotFoundException {
         final JwtResponse token = authServiceMobile.login(authRequest);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/login/web")
-    public ResponseEntity<JwtResponse> loginWeb(@RequestBody JwtRequest authRequest) throws AuthException {
+    public ResponseEntity<JwtResponse> loginWeb(@RequestBody JwtRequest authRequest) throws AuthException,
+            NotFoundException {
         final JwtResponse token = authServiceWeb.login(authRequest);
         return ResponseEntity.ok(token);
     }
@@ -56,21 +58,22 @@ public class AuthController {
 
     @PostMapping("/auth/refresh/web")
     public ResponseEntity<JwtResponse> getNewRefreshTokenWeb(
-            @CookieValue(value = "refreshToken") String refreshToken) throws AuthException {
+            @CookieValue(value = "refreshToken") String refreshToken) throws AuthException, NotFoundException {
         final JwtResponse token = authServiceWeb.refresh(refreshToken);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/auth/refresh/mobile")
-    public ResponseEntity<JwtResponse> getNewRefreshMobile(@RequestBody RefreshJwtRequest request) throws
-            AuthException {
+    public ResponseEntity<JwtResponse> getNewRefreshMobile(@RequestBody RefreshJwtRequest request) throws AuthException,
+            NotFoundException {
         final JwtResponse token = authServiceMobile.refresh(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
 
 
     @PostMapping("/auth/token")
-    public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) throws AuthException {
+    public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) throws AuthException,
+            NotFoundException {
         final JwtResponse token = authServiceMobile.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }

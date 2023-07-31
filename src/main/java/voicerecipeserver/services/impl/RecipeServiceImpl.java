@@ -1,9 +1,7 @@
 package voicerecipeserver.services.impl;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,6 @@ import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
@@ -98,7 +95,10 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException {
         if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
-            throw new AuthException("Нет прав");
+            throw new AuthException("No rights");
+        }
+        if (recipeDto.getMediaId() == null) {
+            throw new BadRequestException("Media id must be present");
         }
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
         setAuthorToRecipe(recipe);
@@ -112,10 +112,9 @@ public class RecipeServiceImpl implements RecipeService {
 
         setDistribution(recipe);
         if (mediaRepository.findById(recipe.getMedia().getId()).isEmpty()) {
-            throw new BadRequestException("Это изображение не было добавлено в пул картинок");
+            throw new NotFoundException("Couldn't find media with id: " + recipe.getMedia().getId());
         }
-        Recipe savedRecipe;
-        savedRecipe = recipeRepository.save(recipe);
+        Recipe savedRecipe = recipeRepository.save(recipe);
         return ResponseEntity.ok(new IdDto().id(savedRecipe.getId()));
 
     }
@@ -131,7 +130,7 @@ public class RecipeServiceImpl implements RecipeService {
             AuthException {
 
         if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
-            throw new AuthException("Нет прав");
+            throw new AuthException("No rights");
         }
         Recipe oldRecipe = FindUtils.findRecipe(recipeRepository, recipeDto.getId());
         Recipe newRecipe = mapper.map(recipeDto, Recipe.class);
@@ -154,7 +153,7 @@ public class RecipeServiceImpl implements RecipeService {
             String ingredientName = receivedIngredient.getName();
 
             if (ingredientsInRecipe.contains(ingredientName)) {
-                throw new BadRequestException("Ингредиент встречается дважды: " + ingredientName);
+                throw new BadRequestException("Duplicated ingredient: " + ingredientName);
             }
             ingredientsInRecipe.add(receivedIngredient.getName());
 
@@ -203,7 +202,7 @@ public class RecipeServiceImpl implements RecipeService {
     private List<Recipe> findRecipesByName(String name, int limit) throws NotFoundException {
         List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit);
         if (recipes.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепты с подстрокой: " + name);
+            throw new NotFoundException("Couldn't find recipes with substring: " + name);
         }
         return recipes;
     }

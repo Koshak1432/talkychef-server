@@ -3,19 +3,16 @@ package voicerecipeserver.utils;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
-
 import java.util.Optional;
+
 
 public class FindUtils {
     private FindUtils() {
     }
 
     public static User findUser(UserRepository repository, String userUid) throws NotFoundException {
-        Optional<User> userOptional = repository.findByUid(userUid);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("Couldn't find user with uid: " + userUid);
-        }
-        return userOptional.get();
+        return repository.findByUid(userUid).orElseThrow(
+                () -> new NotFoundException("Couldn't find user with uid: " + userUid));
     }
 
     public static UserInfo findUserByToken(UserInfoRepository userInfoRepository, String token) throws NotFoundException {
@@ -28,40 +25,24 @@ public class FindUtils {
 
 
     public static Recipe findRecipe(RecipeRepository repository, Long id) throws NotFoundException {
-        Optional<Recipe> recipeOptional = repository.findById(id);
-        if (recipeOptional.isEmpty()) {
-            throw new NotFoundException("Couldn't find recipe with id: " + id);
-        }
-        return recipeOptional.get();
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find recipe with id: " + id));
     }
 
     public static Comment findComment(CommentRepository repository, Long commentId) throws NotFoundException {
-        Optional<Comment> commentOptional = repository.findById(commentId);
-        if (commentOptional.isEmpty()) {
-            throw new NotFoundException("Couldn't find comment with id: " + commentId);
-        }
-        return commentOptional.get();
+        return repository.findById(commentId).orElseThrow(
+                () -> new NotFoundException("Couldn't find comment with id: " + commentId));
     }
 
     public static Collection findCollection(CollectionRepository repository, Long collectionId) throws
             NotFoundException {
-        Optional<Collection> collectionOptional = repository.findById(collectionId);
-        if (collectionOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти коллекцию с id: " + collectionId);
-        }
-        return collectionOptional.get();
+        return repository.findById(collectionId).orElseThrow(
+                () -> new NotFoundException("Couldn't find collection with id: " + collectionId));
     }
 
-    public static boolean findCollectionRecipe(CollectionRepository repository, Long recipeId,  Long collectionId) throws
-            NotFoundException {
-        Optional<Collection> collectionOptional = repository.findRecipe(recipeId, collectionId);
-        if (collectionOptional.isEmpty()) {
-            throw new NotFoundException("Не удалось найти рецепт в коллекции с id: " + collectionId);
-        }
-        return true;
+    public static Media findMedia(MediaRepository repository, Long mediaId) throws NotFoundException {
+        return repository.findById(mediaId).orElseThrow(
+                () -> new NotFoundException("Couldn't find media with id: " + mediaId));
     }
-
-
 
     public static UserInfo findUserByEmail(UserInfoRepository userInfoRepository, String email) throws NotFoundException {
         Optional<UserInfo> userOptional = userInfoRepository.findByEmail(email);

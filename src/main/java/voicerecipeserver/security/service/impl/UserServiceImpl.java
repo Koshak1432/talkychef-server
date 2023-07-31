@@ -58,11 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public Optional<User> getByLogin(@NonNull String login) {
-        return userRepository.findByUid(login);
-    }
-
-    Role getRoleByName(String name) throws NotFoundException {
+    Role findRole(String name) throws NotFoundException {
         Optional<Role> roleOptional = roleRepository.findByName(name);
         if (roleOptional.isEmpty()) {
             throw new NotFoundException("Couldn't find role " + name);
@@ -71,19 +67,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<IdDto> postUser(UserDto userDto) throws UserException, NotFoundException {
+    public ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException {
         User user = mapper.map(userDto, User.class);
         user.setId(null);
         user.setUid(userDto.getLogin());
-        Role userRole = getRoleByName("USER");
+        Role userRole = findRole("USER");
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
         user.setRoles(roles);
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(user.getPassword()));
         User savedUser = userRepository.save(user);
-        if (savedUser.getUserInfo() != null) {
-            throw new UserException("Информация о пользователе существует");
-        }
         UserInfo userInfo = new UserInfo();
         userInfo.setUser(user);
         userInfo.setDisplayName(userDto.getDisplayName());
@@ -97,13 +90,11 @@ public class UserServiceImpl implements UserService {
         if (principal == null) {
             throw new AuthException("Not authorized yet");
         }
-        User user = findUser(userRepository, principal.getLogin());
+        User user = FindUtils.findUser(userRepository, principal.getLogin());
         UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(
-                () -> new UserException("Нет информации о пользователе"));
+                () -> new UserException("Couldn't find user info"));
         UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
         userDto.setUid(user.getUid());
-        System.out.println("USER DTO: " + userDto);
-        System.out.println("USER: " + user);
         return ResponseEntity.ok(userDto);
     }
 
@@ -112,10 +103,10 @@ public class UserServiceImpl implements UserService {
         if (limit == null) {
             limit = 0;
         }
-        List<User> users = userRepository.findByUidContaining(login, limit);
         List<UserProfileDto> userProfileDtos = new ArrayList<>();
+        List<User> users = userRepository.findByUidContaining(login, limit);
         if (users.isEmpty()) {
-            throw new NotFoundException("Не удалось найти пользователей с подстрокой: " + login);
+            throw new NotFoundException("Couldn't find users with substring: " + login);
         }
         for (User user : users) {
             getUserProfileInfo(userProfileDtos, user);
@@ -133,7 +124,6 @@ public class UserServiceImpl implements UserService {
             userProfileDto = new UserProfileDto();
         }
         userProfileDto.setUid(user.getUid());
-//        userProfileDto.setDisplayName(user.getDisplayName());
         userProfileDtos.add(userProfileDto);
     }
 
@@ -142,20 +132,19 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException,
             NotFoundException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
-            throw new BadRequestException("Нет прав");
+            throw new BadRequestException("No rights");
         }
-        User user = findUser(userRepository, profileDto.getUid());
+        User user = FindUtils.findUser(userRepository, profileDto.getUid());
         UserInfo userInfo = user.getUserInfo();
         if (userInfo == null) {
-            throw new NotFoundException("Информация пользователя не найдена");
+            throw new NotFoundException("Couldn't find user info");
         }
         setUserInfo(profileDto, userInfo);
         Media media = null;
         Long oldMediaId = null;
         Long mediaId = profileDto.getMediaId();
         if (mediaId != null) {
-            media = mediaRepository.findById(mediaId).orElseThrow(
-                    () -> new NotFoundException("Медиа не найдено"));
+            media = FindUtils.findMedia(mediaRepository, mediaId);
         }
         userInfo.setMedia(media);
         if (userInfo.getMedia() != null) {
@@ -182,12 +171,12 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException,
             UserException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
-            throw new BadRequestException("Нет прав");
+            throw new BadRequestException("No rights");
         }
         UserInfo userInfo = mapper.map(profileDto, UserInfo.class);
-        User user = findUser(userRepository, profileDto.getUid());
+        User user = FindUtils.findUser(userRepository, profileDto.getUid());
         if (user.getUserInfo() != null) {
-            throw new UserException("Информация о пользователе существует");
+            throw new UserException("User info already exists");
         }
         userInfo.setUser(user);
         UserInfo newUser = userInfoRepository.save(userInfo);
@@ -196,7 +185,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Void> sendEmailInstructions(String email) throws NotFoundException {
-        UserInfo user = findUserByEmail(userInfoRepository, email);
+        UserInfo user = FindUtils.findUserByEmail(userInfoRepository, email);
         String token = UUID.randomUUID().toString();
         user.setToken(token);
         userInfoRepository.save(user);
@@ -206,13 +195,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<IdDto> verifyCode(String token) throws NotFoundException, BadRequestException {
-        UserInfo userFromToken = findUserByToken(userInfoRepository, token);
+        UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
         return ResponseEntity.ok(new IdDto().id(userFromToken.getId()));
     }
 
     @Override
     public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, AuthException {
-        UserInfo userFromToken = findUserByToken(userInfoRepository, token);
+        UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
         userFromToken.setToken(null);
         userInfoRepository.save(userFromToken);
         User user = userRepository.findById(userFromToken.getId()).orElseThrow(() -> new AuthException("No such user"));
@@ -233,12 +222,11 @@ public class UserServiceImpl implements UserService {
 
     public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) throws NotFoundException, BadRequestException {
         if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
-            throw new BadRequestException("Нет прав");
+            throw new BadRequestException("No rights");
         }
-        User user = findUser(userRepository, userDto.getLogin());
+        User user = FindUtils.findUser(userRepository, userDto.getLogin());
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(new IdDto().id(savedUser.getId()));
     }
-
 }

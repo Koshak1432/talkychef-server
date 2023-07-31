@@ -20,7 +20,6 @@ public interface MarkApi {
     ResponseEntity<Float> getAvgMark(@PathVariable("id") @Positive Long id) throws NotFoundException;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<MarkDto> getMark(@RequestParam("user_uid") String userUid,
                                     @RequestParam("recipe_id") Long recipeId) throws NotFoundException;
 
