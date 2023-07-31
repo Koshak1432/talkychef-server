@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
         UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
         userFromToken.setToken(null);
         userInfoRepository.save(userFromToken);
-        User user = userRepository.findById(userFromToken.getId()).orElseThrow(() -> new AuthException("No such user"));
+        User user = userRepository.findById(userFromToken.getId()).orElseThrow(() -> new AuthException("Couldn't find user with id: " + userFromToken.getId()));
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
         userRepository.save(user);
         return new ResponseEntity<>(HttpStatus.OK);
