@@ -23,19 +23,23 @@ jobs:
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       - name: Build the Spring Boot application
         run: ./gradlew bootJar
+      - name: Prepare SSH configuration
+        run: |
+          mkdir -p ~/.ssh
+          echo "StrictHostKeyChecking no" > ~/.ssh/config
+          chmod 600 ~/.ssh/config
+          
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600  ~/.ssh/id_rsa
       - name: Deploy Spring Boot Application
         run: |
           # Define server information
           SERVER_USER="${{secrets.SERVER_USER}}"
           SERVER_IP="${{secrets.SERVER_IP}}"
           REMOTE_APP_DIR="${{secrets.REMOTE_APP_DIR}}"
-          echo "${{secrets.SSH_PRIVATE_KEY}}" > ssh_key
-          chmod 600 ssh_key
-
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
           
           # Securely transfer the JAR file to the server using SCP
-          scp -i ssh_key "build/libs/voicerecipeserver-0.0.1-SNAPSHOT.jar" $SERVER_USER@$SERVER_IP:$REMOTE_APP_DIR/talkychef.jar
+          scp -o StrictHostKeyChecking=no -i  ~/.ssh/id_rsa "build/libs/voicerecipeserver-0.0.1-SNAPSHOT.jar" $SERVER_USER@$SERVER_IP:$REMOTE_APP_DIR/talkychef.jar
           
           #SSH into the server and restart the application
-          ssh -i ssh_key $SERVER_USER@$SERVER_IP "cd $REMOTE_APP_DIR && ./stop.sh && ./start.sh"
+          ssh -o StrictHostKeyChecking=no -i  ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP "cd $REMOTE_APP_DIR && ./stop.sh && ./start.sh"
