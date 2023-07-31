@@ -42,4 +42,5 @@ jobs:
           scp -o StrictHostKeyChecking=no -i  ~/.ssh/id_rsa "build/libs/voicerecipeserver-0.0.1-SNAPSHOT.jar" $SERVER_USER@$SERVER_IP:$REMOTE_APP_DIR/talkychef.jar
           
           #SSH into the server and restart the application
-          ssh -o StrictHostKeyChecking=no -i  ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP "cd $REMOTE_APP_DIR && ./stop.sh && nohup ./start.sh"
+          ssh -o StrictHostKeyChecking=no -i  ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP "cd $REMOTE_APP_DIR && ./stop.sh && nohup ./start.sh > logs.out 2>&1 &"
+          sleep 7
