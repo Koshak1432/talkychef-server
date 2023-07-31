@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService {
     private void sendMessage(UserInfo userInfo, String token) {
         if (!userInfo.getEmail().isEmpty()) {
             String message = String.format("Hello, %s\n" +
-                            "You sent an issue to change your password. Please, confirm your email: http://localhost:8080/restore-password/%s",
+                            "You sent an issue to change your password. Please, confirm your email: https://server.talkychef.ru/api/v1/restore-password/%s",
                     userInfo.getDisplayName(), token);
             mailSender.send(userInfo.getEmail(), "Activation code", message);
         }
