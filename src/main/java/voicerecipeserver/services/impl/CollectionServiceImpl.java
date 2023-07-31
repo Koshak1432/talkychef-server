@@ -135,7 +135,8 @@ public class CollectionServiceImpl implements CollectionService {
             login = AuthServiceCommon.getUserLogin();
         }
         User user = FindUtils.findUser(userRepository, login);
-        Collection collection = collectionRepository.findByAuthorIdUserRecipeCollection(user.getId(), "Мои рецепты").orElseThrow(() -> new NotFoundException("Collection with name: " + name + " from user with login: " + user.getUid() + " not found"));
+        Collection collection = collectionRepository.findByAuthorIdUserRecipeCollection(user.getId(), name).orElseThrow(
+            () -> new NotFoundException("Collection with name: " + name + " from user with login: " + user.getUid() + " not found"));
         CollectionDto collectionDto = mapper.map(collection, CollectionDto.class);
         return ResponseEntity.ok(collectionDto);
     }
