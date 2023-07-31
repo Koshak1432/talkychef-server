@@ -4,6 +4,7 @@ import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.*;
 
+
 public class FindUtils {
     private FindUtils() {
     }
@@ -12,6 +13,11 @@ public class FindUtils {
         return repository.findByUid(userUid).orElseThrow(
                 () -> new NotFoundException("Couldn't find user with uid: " + userUid));
     }
+
+    public static UserInfo findUserByToken(UserInfoRepository userInfoRepository, String token) throws NotFoundException {
+        return userInfoRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Couldn't find user with token: " + token));
+    }
+
 
     public static Recipe findRecipe(RecipeRepository repository, Long id) throws NotFoundException {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find recipe with id: " + id));
@@ -31,5 +37,10 @@ public class FindUtils {
     public static Media findMedia(MediaRepository repository, Long mediaId) throws NotFoundException {
         return repository.findById(mediaId).orElseThrow(
                 () -> new NotFoundException("Couldn't find media with id: " + mediaId));
+    }
+
+    public static UserInfo findUserByEmail(UserInfoRepository userInfoRepository, String email) throws NotFoundException {
+        return userInfoRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("Не удалось найти пользователя with email: " + email));
     }
 }

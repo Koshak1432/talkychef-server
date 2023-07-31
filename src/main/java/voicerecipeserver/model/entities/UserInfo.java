@@ -25,6 +25,12 @@ public class UserInfo {
     @Column(name = "vk_link")
     private String vkLink;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "token")
+    private String token;
+
     @Column(name = "display_name")
     private String displayName;
 

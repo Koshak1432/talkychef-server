@@ -3,6 +3,7 @@ package voicerecipeserver.security.service.impl;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import voicerecipeserver.model.dto.IdDto;
@@ -28,6 +29,8 @@ import voicerecipeserver.utils.FindUtils;
 import java.util.*;
 
 import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
+import static voicerecipeserver.security.service.impl.AuthServiceCommon.getUserLogin;
+import static voicerecipeserver.utils.FindUtils.*;
 
 
 @Service
@@ -38,17 +41,20 @@ public class UserServiceImpl implements UserService {
     private final BeanConfig passwordEncoder;
     private final ModelMapper mapper;
     private final MediaRepository mediaRepository;
+    private final MailSender mailSender;
+
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, BeanConfig passwordEncoder, ModelMapper mapper,
                            RoleRepository roleRepository, UserInfoRepository userInfoRepository,
-                           MediaRepository mediaRepository) {
+                           MediaRepository mediaRepository, MailSender mailSender) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
         this.roleRepository = roleRepository;
         this.userInfoRepository = userInfoRepository;
         this.mediaRepository = mediaRepository;
+        this.mailSender = mailSender;
     }
 
 
@@ -158,6 +164,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setVkLink(profileDto.getVkLink());
         userInfo.setTgLink(profileDto.getTgLink());
         userInfo.setDisplayName(profileDto.getDisplayName());
+        userInfo.setEmail(profileDto.getEmail());
     }
 
     @Override
@@ -174,6 +181,43 @@ public class UserServiceImpl implements UserService {
         userInfo.setUser(user);
         UserInfo newUser = userInfoRepository.save(userInfo);
         return ResponseEntity.ok(new IdDto().id(newUser.getId()));
+    }
+
+    @Override
+    public ResponseEntity<Void> sendEmailInstructions(String email) throws NotFoundException {
+        UserInfo user = FindUtils.findUserByEmail(userInfoRepository, email);
+        String token = UUID.randomUUID().toString();
+        user.setToken(token);
+        userInfoRepository.save(user);
+        sendMessage(user, token);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> verifyCode(String token) throws NotFoundException, BadRequestException {
+        UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
+        return ResponseEntity.ok(new IdDto().id(userFromToken.getId()));
+    }
+
+    @Override
+    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, AuthException {
+        UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
+        userFromToken.setToken(null);
+        userInfoRepository.save(userFromToken);
+        User user = userRepository.findById(userFromToken.getId()).orElseThrow(() -> new AuthException("Couldn't find user with id: " + userFromToken.getId()));
+        user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    private void sendMessage(UserInfo userInfo, String token) {
+        if (!userInfo.getEmail().isEmpty()) {
+            String message = String.format("Hello, %s\n" +
+                            "You sent an issue to change your password. Please, confirm your email: https://server.talkychef.ru/api/v1/restore-password/%s",
+                    userInfo.getDisplayName(), token);
+            mailSender.send(userInfo.getEmail(), "Activation code", message);
+        }
     }
 
     public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) throws NotFoundException, BadRequestException {

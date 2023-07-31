@@ -1,17 +1,16 @@
 package voicerecipeserver.model.dto;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+
+import java.util.Objects;
 
 /**
  * UserProfileDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T07:34:19.182164167Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-28T08:25:35.293425098Z[GMT]")
 
 
 public class UserProfileDto   {
@@ -33,6 +32,9 @@ public class UserProfileDto   {
   @JsonProperty("vk_link")
   private String vkLink = null;
 
+  @JsonProperty("email")
+  private String email = null;
+
   public UserProfileDto uid(String uid) {
     this.uid = uid;
     return this;
@@ -42,9 +44,9 @@ public class UserProfileDto   {
    * Get uid
    * @return uid
    **/
-      @NotNull
+  @NotNull
 
-    public String getUid() {
+  public String getUid() {
     return uid;
   }
 
@@ -61,9 +63,9 @@ public class UserProfileDto   {
    * Get displayName
    * @return displayName
    **/
-      @NotNull
+  @NotNull
 
-    public String getDisplayName() {
+  public String getDisplayName() {
     return displayName;
   }
 
@@ -80,9 +82,9 @@ public class UserProfileDto   {
    * Get mediaId
    * @return mediaId
    **/
-      @NotNull
+  @NotNull
 
-    public Long getMediaId() {
+  public Long getMediaId() {
     return mediaId;
   }
 
@@ -99,9 +101,9 @@ public class UserProfileDto   {
    * Get info
    * @return info
    **/
-      @NotNull
+  @NotNull
 
-    public String getInfo() {
+  public String getInfo() {
     return info;
   }
 
@@ -118,8 +120,8 @@ public class UserProfileDto   {
    * Get tgLink
    * @return tgLink
    **/
-  
-    public String getTgLink() {
+
+  public String getTgLink() {
     return tgLink;
   }
 
@@ -136,13 +138,32 @@ public class UserProfileDto   {
    * Get vkLink
    * @return vkLink
    **/
-  
-    public String getVkLink() {
+
+  public String getVkLink() {
     return vkLink;
   }
 
   public void setVkLink(String vkLink) {
     this.vkLink = vkLink;
+  }
+
+  public UserProfileDto email(String email) {
+    this.email = email;
+    return this;
+  }
+
+  /**
+   * Get email
+   * @return email
+   **/
+  @NotNull
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
 
@@ -156,29 +177,31 @@ public class UserProfileDto   {
     }
     UserProfileDto userProfileDto = (UserProfileDto) o;
     return Objects.equals(this.uid, userProfileDto.uid) &&
-        Objects.equals(this.displayName, userProfileDto.displayName) &&
-        Objects.equals(this.mediaId, userProfileDto.mediaId) &&
-        Objects.equals(this.info, userProfileDto.info) &&
-        Objects.equals(this.tgLink, userProfileDto.tgLink) &&
-        Objects.equals(this.vkLink, userProfileDto.vkLink);
+            Objects.equals(this.displayName, userProfileDto.displayName) &&
+            Objects.equals(this.mediaId, userProfileDto.mediaId) &&
+            Objects.equals(this.info, userProfileDto.info) &&
+            Objects.equals(this.tgLink, userProfileDto.tgLink) &&
+            Objects.equals(this.vkLink, userProfileDto.vkLink) &&
+            Objects.equals(this.email, userProfileDto.email);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(uid, displayName, mediaId, info, tgLink, vkLink);
+    return Objects.hash(uid, displayName, mediaId, info, tgLink, vkLink, email);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserProfileDto {\n");
-    
+
     sb.append("    uid: ").append(toIndentedString(uid)).append("\n");
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    mediaId: ").append(toIndentedString(mediaId)).append("\n");
     sb.append("    info: ").append(toIndentedString(info)).append("\n");
     sb.append("    tgLink: ").append(toIndentedString(tgLink)).append("\n");
     sb.append("    vkLink: ").append(toIndentedString(vkLink)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("}");
     return sb.toString();
   }

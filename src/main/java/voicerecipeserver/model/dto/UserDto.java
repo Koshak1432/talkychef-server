@@ -11,7 +11,7 @@ import jakarta.validation.constraints.*;
  * UserDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T02:48:13.656840513Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-28T08:14:59.482701702Z[GMT]")
 
 
 public class UserDto   {
@@ -24,6 +24,9 @@ public class UserDto   {
   @JsonProperty("display_name")
   private String displayName = null;
 
+  @JsonProperty("email")
+  private String email = null;
+
   public UserDto login(String login) {
     this.login = login;
     return this;
@@ -33,9 +36,9 @@ public class UserDto   {
    * Get login
    * @return login
    **/
-      @NotNull
+  @NotNull
 
-    public String getLogin() {
+  public String getLogin() {
     return login;
   }
 
@@ -52,9 +55,9 @@ public class UserDto   {
    * Get password
    * @return password
    **/
-      @NotNull
+  @NotNull
 
-    public String getPassword() {
+  public String getPassword() {
     return password;
   }
 
@@ -71,14 +74,33 @@ public class UserDto   {
    * Get displayName
    * @return displayName
    **/
-      @NotNull
+  @NotNull
 
-    public String getDisplayName() {
+  public String getDisplayName() {
     return displayName;
   }
 
   public void setDisplayName(String displayName) {
     this.displayName = displayName;
+  }
+
+  public UserDto email(String email) {
+    this.email = email;
+    return this;
+  }
+
+  /**
+   * Get email
+   * @return email
+   **/
+  @NotNull
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
 
@@ -92,23 +114,25 @@ public class UserDto   {
     }
     UserDto userDto = (UserDto) o;
     return Objects.equals(this.login, userDto.login) &&
-        Objects.equals(this.password, userDto.password) &&
-        Objects.equals(this.displayName, userDto.displayName);
+            Objects.equals(this.password, userDto.password) &&
+            Objects.equals(this.displayName, userDto.displayName) &&
+            Objects.equals(this.email, userDto.email);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(login, password, displayName);
+    return Objects.hash(login, password, displayName, email);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserDto {\n");
-    
+
     sb.append("    login: ").append(toIndentedString(login)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("}");
     return sb.toString();
   }
