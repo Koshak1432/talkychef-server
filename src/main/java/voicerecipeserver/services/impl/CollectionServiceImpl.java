@@ -9,11 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.entities.Collection;
+import voicerecipeserver.model.entities.Media;
 import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CollectionRepository;
+import voicerecipeserver.respository.MediaRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
@@ -21,6 +23,7 @@ import voicerecipeserver.services.CollectionService;
 import voicerecipeserver.utils.FindUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -28,22 +31,29 @@ public class CollectionServiceImpl implements CollectionService {
     private final CollectionRepository collectionRepository;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
+    private final MediaRepository mediaRepository;
 
 
     private final ModelMapper mapper;
 
     @Autowired
     public CollectionServiceImpl(CollectionRepository repository, RecipeRepository recipeRepository,
-                                 UserRepository userRepository, ModelMapper mapper) {
+                                 UserRepository userRepository, MediaRepository mediaRepository, ModelMapper mapper) {
         this.collectionRepository = repository;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
+        this.mediaRepository = mediaRepository;
         this.mapper = mapper;
     }
 
     @Override
-    public ResponseEntity<IdDto> addCollection(String name) throws NotFoundException {
-        Collection collection = new Collection(name, 0, FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin()));
+    public ResponseEntity<IdDto> addCollection(CollectionDto body) throws NotFoundException {
+        if (mediaRepository.findById(body.getMediaId()).isEmpty()) {
+            throw new NotFoundException("Couldn't find media with id: " + body.getMediaId());
+        }
+        Collection collection = mapper.map(body, Collection.class);
+        collection.setAuthor(FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin()));
+        collection.setNumber(0);
         collectionRepository.save(collection);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -73,7 +83,7 @@ public class CollectionServiceImpl implements CollectionService {
     public ResponseEntity<Void> deleteCollection(Long id) throws NotFoundException, AuthException {
         User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, id);
-        if (collection.getAuthor() == null || !collection.getAuthor().equals(user)) {
+        if (collection.getAuthor() == null || !collection.getAuthor().getUid().equals(user.getUid())) {
             throw new AuthException("No rights");
         }
         collectionRepository.deleteById(id);
@@ -81,13 +91,18 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<IdDto> putCollection(Long id, String name) throws AuthException, NotFoundException {
+    public ResponseEntity<IdDto> putCollection(Long id, CollectionDto body) throws AuthException, NotFoundException {
+        Optional<Media> media = mediaRepository.findById(body.getMediaId());
+        if (media.isEmpty()) {
+            throw new NotFoundException("Couldn't find media with id: " + body.getMediaId());
+        }
         User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, id);
-        if (collection.getAuthor() == null || !collection.getAuthor().equals(user)) {
+        if (collection.getAuthor() == null || !collection.getAuthor().getUid().equals(user.getUid())) {
             throw new AuthException("No rights");
         }
-        collection.setName(name);
+        collection.setName(body.getName());
+        collection.setMedia(media.get());
         Collection savedCollection = collectionRepository.save(collection);
         return ResponseEntity.ok(new IdDto().id(savedCollection.getId()));
     }

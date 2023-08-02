@@ -39,6 +39,10 @@ public class Media {
     @ToString.Exclude
     private Step step;
 
+    @OneToOne(mappedBy = "media", orphanRemoval = true)
+    @ToString.Exclude
+    private Collection collection;
+
     @ToString.Exclude
     @OneToOne(mappedBy = "media", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserInfo userInfo;

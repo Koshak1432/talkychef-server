@@ -35,8 +35,8 @@ public class CollectionApiController implements CollectionApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> collectionPost(String name) throws NotFoundException {
-        return service.addCollection(name);
+    public ResponseEntity<IdDto> collectionPost(CollectionDto body) throws NotFoundException {
+        return service.addCollection(body);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class CollectionApiController implements CollectionApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> collectionPut(Long id, String name) throws NotFoundException, AuthException {
-        return service.putCollection(id, name);
+    public ResponseEntity<IdDto> collectionPut(Long id, CollectionDto body) throws NotFoundException, AuthException {
+        return service.putCollection(id, body);
 
     }
 
