@@ -1,20 +1,20 @@
 package voicerecipeserver.model.dto;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import org.springframework.validation.annotation.Validated;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import voicerecipeserver.model.dto.RecipeDto;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * CollectionDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-28T05:58:02.208132775Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-08-02T05:33:01.688027473Z[GMT]")
 
 
 public class CollectionDto   {
@@ -27,9 +27,8 @@ public class CollectionDto   {
   @JsonProperty("id")
   private Integer id = null;
 
-  @JsonProperty("recipes")
-  @Valid
-  private List<RecipeDto> recipes = new ArrayList<RecipeDto>();
+  @JsonProperty("media_id")
+  private Long mediaId = null;
 
   public CollectionDto name(String name) {
     this.name = name;
@@ -88,28 +87,24 @@ public class CollectionDto   {
     this.id = id;
   }
 
-  public CollectionDto recipes(List<RecipeDto> recipes) {
-    this.recipes = recipes;
-    return this;
-  }
 
-  public CollectionDto addRecipesItem(RecipeDto recipesItem) {
-    this.recipes.add(recipesItem);
+  public CollectionDto mediaId(Long mediaId) {
+    this.mediaId = mediaId;
     return this;
   }
 
   /**
-   * Get recipes
-   * @return recipes
+   * Get mediaId
+   * @return mediaId
    **/
   @NotNull
-  @Valid
-  public List<RecipeDto> getRecipes() {
-    return recipes;
+
+  public Long getMediaId() {
+    return mediaId;
   }
 
-  public void setRecipes(List<RecipeDto> recipes) {
-    this.recipes = recipes;
+  public void setMediaId(Long mediaId) {
+    this.mediaId = mediaId;
   }
 
 
@@ -125,12 +120,12 @@ public class CollectionDto   {
     return Objects.equals(this.name, collectionDto.name) &&
             Objects.equals(this.number, collectionDto.number) &&
             Objects.equals(this.id, collectionDto.id) &&
-            Objects.equals(this.recipes, collectionDto.recipes);
+            Objects.equals(this.mediaId, collectionDto.mediaId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, number, id, recipes);
+    return Objects.hash(name, number, id, mediaId);
   }
 
   @Override
@@ -141,7 +136,7 @@ public class CollectionDto   {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    number: ").append(toIndentedString(number)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    recipes: ").append(toIndentedString(recipes)).append("\n");
+    sb.append("    mediaId: ").append(toIndentedString(mediaId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -78,13 +78,13 @@ public class SlopeOne {
      * @param data existing user data and their items' ratings
      */
     private void buildDifferencesMatrix(Map<User, HashMap<Recipe, Double>> data) {
-        data.values().forEach(user -> {
-            user.forEach((recipe1, rating1) -> {
+        data.values().forEach(mark -> {
+            mark.forEach((recipe1, rating1) -> {
                 if (!diff.containsKey(recipe1)) {
                     diff.put(recipe1, new HashMap<>());
                     freq.put(recipe1, new HashMap<>());
                 }
-                user.forEach((recipe2, rating2) -> {
+                mark.forEach((recipe2, rating2) -> {
                     int oldCount = freq.get(recipe1).getOrDefault(recipe2, 0);
                     double oldDiff = diff.get(recipe1).getOrDefault(recipe2, 0.0);
                     double observedDiff = rating1 - rating2;
@@ -131,9 +131,9 @@ public class SlopeOne {
                                      HashMap<Recipe, Double> uPred, HashMap<Recipe, Integer> uFreq) {
         for (Recipe j : e.getValue().keySet()) {
             for (Recipe k : diff.keySet()) {
-                double diffValue = diff.getOrDefault(k, Collections.emptyMap()).getOrDefault(j, 0.0);
-                double userValue = e.getValue().getOrDefault(j, 0.0);
-                int freqValue = freq.getOrDefault(k, Collections.emptyMap()).getOrDefault(j, 0);
+                double diffValue = diff.get(k).getOrDefault(j, 0.0);
+                double userValue = e.getValue().get(j);
+                int freqValue = freq.get(k).getOrDefault(j, 0);
 
                 double predictedValue = diffValue + userValue;
                 double finalValue = predictedValue * freqValue;
