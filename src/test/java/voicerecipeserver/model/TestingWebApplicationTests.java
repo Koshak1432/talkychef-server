@@ -62,7 +62,7 @@ public class TestingWebApplicationTests {
 
     @Test
     public void findRecipeByIdReturnsNotFoundExc() throws Exception {
-        this.mockMvc.perform(get(Constants.BASE_API_PATH + "/recipes/2")).andExpect(status().isNotFound());
+        this.mockMvc.perform(get(Constants.BASE_API_PATH + "/recipes/100500")).andExpect(status().isNotFound());
     }
 
 
