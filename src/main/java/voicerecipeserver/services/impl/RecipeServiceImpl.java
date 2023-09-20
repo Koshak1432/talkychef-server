@@ -247,8 +247,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit) throws NotFoundException {
+    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit, Integer page) throws NotFoundException {
         SlopeOne recommendAlgSlopeOne = new SlopeOne(mapper, userRepository, markRepository, recipeRepository);
-        return ResponseEntity.ok(recommendAlgSlopeOne.recommendAlgSlopeOne(limit));
+        List<RecipeDto> recipes = recommendAlgSlopeOne.recommendAlgSlopeOne(limit, page);
+        return ResponseEntity.ok(recipes);
     }
 }

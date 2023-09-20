@@ -23,5 +23,5 @@ public interface RecipeService {
 
     ResponseEntity<Void> deleteRecipe(Long id) throws NotFoundException;
 
-    ResponseEntity<List<RecipeDto>> filterContent(Integer limit) throws AuthException, NotFoundException;
+    ResponseEntity<List<RecipeDto>> filterContent(Integer limit, Integer page) throws AuthException, NotFoundException;
 }
