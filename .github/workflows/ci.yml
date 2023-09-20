@@ -28,7 +28,7 @@ env:
       SECRET_ACCESS: ${{secrets.SECRET_ACCESS}}
       SECRET_REFRESH: ${{secrets.SECRET_REFRESH}}
       MAIL_USERNAME: ${{secrets.MAIL_USERNAME}}
-      MAIL_PASSWORD: $${{secrets.MAIL_PASSWORD}}
+      MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
 
 jobs:
   build:
