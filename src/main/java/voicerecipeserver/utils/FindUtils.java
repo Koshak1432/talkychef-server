@@ -43,4 +43,7 @@ public class FindUtils {
         return userInfoRepository.findByEmail(email).orElseThrow(
                 () -> new NotFoundException("Не удалось найти пользователя with email: " + email));
     }
+
+
+
 }

@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(Constants.BASE_API_PATH + "/registration/*").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/auth/refresh/*").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH+ "/categories").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH+ "/categories/**").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/auth/token").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/login/*").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/media/**").permitAll()
