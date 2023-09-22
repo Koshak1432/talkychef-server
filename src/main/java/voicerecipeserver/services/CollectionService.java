@@ -9,7 +9,7 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import java.util.List;
 
 public interface CollectionService {
-    ResponseEntity<IdDto> addCollection(String name) throws NotFoundException;
+    ResponseEntity<IdDto> addCollection(CollectionDto body) throws NotFoundException;
 
     ResponseEntity<Void> addRecipeToCollection(Long recipe,Long collectionId) throws NotFoundException, AuthException;
 
@@ -17,7 +17,7 @@ public interface CollectionService {
 
     ResponseEntity<Void> deleteCollection(Long id) throws NotFoundException, AuthException;
 
-    ResponseEntity<IdDto> putCollection(Long id, String name) throws AuthException, NotFoundException;
+    ResponseEntity<IdDto> putCollection(Long id, CollectionDto body) throws AuthException, NotFoundException;
 
     ResponseEntity<Void> deleteRecipeFromCollection(Long recipe, Long collectionId) throws NotFoundException, AuthException;
 
@@ -25,4 +25,5 @@ public interface CollectionService {
 
     ResponseEntity<List<CollectionDto>> getCollectionPageByName(String name, Long pageNum) throws NotFoundException;
 
+    ResponseEntity<CollectionDto> getCollectionByName(String name, String login) throws NotFoundException;
 }

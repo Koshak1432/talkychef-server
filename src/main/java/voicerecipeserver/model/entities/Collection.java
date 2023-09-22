@@ -24,6 +24,11 @@ public class Collection {
     @ToString.Exclude
     private User author;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "media_id")
+    @ToString.Exclude
+    private Media media;
+
 /**
  * @deprecated
  * Будет подгружаться вся коллекция. Если во всей коллекции нет нужды, лучше использовать другие методы
@@ -40,5 +45,9 @@ public class Collection {
     @Deprecated()
     private Set<Recipe> recipes;
 
-
+    public Collection(String name, Integer number, User author) {
+        this.name = name;
+        this.number = number;
+        this.author = author;
+    }
 }

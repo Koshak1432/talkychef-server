@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.ProfileApi;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
+import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.dto.UserProfileDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
@@ -45,5 +46,21 @@ public class ProfileApiController implements ProfileApi {
     @Override
     public ResponseEntity<List<UserProfileDto>> profileByUidGet(String login, Integer limit) throws Exception {
         return userService.getUserProfile(login, limit);
+    }
+
+    @Override
+    public ResponseEntity<Void> sendInstructions(String email) throws NotFoundException {
+        return userService.sendEmailInstructions(email);
+    }
+
+    @Override
+    public ResponseEntity<IdDto> verifyCode(String token) throws NotFoundException, BadRequestException {
+        return userService.verifyCode(token);
+    }
+
+    @Override
+    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, BadRequestException, AuthException {
+        return userService.changePassword(token, userDto);
+
     }
 }

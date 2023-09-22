@@ -53,8 +53,8 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit) throws NotFoundException, AuthException {
-        return recipeService.filterContent(limit);
+    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit, Integer page) throws NotFoundException, AuthException {
+        return recipeService.filterContent(limit, page);
     }
 
 
