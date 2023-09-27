@@ -1,10 +1,12 @@
 name: CD
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types:
-      - completed
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   deploy:
@@ -21,8 +23,6 @@ jobs:
           distribution: 'oracle'
       - name: Setup Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-      - name: Build the Spring Boot application
-        run: ./gradlew bootJar
       - name: Prepare SSH configuration
         run: |
           mkdir -p ~/.ssh
@@ -37,9 +37,6 @@ jobs:
           SERVER_USER="${{secrets.SERVER_USER}}"
           SERVER_IP="${{secrets.SERVER_IP}}"
           REMOTE_APP_DIR="${{secrets.REMOTE_APP_DIR}}"
-          
-          # Securely transfer the JAR file to the server using SCP
-          scp -o StrictHostKeyChecking=no -i  ~/.ssh/id_rsa "build/libs/voicerecipeserver-0.0.1-SNAPSHOT.jar" $SERVER_USER@$SERVER_IP:$REMOTE_APP_DIR/talkychef.jar
           
           #SSH into the server and restart the application
           ssh -o StrictHostKeyChecking=no -i  ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP "cd $REMOTE_APP_DIR && ./start.sh"
