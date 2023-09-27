@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.CollectionApi;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.IdDto;
+import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
@@ -31,7 +32,7 @@ public class CollectionApiController implements CollectionApi {
 
     @Override
     public ResponseEntity<List<CollectionDto>> collectionGet(String login) throws NotFoundException {
-        return service.getCollection(login);
+        return service.getCollections(login);
     }
 
     @Override
@@ -67,8 +68,8 @@ public class CollectionApiController implements CollectionApi {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> collectionFromParticularUser(String name, String login) throws NotFoundException, AuthException, BadRequestException {
-        return service.getCollectionByName(name, login);
+    public ResponseEntity<List<RecipeDto>> getRecipesFromCollection(Long id) throws NotFoundException, AuthException, BadRequestException {
+        return service.getCollectionRecipesById(id);
     }
 
     @Override

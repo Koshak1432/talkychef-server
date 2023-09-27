@@ -62,4 +62,11 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                    LIMIT :limit OFFSET :offset
             """, nativeQuery = true)
     List<Recipe> findTopRecipesWithLimitAndOffset(int limit, int offset);
+
+    @Query(value = """
+                   SELECT recipes.*
+                   FROM recipes
+                   WHERE id in :ids
+            """, nativeQuery = true)
+    List<Recipe> findByIds(@Param("ids") List<Long> recipesIds);
 }

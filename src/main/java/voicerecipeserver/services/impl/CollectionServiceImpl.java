@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.IdDto;
+import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.Collection;
 import voicerecipeserver.model.entities.Media;
 import voicerecipeserver.model.entities.Recipe;
@@ -34,7 +35,8 @@ public class CollectionServiceImpl implements CollectionService {
     private final MediaRepository mediaRepository;
 
 
-    private final ModelMapper mapper;
+    private final ModelMapper  mapper;
+
 
     @Autowired
     public CollectionServiceImpl(CollectionRepository repository, RecipeRepository recipeRepository,
@@ -121,7 +123,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<List<CollectionDto>> getCollection(String login) throws NotFoundException {
+    public ResponseEntity<List<CollectionDto>> getCollections(String login) throws NotFoundException {
         if (login == null) {
             login = AuthServiceCommon.getUserLogin();
         }
@@ -145,15 +147,15 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> getCollectionByName(String name, String login) throws NotFoundException {
-        if (login == null) {
-            login = AuthServiceCommon.getUserLogin();
-        }
-        User user = FindUtils.findUser(userRepository, login);
-        Collection collection = collectionRepository.findByAuthorIdUserRecipeCollection(user.getId(), name).orElseThrow(
-            () -> new NotFoundException("Collection with name: " + name + " from user with login: " + user.getUid() + " not found"));
-        CollectionDto collectionDto = mapper.map(collection, CollectionDto.class);
-        return ResponseEntity.ok(collectionDto);
+    public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) throws NotFoundException {
+//        Collection collection = collectionRepository.findById(id).orElseThrow(
+//            () -> new NotFoundException("Collection with id: " + id + " not found"));
+//        CollectionDto collectionDto = mapper.map(collection, CollectionDto.class);
+        List<Long> resipesIds = collectionRepository.findRecipeIdsInCollection(id);
+        List<Recipe> recipes = recipeRepository.findByIds(resipesIds);
+        List<RecipeDto> recipeDtos = recipes.stream().map(
+                element -> mapper.map(element, RecipeDto.class)).toList();
+        return ResponseEntity.ok(recipeDtos);
     }
 
     private List<Collection> findCollectionsByName(String name, Long limit) throws NotFoundException {

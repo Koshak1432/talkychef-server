@@ -1,6 +1,7 @@
 package voicerecipeserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,17 @@ public class CategoryApiController implements CategoryApi {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> categoriesGetByName(Long id, Integer limit) throws NotFoundException, AuthException, BadRequestException {
+    public ResponseEntity<List<RecipeDto>> categoriesGetById(Long id, Integer limit) throws NotFoundException, AuthException, BadRequestException {
        return service.getRecipesFromCategory(id, limit);
+    }
+
+    @Override
+    public ResponseEntity<Void> categoriesDeleteByCategoryAndRecipeId(Long id, Long recipeId) throws NotFoundException {
+        return service.deleteRecipesFromCategory(id, recipeId);
+    }
+
+    @Override
+    public ResponseEntity<Void> addCategoryToRecipe(Long id, Long categoryId) throws NotFoundException, AuthException, BadRequestException {
+        return service.addCategoryToRecipe(id, categoryId);
     }
 }

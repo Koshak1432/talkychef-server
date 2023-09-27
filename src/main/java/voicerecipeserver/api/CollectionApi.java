@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.IdDto;
+import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
@@ -50,8 +51,8 @@ public interface CollectionApi {
     ResponseEntity<CollectionDto> collectionGetByName(@RequestParam(value = "collection_id") Long collectionId)
             throws NotFoundException, AuthException, BadRequestException;
 
-    @GetMapping(value = "/name/{name}")
-    ResponseEntity<CollectionDto> collectionFromParticularUser(@PathVariable(value = "name") String name, @RequestParam(value = "login", required = false) String login)
+    @GetMapping(value = "/{id}")
+    ResponseEntity<List<RecipeDto>> getRecipesFromCollection(@PathVariable(value = "id") Long id)
             throws NotFoundException, AuthException, BadRequestException;
 
     @GetMapping(value = "/search/{name}")
