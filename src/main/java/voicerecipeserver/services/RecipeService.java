@@ -1,10 +1,7 @@
 package voicerecipeserver.services;
 
 import org.springframework.http.ResponseEntity;
-import voicerecipeserver.model.dto.CommentDto;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarkDto;
-import voicerecipeserver.model.dto.RecipeDto;
+import voicerecipeserver.model.dto.*;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
@@ -23,5 +20,7 @@ public interface RecipeService {
 
     ResponseEntity<Void> deleteRecipe(Long id) throws NotFoundException;
 
-    ResponseEntity<List<RecipeDto>> filterContent(Integer limit) throws AuthException, NotFoundException;
+    ResponseEntity<List<RecipeDto>> filterContent(Integer limit, Integer page) throws AuthException, NotFoundException;
+
+    ResponseEntity<List<CategoryDto>>  getCategoriesById(Long id);
 }

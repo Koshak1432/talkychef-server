@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
+import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.AuthException;
@@ -31,11 +32,13 @@ public interface RecipeApi {
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
-    ResponseEntity<IdDto> recipePost(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException;
+    ResponseEntity<IdDto> recipePost(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+            AuthException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PutMapping
-    ResponseEntity<IdDto> recipeUpdate(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException;
+    ResponseEntity<IdDto> recipeUpdate(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+            AuthException;
 
 
     @DeleteMapping(value = "/{id}")
@@ -50,8 +53,15 @@ public interface RecipeApi {
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
             NotFoundException, AuthException;
 
+    @GetMapping(value = "/{id}/categories")
+    ResponseEntity<List<CategoryDto>> getCategories(
+            @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
+            NotFoundException, BadRequestException;
+
+
     @GetMapping
     ResponseEntity<List<RecipeDto>> getRecipesRecommendations(
-            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
-            NotFoundException, AuthException;
+            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit,
+            @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws NotFoundException,
+            AuthException;
 }

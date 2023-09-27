@@ -262,7 +262,7 @@ public class DefaultMapperTest {
         recipe.setName("name123");
         recipe.setAuthor(new User("anton", "1234", Set.of(new Role("ADMIN"))));
         recipe.setCookTimeMins(4044);
-        recipe.setMedia(new Media(11L, null, null, null, null, null));
+        recipe.setMedia(new Media(11L, null, null, null, null, null, null));
 
         RecipeDto dto = mapper.map(recipe, RecipeDto.class);
         assertEquals(recipe.getName(), dto.getName());

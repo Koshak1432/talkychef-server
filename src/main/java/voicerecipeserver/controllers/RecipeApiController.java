@@ -5,12 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.RecipeApi;
+import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.services.RecipeService;
 
 import java.util.List;
@@ -53,8 +53,13 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit) throws NotFoundException, AuthException {
-        return recipeService.filterContent(limit);
+    public ResponseEntity<List<CategoryDto>> getCategories(Long id) throws NotFoundException, BadRequestException {
+        return recipeService.getCategoriesById(id);
+    }
+
+    @Override
+    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit, Integer page) throws NotFoundException, AuthException {
+        return recipeService.filterContent(limit, page);
     }
 
 

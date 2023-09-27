@@ -56,4 +56,10 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
           WHERE author_id =:id AND name=:name
             """, nativeQuery = true)
     Optional<Collection> findByAuthorIdUserRecipeCollection(Long id, String name);
+
+    @Query(value = """
+          SELECT recipe_id FROM collections_distribution 
+          WHERE collection_id =:id
+            """, nativeQuery = true)
+    List<Long> findRecipeIdsInCollection(Long id);
 }

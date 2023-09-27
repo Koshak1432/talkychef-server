@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.*;
@@ -35,6 +36,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final MarkRepository markRepository;
     private final MediaRepository mediaRepository;
     private final CollectionRepository collectionRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
@@ -42,7 +44,8 @@ public class RecipeServiceImpl implements RecipeService {
                              AvgMarkRepository avgMarkRepository, StepRepository stepRepository,
                              MarkRepository markRepository, UserRepository userRepository,
                              MediaRepository mediaRepository,
-                             CollectionRepository collectionRepository) {
+                             CollectionRepository collectionRepository,
+                             CategoryRepository categoryRepository) {
 
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
@@ -56,6 +59,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.markRepository = markRepository;
         this.mediaRepository = mediaRepository;
         this.collectionRepository = collectionRepository;
+        this.categoryRepository = categoryRepository;
     }
 
 
@@ -247,8 +251,18 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit) throws NotFoundException {
+    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit, Integer page) throws NotFoundException {
         SlopeOne recommendAlgSlopeOne = new SlopeOne(mapper, userRepository, markRepository, recipeRepository);
-        return ResponseEntity.ok(recommendAlgSlopeOne.recommendAlgSlopeOne(limit));
+        List<RecipeDto> recipes = recommendAlgSlopeOne.recommendAlgSlopeOne(limit, page);
+        return ResponseEntity.ok(recipes);
+    }
+
+    @Override
+    public ResponseEntity<List<CategoryDto>> getCategoriesById(Long id) {
+        List<Category> categories = categoryRepository.findByRecipeId(id);
+        List<CategoryDto> categoryDtos =categories.stream().map(
+                element -> mapper.map(element, CategoryDto.class)).toList();
+
+        return ResponseEntity.ok(categoryDtos);
     }
 }

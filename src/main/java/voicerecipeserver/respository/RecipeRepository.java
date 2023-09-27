@@ -51,7 +51,7 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                     ORDER BY random()
                     LIMIT :limit
             """, nativeQuery = true)
-    List<Recipe>  findRandomWithLimit(int limit);
+    List<Recipe> findRandomWithLimit(int limit);
 
 
     @Query(value = """
@@ -59,7 +59,14 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                    FROM recipes
                    JOIN avg_marks ON recipes.id = avg_marks.recipe_id
                    ORDER BY avg_mark DESC
-                   LIMIT :limit
+                   LIMIT :limit OFFSET :offset
             """, nativeQuery = true)
-    List<Recipe> findTopRecipesWithLimit(Integer limit);
+    List<Recipe> findTopRecipesWithLimitAndOffset(int limit, int offset);
+
+    @Query(value = """
+                   SELECT recipes.*
+                   FROM recipes
+                   WHERE id in :ids
+            """, nativeQuery = true)
+    List<Recipe> findByIds(@Param("ids") List<Long> recipesIds);
 }
