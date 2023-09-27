@@ -12,15 +12,15 @@ import voicerecipeserver.model.entities.Recipe;
 import java.util.List;
 import java.util.Optional;
 
-public interface CategoryRepository  extends CrudRepository<Category, Long> {
+public interface CategoryRepository extends CrudRepository<Category, Long> {
     List<Category> findAll();
 
     @Query(value = """
-          SELECT recipe_id FROM categories_distribution 
-          WHERE category_id=:id
-          LIMIT :limit
-            """, nativeQuery = true)
-    List<Long>  findRecipesWithCategoryId(@Param("id") Long inline, @Param("limit") Integer limit);
+            SELECT recipe_id FROM categories_distribution 
+            WHERE category_id=:id
+            LIMIT :limit
+              """, nativeQuery = true)
+    List<Long> findRecipesWithCategoryId(@Param("id") Long inline, @Param("limit") Integer limit);
 
 
     @Transactional
@@ -38,7 +38,10 @@ public interface CategoryRepository  extends CrudRepository<Category, Long> {
             """, nativeQuery = true)
     void addRecipeToCategory(Long recipeId, Long categoryId);
 
-
-
-
+    @Query(value = """
+            WITH categoriesIds AS (SELECT  category_id FROM categories_distribution 
+            WHERE recipe_id=:id)
+            SELECT * FROM categories where id in (SELECT category_id from categoriesIds)
+              """, nativeQuery = true)
+    List<Category> findByRecipeId(Long id);
 }

@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.Category;
@@ -19,7 +20,7 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private final  RecipeRepository recipeRepository;
+    private final RecipeRepository recipeRepository;
     private final ModelMapper modelMapper;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository,
@@ -38,8 +39,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit)  { //todo проверить на пустой категории
-        if (limit == null) limit = 100;
+    public ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit) { //todo проверить на пустой категории
+        if (limit == null) limit = Constants.MAX_RECIPES_PER_PAGE;
         List<Long> recipesIds = categoryRepository.findRecipesWithCategoryId(id, limit);
         List<Recipe> recipes = recipeRepository.findByIds(recipesIds);
 

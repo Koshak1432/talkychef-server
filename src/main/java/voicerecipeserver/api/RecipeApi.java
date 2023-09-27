@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
+import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.AuthException;
@@ -51,6 +52,12 @@ public interface RecipeApi {
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
             NotFoundException, AuthException;
+
+    @GetMapping(value = "/{id}/categories")
+    ResponseEntity<List<CategoryDto>> getCategories(
+            @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
+            NotFoundException, BadRequestException;
+
 
     @GetMapping
     ResponseEntity<List<RecipeDto>> getRecipesRecommendations(

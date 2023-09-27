@@ -35,7 +35,7 @@ public class CollectionServiceImpl implements CollectionService {
     private final MediaRepository mediaRepository;
 
 
-    private final ModelMapper  mapper;
+    private final ModelMapper mapper;
 
 
     @Autowired
@@ -148,7 +148,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) throws NotFoundException {
-      List<Long> resipesIds = collectionRepository.findRecipeIdsInCollection(id);
+        List<Long> resipesIds = collectionRepository.findRecipeIdsInCollection(id);
         List<Recipe> recipes = recipeRepository.findByIds(resipesIds);
         List<RecipeDto> recipeDtos = recipes.stream().map(
                 element -> mapper.map(element, RecipeDto.class)).toList();

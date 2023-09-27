@@ -12,11 +12,13 @@ import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
 import java.util.List;
+
 @Valid
 @RequestMapping(Constants.BASE_API_PATH + "/categories")
 public interface CategoryApi {
     @GetMapping
     ResponseEntity<List<CategoryDto>> categoriesGet() throws NotFoundException;
+
     @GetMapping(value = "/{id}")
     ResponseEntity<List<RecipeDto>> categoriesGetById(@PathVariable(value = "id") Long id,
                                                       @RequestParam(value = "limit", required = false) @PositiveOrZero Integer limit)
@@ -24,7 +26,8 @@ public interface CategoryApi {
 
     @DeleteMapping(value = "/{id}")
     ResponseEntity<Void> categoriesDeleteByCategoryAndRecipeId(@PathVariable(value = "id") Long id,
-                                                        @RequestParam(value = "recipe_id", required = true) @PositiveOrZero Long recipeId) throws NotFoundException;
+                                                               @RequestParam(value = "recipe_id", required = true) @PositiveOrZero Long recipeId) throws NotFoundException;
+
     @PostMapping(value = "/recipes/{id}")
     ResponseEntity<Void> addCategoryToRecipe(@PathVariable(value = "id") Long id, @RequestParam(value = "category_id", required = true) Long categoryId) throws NotFoundException, AuthException, BadRequestException;
 
