@@ -37,10 +37,15 @@ public interface CollectionApi {
     ResponseEntity<IdDto> collectionPut(@RequestParam("collection_id") @PositiveOrZero Long id, @Valid @RequestBody CollectionDto body) throws NotFoundException, AuthException;
 
 
+    @PostMapping(value = "/liked")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    ResponseEntity<IdDto> collectionLikedRecipePost(@RequestParam("recipe_id") @PositiveOrZero Long id) throws NotFoundException, AuthException;
+
     @PostMapping(value = "/content")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<Void> collectionContentPost(@RequestParam("recipe_id") @PositiveOrZero Long recipeId,
                                                @RequestParam("collection_id") @NotBlank Long collectionId) throws NotFoundException, AuthException;
+
 
     @DeleteMapping(value = "/content")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")

@@ -155,6 +155,21 @@ public class CollectionServiceImpl implements CollectionService {
         return ResponseEntity.ok(recipeDtos);
     }
 
+    @Override
+    public ResponseEntity<IdDto> postLikedRecipe(Long recipeId) throws NotFoundException {
+        String login = AuthServiceCommon.getUserLogin();
+        Collection likedCollection;
+        List<Collection> collections = collectionRepository.findByNameContaining(1L, login + "_liked");
+        if (collections.isEmpty()) {
+            Collection collection = new Collection(login + "_liked", 0, FindUtils.findUser(userRepository, login));
+            likedCollection = collectionRepository.save(collection);
+        } else {
+            likedCollection = collections.get(0);
+        }
+        collectionRepository.addRecipeToCollection(recipeId, likedCollection.getId());
+        return ResponseEntity.ok(new IdDto().id(likedCollection.getId()));
+    }
+
     private List<Collection> findCollectionsByName(String name, Long limit) throws NotFoundException {
         List<Collection> collections = collectionRepository.findByNameContaining(limit, name);
         if (collections.isEmpty()) {

@@ -127,10 +127,12 @@ public class RecipeServiceImpl implements RecipeService {
         if (mediaRepository.findById(recipe.getMedia().getId()).isEmpty()) {
             throw new NotFoundException("Couldn't find media with id: " + recipe.getMedia().getId());
         }
+
+        System.out.println(recipe);
         Recipe savedRecipe = recipeRepository.save(recipe);
         Collection recipeCollection = findUserRecipesCollection(author.getId());
         if (recipeCollection == null) {
-            Collection collection = new Collection("Мои рецепты", 0, author);
+            Collection collection = new Collection(author.getUid()+"_saved", 0, author);
             recipeCollection = collectionRepository.save(collection);
         }
         collectionRepository.addRecipeToCollection(savedRecipe.getId(), recipeCollection.getId());

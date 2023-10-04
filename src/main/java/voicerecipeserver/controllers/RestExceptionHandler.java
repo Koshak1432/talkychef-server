@@ -55,6 +55,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new Error().code(404).message(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({ClassCastException.class})
+    protected ResponseEntity<Object> handleClassCastException(Exception e) {
+        return new ResponseEntity<>(new Error().code(404).message(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({BadRequestException.class, InvalidMediaTypeException.class})
     protected ResponseEntity<Object> handleBadRequest(Exception e) {
         return new ResponseEntity<>(new Error().code(400).message(e.getMessage()), HttpStatus.BAD_REQUEST);

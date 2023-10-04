@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 
@@ -28,4 +27,6 @@ public interface CollectionService {
     ResponseEntity<List<CollectionDto>> getCollectionPageByName(String name, Long pageNum) throws NotFoundException;
 
     ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) throws NotFoundException;
+
+    ResponseEntity<IdDto> postLikedRecipe(Long recipeId) throws NotFoundException;
 }
