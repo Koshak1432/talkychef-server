@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.entities.Media;
 import voicerecipeserver.model.entities.MediaType;
@@ -46,6 +47,7 @@ public class MediaServiceImpl implements MediaService {
 
     //todo кешнуть поддерживаемые типы при инициализации и потом их юзать. Эксепшены кидать при отсутствии типа.
     @Override
+    @Transactional
     public ResponseEntity<IdDto> addMedia(String contentTypeHeader, byte[] data) throws InvalidMediaTypeException {
         int endOfTypeInd = contentTypeHeader.indexOf(';');
         String mimeType;

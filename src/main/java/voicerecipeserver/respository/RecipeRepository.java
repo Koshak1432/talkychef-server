@@ -13,20 +13,20 @@ import java.util.Optional;
 public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     @Query(value = """
-                    (
-                        SELECT * FROM recipes
-                        WHERE name ILIKE :namePart || '%'
-                        ORDER BY name
-                    )
-                    UNION
-                    (
-                        SELECT * FROM recipes
-                        WHERE name ILIKE '% ' || :namePart || '%'
-                        ORDER BY name
-                    )
-                    LIMIT :limit
+                (
+                    SELECT * FROM recipes
+                    WHERE name ILIKE :namePart || '%'
+                    ORDER BY name
+                )
+                UNION
+                (
+                    SELECT * FROM recipes
+                    WHERE name ILIKE '% ' || :namePart || '%'
+                    ORDER BY name
+                )
+                LIMIT :limit
             """, nativeQuery = true)
-    List<Recipe> findByNameContaining(@Param("namePart") String inline, @Param("limit") Integer limit);
+    List<Recipe> findByNameContaining(@Param("namePart") String inline, Integer limit);
 
     // https://medium.com/swlh/sql-pagination-you-are-probably-doing-it-wrong-d0f2719cc166 - performance issue
     // вообще хотелось бы этот метод в репозиторий коллекций добавить, но там проблема с конвертацией.

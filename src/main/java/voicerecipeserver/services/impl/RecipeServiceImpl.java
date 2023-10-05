@@ -5,25 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.entities.Collection;
+import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.recommend.SlopeOne;
 import voicerecipeserver.respository.*;
-import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
 import voicerecipeserver.utils.FindUtils;
 
 import java.util.*;
-
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
-import static voicerecipeserver.utils.FindUtils.findUser;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -43,8 +40,7 @@ public class RecipeServiceImpl implements RecipeService {
                              MeasureUnitRepository measureUnitRepository, ModelMapper mapper,
                              AvgMarkRepository avgMarkRepository, StepRepository stepRepository,
                              MarkRepository markRepository, UserRepository userRepository,
-                             MediaRepository mediaRepository,
-                             CollectionRepository collectionRepository,
+                             MediaRepository mediaRepository, CollectionRepository collectionRepository,
                              CategoryRepository categoryRepository) {
 
         this.recipeRepository = recipeRepository;
@@ -104,6 +100,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException {
         if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
@@ -139,7 +136,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private Collection findUserRecipesCollection(Long id) {
-        Optional<Collection> optionalCollection = collectionRepository.findByAuthorIdUserRecipeCollection(id, "Мои рецепты");
+        Optional<Collection> optionalCollection = collectionRepository.findByAuthorIdUserRecipeCollection(id,
+                                                                                                          "Мои рецепты");
         return optionalCollection.orElse(null);
     }
 
@@ -150,6 +148,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException {
 
@@ -242,6 +241,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> deleteRecipe(Long recipeId) throws NotFoundException {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         if (AuthServiceCommon.checkAuthorities(recipe.getAuthor().getUid())) {
@@ -260,7 +260,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ResponseEntity<List<CategoryDto>> getCategoriesById(Long id) {
         List<Category> categories = categoryRepository.findByRecipeId(id);
-        List<CategoryDto> categoryDtos =categories.stream().map(
+        List<CategoryDto> categoryDtos = categories.stream().map(
                 element -> mapper.map(element, CategoryDto.class)).toList();
 
         return ResponseEntity.ok(categoryDtos);

@@ -49,6 +49,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> addCollection(CollectionDto body) throws NotFoundException {
         if (mediaRepository.findById(body.getMediaId()).isEmpty()) {
             throw new NotFoundException("Couldn't find media with id: " + body.getMediaId());
@@ -82,6 +83,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> deleteCollection(Long id) throws NotFoundException, AuthException {
         User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, id);
@@ -93,6 +95,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> putCollection(Long id, CollectionDto body) throws AuthException, NotFoundException {
         Optional<Media> media = mediaRepository.findById(body.getMediaId());
         if (media.isEmpty()) {
@@ -110,6 +113,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> deleteRecipeFromCollection(Long recipeId, Long collectionId) throws NotFoundException,
             AuthException {
         User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
@@ -150,8 +154,7 @@ public class CollectionServiceImpl implements CollectionService {
     public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) throws NotFoundException {
         List<Long> resipesIds = collectionRepository.findRecipeIdsInCollection(id);
         List<Recipe> recipes = recipeRepository.findByIds(resipesIds);
-        List<RecipeDto> recipeDtos = recipes.stream().map(
-                element -> mapper.map(element, RecipeDto.class)).toList();
+        List<RecipeDto> recipeDtos = recipes.stream().map(element -> mapper.map(element, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
 

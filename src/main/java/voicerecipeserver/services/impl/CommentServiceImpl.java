@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.model.dto.CommentDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.entities.Comment;
@@ -37,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setId(null);
@@ -50,6 +52,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
         Comment comment = FindUtils.findComment(commentRepository, commentDto.getId());
         if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
@@ -60,6 +63,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> deleteComment(Long commentId) throws NotFoundException {
         Comment comment = FindUtils.findComment(commentRepository, commentId);
         if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
