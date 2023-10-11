@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.SelectionApi;
 import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.SelectionDto;
+import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.SelectionService;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class SelectionController implements SelectionApi {
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(Long id) {
+    public ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(Long id) throws NotFoundException {
         return service.getCategoriesOfSelection(id);
     }
 }

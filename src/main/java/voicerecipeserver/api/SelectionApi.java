@@ -20,5 +20,6 @@ public interface SelectionApi {
     ResponseEntity<List<SelectionDto>> getAllSelections() ;
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(@PathVariable(value = "id") @Positive Long id);
+    ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(@PathVariable(value = "id") @Positive Long id) throws
+            NotFoundException;
 }
