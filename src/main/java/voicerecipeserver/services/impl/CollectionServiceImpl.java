@@ -151,9 +151,8 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) throws NotFoundException {
-        List<Long> resipesIds = collectionRepository.findRecipeIdsInCollection(id);
-        List<Recipe> recipes = recipeRepository.findByIds(resipesIds);
+    public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) {
+        List<Recipe> recipes = recipeRepository.findByCollectionId(id);
         List<RecipeDto> recipeDtos = recipes.stream().map(element -> mapper.map(element, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }

@@ -57,7 +57,7 @@ public class Recipe {
 
     @ManyToMany(mappedBy = "recipes")
     @ToString.Exclude
-    private Set<Category> categories;
+    private List<Category> categories;
 
     @ManyToMany(mappedBy = "recipes")
     @ToString.Exclude

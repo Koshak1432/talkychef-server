@@ -11,18 +11,10 @@ import java.util.List;
 public interface CategoryRepository extends CrudRepository<Category, Long> {
     List<Category> findAll();
 
-    @Query(value = """
-            SELECT recipe_id FROM categories_distribution
-            WHERE category_id=:id
-            LIMIT :limit
-              """, nativeQuery = true)
-    List<Long> findRecipesWithCategoryId(Long id, Integer limit);
-
-
     @Modifying
     @Query(value = """
             DELETE FROM categories_distribution
-            WHERE  category_id=:categoryId AND recipe_id =:recipeId
+            WHERE  category_id = :categoryId AND recipe_id = :recipeId
             """, nativeQuery = true)
     void deleteByCategoryRecipeId(Long categoryId, Long recipeId);
 
@@ -38,4 +30,11 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
               WHERE distr.recipe_id = :id
             """, nativeQuery = true)
     List<Category> findByRecipeId(Long id);
+
+    @Query(value = """
+            SELECT categories.* FROM categories
+            JOIN selections_distribution distr ON categories.id = distr.category_id
+            WHERE distr.selection_id = :id
+            """, nativeQuery = true)
+    List<Category> findBySelectionId(Long id);
 }

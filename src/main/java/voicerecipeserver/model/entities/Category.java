@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -23,10 +25,14 @@ public class Category {
 
     @ToString.Exclude
     @ManyToMany
-    @JoinTable(name = "categories_distribution",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    @JoinTable(name = "categories_distribution", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns
+            = @JoinColumn(name = "recipe_id"))
     private List<Recipe> recipes;
 
+
+    @ManyToMany
+    @JoinTable(name = "selections_distribution", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns =
+    @JoinColumn(name = "selection_id"))
+    private List<Selection> selections = new ArrayList<>();
 
 }
