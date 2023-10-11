@@ -46,7 +46,7 @@ public class FindUtils {
     public static UserInfo findUserByEmail(UserInfoRepository userInfoRepository, String email) throws
             NotFoundException {
         return userInfoRepository.findByEmail(email).orElseThrow(
-                () -> new NotFoundException("Не удалось найти пользователя with email: " + email));
+                () -> new NotFoundException("Couldn't find user with email: " + email));
     }
 
     public static Collection findCollectionById(CollectionRepository repository, Long id) throws NotFoundException {
