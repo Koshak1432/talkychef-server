@@ -46,7 +46,6 @@ public class CommentServiceImpl implements CommentService {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, commentDto.getRecipeId());
         comment.setUser(user);
         comment.setRecipe(recipe);
-
         Comment savedComment = commentRepository.save(comment);
         return ResponseEntity.ok(new IdDto().id(savedComment.getId()));
     }

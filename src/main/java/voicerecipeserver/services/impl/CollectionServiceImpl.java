@@ -15,16 +15,12 @@ import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.CollectionRepository;
-import voicerecipeserver.respository.MediaRepository;
-import voicerecipeserver.respository.RecipeRepository;
-import voicerecipeserver.respository.UserRepository;
+import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.CollectionService;
 import voicerecipeserver.utils.FindUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -36,24 +32,25 @@ public class CollectionServiceImpl implements CollectionService {
 
 
     private final ModelMapper mapper;
+    private final CategoryRepository categoryRepository;
 
 
     @Autowired
     public CollectionServiceImpl(CollectionRepository repository, RecipeRepository recipeRepository,
-                                 UserRepository userRepository, MediaRepository mediaRepository, ModelMapper mapper) {
+                                 UserRepository userRepository, MediaRepository mediaRepository, ModelMapper mapper,
+                                 CategoryRepository categoryRepository) {
         this.collectionRepository = repository;
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
         this.mediaRepository = mediaRepository;
         this.mapper = mapper;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     @Transactional
     public ResponseEntity<IdDto> addCollection(CollectionDto body) throws NotFoundException {
-        if (mediaRepository.findById(body.getMediaId()).isEmpty()) {
-            throw new NotFoundException("Couldn't find media with id: " + body.getMediaId());
-        }
+        FindUtils.findMedia(mediaRepository, body.getMediaId());
         Collection collection = mapper.map(body, Collection.class);
         collection.setAuthor(FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin()));
         collection.setNumber(0);
@@ -97,17 +94,14 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     @Transactional
     public ResponseEntity<IdDto> putCollection(Long id, CollectionDto body) throws AuthException, NotFoundException {
-        Optional<Media> media = mediaRepository.findById(body.getMediaId());
-        if (media.isEmpty()) {
-            throw new NotFoundException("Couldn't find media with id: " + body.getMediaId());
-        }
+        Media media = FindUtils.findMedia(mediaRepository, id);
         User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, id);
         if (collection.getAuthor() == null || !collection.getAuthor().getUid().equals(user.getUid())) {
             throw new AuthException("No rights");
         }
         collection.setName(body.getName());
-        collection.setMedia(media.get());
+        collection.setMedia(media);
         Collection savedCollection = collectionRepository.save(collection);
         return ResponseEntity.ok(new IdDto().id(savedCollection.getId()));
     }
@@ -144,7 +138,7 @@ public class CollectionServiceImpl implements CollectionService {
         if (null == limit) {
             limit = 0L;
         }
-        List<Collection> collections = findCollectionsByName(name, limit);
+        List<Collection> collections = FindUtils.findCollectionsByName(collectionRepository, name, limit);
         List<CollectionDto> collectionDtos = collections.stream().map(
                 collection -> mapper.map(collection, CollectionDto.class)).toList();
         return ResponseEntity.ok(collectionDtos);
@@ -152,8 +146,8 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) throws NotFoundException {
-        List<Long> resipesIds = collectionRepository.findRecipeIdsInCollection(id);
-        List<Recipe> recipes = recipeRepository.findByIds(resipesIds);
+        FindUtils.findCollectionById(collectionRepository, id);
+        List<Recipe> recipes = recipeRepository.findByCollectionId(id);
         List<RecipeDto> recipeDtos = recipes.stream().map(element -> mapper.map(element, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }

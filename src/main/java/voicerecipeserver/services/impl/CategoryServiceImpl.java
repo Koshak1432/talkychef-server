@@ -44,9 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (limit == null) {
             limit = Constants.MAX_RECIPES_PER_PAGE;
         }
-        List<Long> recipesIds = categoryRepository.findRecipesWithCategoryId(id, limit);
-        List<Recipe> recipes = recipeRepository.findByIds(recipesIds);
-
+        List<Recipe> recipes = recipeRepository.findByCategoryId(id, limit);
         List<RecipeDto> recipeDtos = recipes.stream().map(
                 element -> modelMapper.map(element, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
