@@ -34,12 +34,14 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> recipePost(RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException {
+    public ResponseEntity<IdDto> recipePost(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+            AuthException {
         return recipeService.addRecipe(recipeDto);
     }
 
     @Override
-    public ResponseEntity<IdDto> recipeUpdate(RecipeDto recipeDto) throws NotFoundException, BadRequestException, AuthException {
+    public ResponseEntity<IdDto> recipeUpdate(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+            AuthException {
         return recipeService.updateRecipe(recipeDto);
     }
 
@@ -48,7 +50,8 @@ public class RecipeApiController implements RecipeApi {
         return recipeService.deleteRecipe(id);
     }
 
-    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit) throws NotFoundException, AuthException {
+    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit) throws NotFoundException,
+            AuthException {
         return recipeService.searchRecipesByName(name, limit);
     }
 
@@ -58,7 +61,8 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit, Integer page) throws NotFoundException, AuthException {
+    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit, Integer page) throws
+            NotFoundException, AuthException {
         return recipeService.filterContent(limit, page);
     }
 

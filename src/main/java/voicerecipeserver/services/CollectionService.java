@@ -12,7 +12,7 @@ import java.util.List;
 public interface CollectionService {
     ResponseEntity<IdDto> addCollection(CollectionDto body) throws NotFoundException;
 
-    ResponseEntity<Void> addRecipeToCollection(Long recipe,Long collectionId) throws NotFoundException, AuthException;
+    ResponseEntity<Void> addRecipeToCollection(Long recipe, Long collectionId) throws NotFoundException, AuthException;
 
     ResponseEntity<CollectionDto> getCollectionPage(Long collectionId) throws NotFoundException, AuthException;
 
@@ -20,7 +20,8 @@ public interface CollectionService {
 
     ResponseEntity<IdDto> putCollection(Long id, CollectionDto body) throws AuthException, NotFoundException;
 
-    ResponseEntity<Void> deleteRecipeFromCollection(Long recipe, Long collectionId) throws NotFoundException, AuthException;
+    ResponseEntity<Void> deleteRecipeFromCollection(Long recipe, Long collectionId) throws NotFoundException,
+            AuthException;
 
     ResponseEntity<List<CollectionDto>> getCollections(String login) throws NotFoundException;
 

@@ -1,11 +1,8 @@
 package voicerecipeserver.respository;
 
-import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.model.entities.User;
 
 import java.util.List;
@@ -15,14 +12,19 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByUid(String uid);
 
     @Query(value = """
-                    SELECT * FROM users
-                    WHERE uid ILIKE :namePart || '%'
+                    (
+                        SELECT * FROM users
+                        WHERE uid ILIKE :namePart || '%'
+                        ORDER BY uid
+                    )
                     UNION
-                    SELECT * FROM users
-                    WHERE uid ILIKE '% ' || :namePart || '%'
-                    ORDER BY uid
-                    LIMIT CASE WHEN (:limit > 0) THEN :limit END
+                    (
+                        SELECT * FROM users
+                        WHERE uid ILIKE '% ' || :namePart || '%'
+                        ORDER BY uid
+                    )
+                    LIMIT :limit
             """, nativeQuery = true)
-    List<User> findByUidContaining(@Param("namePart") String inline, @Param("limit") Integer limit);
+    List<User> findByUidContaining(@Param("namePart") String inline, Integer limit);
 
 }

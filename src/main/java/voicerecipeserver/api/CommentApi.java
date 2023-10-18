@@ -30,7 +30,8 @@ public interface CommentApi {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<Void> commentDelete(@PathVariable("id") @Positive(message = "comment id must be positive") Long id) throws NotFoundException;
+    ResponseEntity<Void> commentDelete(
+            @PathVariable("id") @Positive(message = "comment id must be positive") Long id) throws NotFoundException;
 
     @GetMapping("/{id}")
     ResponseEntity<List<CommentDto>> getRecipeComments(

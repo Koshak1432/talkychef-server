@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.MarkDto;
 import voicerecipeserver.model.entities.Mark;
@@ -75,6 +76,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException,
             BadRequestException {
         Mark mark = mapper.map(markDto, Mark.class);
@@ -92,6 +94,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException, AuthException {
         Mark newMark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.checkAuthorities(markDto.getUserUid())) {
@@ -108,6 +111,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws AuthException,
             NotFoundException {
         if (!checkAuthorities(userUid)) {
