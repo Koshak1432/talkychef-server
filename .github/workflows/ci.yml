@@ -1,0 +1,73 @@
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+env:
+      DB_NAME: postgresql
+      POSTGRES_DB_NAME: talkyChef
+      DATASOURCE_URL: jdbc:postgresql://localhost:5432/talkyChef
+      DATASOURCE_USERNAME: ${{secrets.DATASOURCE_USERNAME}}
+      DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
+      SCHEMA_NAME: public
+      SERVER_PORT: ${{secrets.SERVER_PORT}}
+      ENABLE_SSL: false
+      ENABLE_HTTP2: false
+      SECRET_ACCESS: ${{secrets.SECRET_ACCESS}}
+      SECRET_REFRESH: ${{secrets.SECRET_REFRESH}}
+      MAIL_USERNAME: ${{secrets.MAIL_USERNAME}}
+      MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: ${{ env.DATASOURCE_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.DATASOURCE_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB_NAME }}
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'oracle'
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+    - name: Create PostgreSQL Database
+      run: |
+        PGPASSWORD="${{ env.DATASOURCE_PASSWORD }}" psql -h localhost -U ${{ env.DATASOURCE_USERNAME }} -c "CREATE DATABASE ${{env.POSTGRES_DB_NAME}};"
+    - name: Database Migration with Flyway
+      run: ./gradlew flywayMigrate
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    - name: Run build(with test task)
+      run: ./gradlew build
