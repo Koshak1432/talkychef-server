@@ -1,11 +1,17 @@
 package voicerecipeserver.model.mappers;
 
+import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import voicerecipeserver.model.dto.*;
 import voicerecipeserver.model.dto.IngredientsDistributionDto;
 import voicerecipeserver.model.entities.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class DefaultMapper extends ModelMapper {
@@ -36,9 +42,24 @@ public class DefaultMapper extends ModelMapper {
             mapper.map(src -> src.getIngredient().getName(), IngredientsDistributionDto::setName);
         });
 
+        this.addConverter(new OffsetDateTimeToLocalDateTimeConverter());
         this.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> {
                     m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
                 });
+        this.typeMap(Comment.class, CommentDto.class).addMappings(
+                m -> {
+                    m.map(Comment::getPostTime, CommentDto::postTime);
+                }
+        );
     }
+
+    private static class OffsetDateTimeToLocalDateTimeConverter extends
+            AbstractConverter<OffsetDateTime, LocalDateTime> {
+        @Override
+        protected LocalDateTime convert(OffsetDateTime source) {
+            return source.toLocalDateTime();
+        }
+    }
+
 }
