@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.dto.UserProfileDto;
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    Role findRole(String name) throws NotFoundException {
+    private Role findRole(String name) throws NotFoundException {
         Optional<Role> roleOptional = roleRepository.findByName(name);
         if (roleOptional.isEmpty()) {
             throw new NotFoundException("Couldn't find role " + name);
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException {
         User user = mapper.map(userDto, User.class);
         user.setId(null);
@@ -123,6 +125,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException,
             NotFoundException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
@@ -162,6 +165,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException,
             UserException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
@@ -178,6 +182,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> sendEmailInstructions(String email) throws NotFoundException {
         UserInfo user = FindUtils.findUserByEmail(userInfoRepository, email);
         String token = UUID.randomUUID().toString();
@@ -194,6 +199,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, AuthException {
         UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
         userFromToken.setToken(null);
@@ -214,6 +220,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    @Transactional
     public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) throws NotFoundException, BadRequestException {
         if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
             throw new BadRequestException("No rights");

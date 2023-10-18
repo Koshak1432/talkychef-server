@@ -1,22 +1,20 @@
 package voicerecipeserver.api;
 
-import org.springframework.context.annotation.Role;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
+import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
-import voicerecipeserver.recommend.SlopeOne;
 
 import java.util.List;
 
@@ -51,6 +49,12 @@ public interface RecipeApi {
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
             NotFoundException, AuthException;
+
+    @GetMapping(value = "/{id}/categories")
+    ResponseEntity<List<CategoryDto>> getCategories(
+            @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
+            NotFoundException, BadRequestException;
+
 
     @GetMapping
     ResponseEntity<List<RecipeDto>> getRecipesRecommendations(

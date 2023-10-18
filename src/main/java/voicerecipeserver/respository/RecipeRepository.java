@@ -13,53 +13,64 @@ import java.util.Optional;
 public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     @Query(value = """
+                (
                     SELECT * FROM recipes
                     WHERE name ILIKE :namePart || '%'
-                    UNION
+                    ORDER BY name
+                )
+                UNION
+                (
                     SELECT * FROM recipes
                     WHERE name ILIKE '% ' || :namePart || '%'
                     ORDER BY name
-                    LIMIT CASE WHEN (:limit > 0) THEN :limit END
+                )
+                LIMIT :limit
             """, nativeQuery = true)
-    List<Recipe> findByNameContaining(@Param("namePart") String inline, @Param("limit") Integer limit);
+    List<Recipe> findByNameContaining(@Param("namePart") String inline, Integer limit);
 
     // https://medium.com/swlh/sql-pagination-you-are-probably-doing-it-wrong-d0f2719cc166 - performance issue
     // вообще хотелось бы этот метод в репозиторий коллекций добавить, но там проблема с конвертацией.
     @Query(value = """
-                    SELECT * FROM recipes
-                    WHERE id IN
-                    (
-                        SELECT recipe_id FROM collections_distribution
-                        WHERE collection_id=:collectionId
-                        ORDER BY recipe_id
-                        LIMIT :numRecipes OFFSET :offset
-            )
+                SELECT recipes.* FROM recipes
+                JOIN collections_distribution distr ON recipes.id = distr.recipe_id
+                WHERE distr.collection_id = :collectionId
+                ORDER BY distr.recipe_id
+                LIMIT :numRecipes OFFSET :offset
             """, nativeQuery = true)
     List<Recipe> findRecipesWithOffsetFromCollectionById(int numRecipes, int offset, long collectionId);
 
-
     Optional<Recipe> findRecipeByMediaId(Long mediaId);
 
-
     @Query(value = """
-                    WITH avg_limit AS (
-                        SELECT recipe_id FROM avg_marks
-                        ORDER BY avg_mark DESC
-                    )
-                    SELECT * FROM recipes
-                    WHERE id not in (SELECT * from avg_limit)
-                    ORDER BY random()
-                    LIMIT :limit
+                SELECT recipes.* FROM recipes
+                LEFT JOIN avg_marks ON recipes.id = avg_marks.recipe_id
+                WHERE avg_marks.recipe_id IS NULL
+                ORDER BY random()
+                LIMIT :limit
             """, nativeQuery = true)
     List<Recipe> findRandomWithLimit(int limit);
 
-
     @Query(value = """
-                   SELECT recipes.*
-                   FROM recipes
-                   JOIN avg_marks ON recipes.id = avg_marks.recipe_id
-                   ORDER BY avg_mark DESC
-                   LIMIT :limit OFFSET :offset
+               SELECT recipes.*
+               FROM recipes
+               JOIN avg_marks ON recipes.id = avg_marks.recipe_id
+               ORDER BY avg_mark DESC
+               LIMIT :limit OFFSET :offset
             """, nativeQuery = true)
     List<Recipe> findTopRecipesWithLimitAndOffset(int limit, int offset);
+
+    @Query(value = """
+                SELECT recipes.* FROM recipes
+                JOIN categories_distribution distr ON recipes.id = distr.recipe_id
+                WHERE category_id = :id
+                LIMIT :limit
+            """, nativeQuery = true)
+    List<Recipe> findByCategoryId(Long id, Integer limit);
+
+    @Query(value = """
+                SELECT recipes.* FROM recipes
+                JOIN collections_distribution distr ON recipes.id = distr.recipe_id
+                WHERE collection_id = :id
+            """, nativeQuery = true)
+    List<Recipe> findByCollectionId(Long id);
 }

@@ -15,12 +15,12 @@ import jakarta.validation.constraints.*;
  * RecipeDto
  */
 @Validated
-@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-07-27T05:11:52.897277956Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-09-27T08:24:25.461779912Z[GMT]")
 
 
-public class RecipeDto {
-    @JsonProperty("name")
-    private String name = null;
+public class RecipeDto   {
+  @JsonProperty("name")
+  private String name = null;
 
   @JsonProperty("id")
   private Long id = null;
@@ -36,6 +36,9 @@ public class RecipeDto {
 
   @JsonProperty("prep_time_mins")
   private Integer prepTimeMins = null;
+
+  @JsonProperty("servings")
+  private Integer servings = null;
 
   @JsonProperty("kilocalories")
   private Double kilocalories = null;
@@ -104,7 +107,8 @@ public class RecipeDto {
    * Get mediaId
    * @return mediaId
    **/
-  
+      @NotNull
+
     public Long getMediaId() {
     return mediaId;
   }
@@ -167,6 +171,24 @@ public class RecipeDto {
 
   public void setPrepTimeMins(Integer prepTimeMins) {
     this.prepTimeMins = prepTimeMins;
+  }
+
+  public RecipeDto servings(Integer servings) {
+    this.servings = servings;
+    return this;
+  }
+
+  /**
+   * Get servings
+   * @return servings
+   **/
+  
+    public Integer getServings() {
+    return servings;
+  }
+
+  public void setServings(Integer servings) {
+    this.servings = servings;
   }
 
   public RecipeDto kilocalories(Double kilocalories) {
@@ -309,6 +331,7 @@ public class RecipeDto {
         Objects.equals(this.cookTimeMins, recipeDto.cookTimeMins) &&
         Objects.equals(this.authorUid, recipeDto.authorUid) &&
         Objects.equals(this.prepTimeMins, recipeDto.prepTimeMins) &&
+        Objects.equals(this.servings, recipeDto.servings) &&
         Objects.equals(this.kilocalories, recipeDto.kilocalories) &&
         Objects.equals(this.proteins, recipeDto.proteins) &&
         Objects.equals(this.fats, recipeDto.fats) &&
@@ -319,7 +342,7 @@ public class RecipeDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, id, mediaId, cookTimeMins, authorUid, prepTimeMins, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps);
+    return Objects.hash(name, id, mediaId, cookTimeMins, authorUid, prepTimeMins, servings, kilocalories, proteins, fats, carbohydrates, ingredientsDistributions, steps);
   }
 
   @Override
@@ -333,6 +356,7 @@ public class RecipeDto {
     sb.append("    cookTimeMins: ").append(toIndentedString(cookTimeMins)).append("\n");
     sb.append("    authorUid: ").append(toIndentedString(authorUid)).append("\n");
     sb.append("    prepTimeMins: ").append(toIndentedString(prepTimeMins)).append("\n");
+    sb.append("    servings: ").append(toIndentedString(servings)).append("\n");
     sb.append("    kilocalories: ").append(toIndentedString(kilocalories)).append("\n");
     sb.append("    proteins: ").append(toIndentedString(proteins)).append("\n");
     sb.append("    fats: ").append(toIndentedString(fats)).append("\n");
@@ -354,4 +378,3 @@ public class RecipeDto {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

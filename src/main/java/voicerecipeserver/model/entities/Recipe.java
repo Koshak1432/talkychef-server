@@ -39,6 +39,8 @@ public class Recipe {
 
     private Double carbohydrates;
 
+    private Integer servings;
+
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -55,7 +57,7 @@ public class Recipe {
 
     @ManyToMany(mappedBy = "recipes")
     @ToString.Exclude
-    private Set<Category> categories;
+    private List<Category> categories;
 
     @ManyToMany(mappedBy = "recipes")
     @ToString.Exclude
