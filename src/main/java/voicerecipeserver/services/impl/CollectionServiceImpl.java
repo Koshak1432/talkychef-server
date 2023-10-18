@@ -117,6 +117,8 @@ public class CollectionServiceImpl implements CollectionService {
         }
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         collectionRepository.deleteRecipeFromCollection(recipe.getId(), collection.getId());
+        collection.setNumber(collection.getNumber() - 1);
+        collectionRepository.save(collection);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
