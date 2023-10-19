@@ -58,7 +58,10 @@ public class DefaultMapper extends ModelMapper {
             AbstractConverter<OffsetDateTime, LocalDateTime> {
         @Override
         protected LocalDateTime convert(OffsetDateTime source) {
-            return source.toLocalDateTime();
+            if (source != null) {
+                return source.toLocalDateTime();
+            }
+            return null;
         }
     }
 
