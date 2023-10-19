@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -30,9 +31,8 @@ public class Comment {
     @ToString.Exclude
     private User user;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date")
-    private Date postTime;
+    private LocalDateTime postTime;
 
     @Column(name = "content")
     private String content;

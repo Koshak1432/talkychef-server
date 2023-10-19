@@ -155,6 +155,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdDto> postLikedRecipe(Long recipeId) throws NotFoundException {
         String login = AuthServiceCommon.getUserLogin();
         Collection likedCollection;
