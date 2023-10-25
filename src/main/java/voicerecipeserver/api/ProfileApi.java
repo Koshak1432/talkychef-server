@@ -2,6 +2,7 @@ package voicerecipeserver.api;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +15,6 @@ import voicerecipeserver.model.dto.UserProfileDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.model.exceptions.UserException;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public interface ProfileApi {
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<UserProfileDto> profileGet() throws Exception;
+    ResponseEntity<UserProfileDto> profileGet() throws NotFoundException;
 
     @PutMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
@@ -34,23 +34,28 @@ public interface ProfileApi {
     @PostMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<IdDto> profilePost(@RequestBody UserProfileDto profileDto) throws BadRequestException,
-            NotFoundException, UserException;
+            NotFoundException;
+
+    @GetMapping("/search/{login}")
+    ResponseEntity<List<UserProfileDto>> profilesByPartUidGet(
+            @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login,
+            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit,
+            @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws NotFoundException;
 
     @GetMapping("/{login}")
-    ResponseEntity<List<UserProfileDto>> profileByUidGet(
-            @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login,
-            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
-            Exception;
+    ResponseEntity<UserProfileDto> profileByUidGet(
+            @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login) throws
+            NotFoundException;
 
     @PostMapping("/restore-password")
-    public ResponseEntity<Void> sendInstructions(@RequestParam("email") String email) throws NotFoundException;
+    ResponseEntity<Void> sendInstructions(@RequestParam("email") String email) throws NotFoundException;
 
     @GetMapping("/restore-password/{token}")
-    public ResponseEntity<IdDto> verifyCode(@PathVariable("token") String token) throws NotFoundException,
+    ResponseEntity<IdDto> verifyCode(@PathVariable("token") String token) throws NotFoundException,
             BadRequestException;
 
     @PostMapping("/restore-password/{token}")
-    public ResponseEntity<Void> changePassword(@PathVariable("token") String token, @RequestBody UserDto userDto) throws
+    ResponseEntity<Void> changePassword(@PathVariable("token") String token, @RequestBody UserDto userDto) throws
             NotFoundException, BadRequestException, AuthException;
 
 

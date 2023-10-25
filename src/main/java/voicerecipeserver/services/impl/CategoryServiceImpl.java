@@ -39,12 +39,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id,
-                                                                  Integer limit) { //todo проверить на пустой категории
-        if (limit == null) {
-            limit = Constants.MAX_RECIPES_PER_PAGE;
-        }
-        List<Recipe> recipes = recipeRepository.findByCategoryId(id, limit);
+    public ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit,
+                                                                  Integer page) { //todo проверить на пустой категории
+        int trueLimit = (limit == null) ? Constants.MAX_ITEMS_PER_PAGE : limit;
+        int truePage = (page == null) ? 0 : page;
+        List<Recipe> recipes = recipeRepository.findByCategoryId(id, trueLimit, truePage);
         List<RecipeDto> recipeDtos = recipes.stream().map(
                 element -> modelMapper.map(element, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
@@ -110,7 +111,7 @@ public class RecipeServiceImpl implements RecipeService {
             throw new BadRequestException("Media id must be present");
         }
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
-        User author = FindUtils.findUser(userRepository, recipe.getAuthor().getUid());
+        User author = FindUtils.findUserByUid(userRepository, recipe.getAuthor().getUid());
         recipe.setAuthor(author);
         recipe.setId(null);
         checkMediaUniqueness(recipe);
@@ -128,7 +129,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe savedRecipe = recipeRepository.save(recipe);
         Collection recipeCollection = findUserRecipesCollection(author.getId());
         if (recipeCollection == null) {
-            Collection collection = new Collection(author.getUid()+"_saved", 0, author);
+            Collection collection = new Collection(author.getUid() + "_saved", 0, author);
             recipeCollection = collectionRepository.save(collection);
         }
         collectionRepository.addRecipeToCollection(savedRecipe.getId(), recipeCollection.getId());
@@ -143,7 +144,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
-        User author = FindUtils.findUser(userRepository, recipe.getAuthor().getUid());
+        User author = FindUtils.findUserByUid(userRepository, recipe.getAuthor().getUid());
         recipe.setAuthor(author);
     }
 
@@ -222,8 +223,9 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private List<Recipe> findRecipesByName(String name, int limit) throws NotFoundException {
-        List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit);
+    private List<Recipe> findRecipesByName(String name, int limit, int pageNum) throws NotFoundException {
+
+        List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit, pageNum);
         if (recipes.isEmpty()) {
             throw new NotFoundException("Couldn't find recipes with substring: " + name);
         }
@@ -231,11 +233,10 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException {
-        if (limit == null) {
-            limit = 0;
-        }
-        List<Recipe> recipes = findRecipesByName(name, limit);
+    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) throws NotFoundException {
+        int trueLimit = (limit == null) ? Constants.MAX_ITEMS_PER_PAGE : limit;
+        int truePage = (page == null) ? 0 : page;
+        List<Recipe> recipes = findRecipesByName(name, trueLimit, truePage);
         List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }

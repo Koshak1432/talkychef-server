@@ -50,7 +50,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     private void setAuthorToMark(Mark mark, String uid) throws NotFoundException {
-        User author = FindUtils.findUser(userRepository, uid);
+        User author = FindUtils.findUserByUid(userRepository, uid);
         mark.getId().setUserId(author.getId());
         mark.setUser(author);
     }
@@ -67,7 +67,7 @@ public class MarkServiceImpl implements MarkService {
 
     @Override
     public ResponseEntity<MarkDto> getRecipeMark(String userUid, Long recipeId) throws NotFoundException {
-        User user = FindUtils.findUser(userRepository, userUid);
+        User user = FindUtils.findUserByUid(userRepository, userUid);
         Optional<Mark> mark = markRepository.findById(new MarkKey(user.getId(), recipeId));
         if (mark.isEmpty()) {
             throw new NotFoundException("Couldn't find mark by " + userUid + " for recipe with id: " + recipeId);
@@ -117,7 +117,7 @@ public class MarkServiceImpl implements MarkService {
         if (!checkAuthorities(userUid)) {
             throw new AuthException("No rights");
         }
-        User user = FindUtils.findUser(userRepository, userUid);
+        User user = FindUtils.findUserByUid(userRepository, userUid);
         markRepository.deleteById(new MarkKey(user.getId(), recipeId));
         return new ResponseEntity<>(HttpStatus.OK);
     }

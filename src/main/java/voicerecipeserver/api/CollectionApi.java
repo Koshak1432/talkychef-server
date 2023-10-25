@@ -38,7 +38,6 @@ public interface CollectionApi {
     ResponseEntity<IdDto> collectionPut(@RequestParam("collection_id") @PositiveOrZero Long id,
                                         @Valid @RequestBody CollectionDto body) throws NotFoundException, AuthException;
 
-
     @PostMapping(value = "/liked")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<IdDto> collectionLikedRecipePost(@RequestParam("recipe_id") @PositiveOrZero Long id) throws NotFoundException, AuthException;
@@ -57,7 +56,7 @@ public interface CollectionApi {
             NotFoundException, AuthException;
 
     @GetMapping(value = "/search")
-    ResponseEntity<CollectionDto> collectionGetByName(@RequestParam(value = "collection_id") Long collectionId) throws
+    ResponseEntity<CollectionDto> getCollectionById(@RequestParam(value = "collection_id") Long collectionId) throws
             NotFoundException, AuthException, BadRequestException;
 
     @GetMapping(value = "/{id}")
@@ -65,7 +64,7 @@ public interface CollectionApi {
             NotFoundException, AuthException, BadRequestException;
 
     @GetMapping(value = "/search/{name}")
-    ResponseEntity<List<CollectionDto>> collectionGetByName(@PathVariable(value = "name") String name,
-                                                            @RequestParam(value = "limit", required = false) @PositiveOrZero Long limit) throws
+    ResponseEntity<List<CollectionDto>> getCollectionsByName(@PathVariable(value = "name") String name,
+                                                             @RequestParam(value = "limit", required = false) @PositiveOrZero Long limit) throws
             NotFoundException, AuthException, BadRequestException;
 }

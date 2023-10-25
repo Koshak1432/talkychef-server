@@ -78,7 +78,7 @@ public class TestingWebApplicationTests {
         Recipe recipe2 = Recipe.builder().id(3L).author(User.builder().uid("admin").id(1L).build()).name(
                 "Очень-очень горячая курица").cookTimeMins(30).build();
         List<Recipe> recipeList = Arrays.asList(recipe, recipe2);
-        when(recipeRepository.findByNameContaining("Очень", 0)).thenReturn(recipeList);
+        when(recipeRepository.findByNameContaining("Очень", 0, 0)).thenReturn(recipeList);
 
         this.mockMvc.perform(get(Constants.BASE_API_PATH + "/recipes/search/Очень")).andExpect(
                 status().isOk()).andExpect(content().contentType("application/json")).andExpect(

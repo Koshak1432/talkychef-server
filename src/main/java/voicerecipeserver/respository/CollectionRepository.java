@@ -21,9 +21,9 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
                     WHERE name ILIKE '% ' || :namePart || '%'
                     ORDER BY name
                 )
-                LIMIT :limit
+                LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
-    List<Collection> findByNameContaining(Long limit, String namePart);
+    List<Collection> findByNameContaining(String namePart, int limit, int page);
 
     Optional<Collection> findCollectionByName(String name);
 

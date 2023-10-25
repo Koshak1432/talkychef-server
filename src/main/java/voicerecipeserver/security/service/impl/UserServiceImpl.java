@@ -1,35 +1,27 @@
 package voicerecipeserver.security.service.impl;
 
-import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.dto.UserProfileDto;
-import voicerecipeserver.model.entities.Collection;
 import voicerecipeserver.model.entities.Media;
 import voicerecipeserver.model.entities.Role;
 import voicerecipeserver.model.entities.User;
 import voicerecipeserver.model.entities.UserInfo;
-import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.respository.*;
 import voicerecipeserver.security.config.BeanConfig;
-import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.security.service.UserService;
 import voicerecipeserver.utils.FindUtils;
 
 import java.util.*;
-
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.getAuthInfo;
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.getUserLogin;
-import static voicerecipeserver.utils.FindUtils.*;
 
 
 @Service
@@ -55,7 +47,6 @@ public class UserServiceImpl implements UserService {
         this.mediaRepository = mediaRepository;
         this.mailSender = mailSender;
     }
-
 
     private Role findRole(String name) throws NotFoundException {
         Optional<Role> roleOptional = roleRepository.findByName(name);
@@ -85,44 +76,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> getUserProfile() throws Exception {
-        User user = FindUtils.findUser(userRepository,AuthServiceCommon.getUserLogin());
-        UserInfo userInfo = userInfoRepository.findById(user.getId()).orElseThrow(
-                () -> new UserException("Couldn't find user info"));
-        UserProfileDto userDto = mapper.map(userInfo, UserProfileDto.class);
-        userDto.setUid(user.getUid());
-        return ResponseEntity.ok(userDto);
+    public ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException {
+        User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
+        UserInfo userInfo = FindUtils.findUserInfoById(userInfoRepository, user.getId());
+        UserProfileDto userProfileDto = mapper.map(userInfo, UserProfileDto.class);
+        return ResponseEntity.ok(userProfileDto);
     }
 
     @Override
-    public ResponseEntity<List<UserProfileDto>> getUserProfile(String login, Integer limit) throws Exception {
-        if (limit == null) {
-            limit = 0;
-        }
-        List<UserProfileDto> userProfileDtos = new ArrayList<>();
-        List<User> users = userRepository.findByUidContaining(login, limit);
-        if (users.isEmpty()) {
-            throw new NotFoundException("Couldn't find users with substring: " + login);
-        }
-        for (User user : users) {
-            getUserProfileInfo(userProfileDtos, user);
-        }
+    public ResponseEntity<UserProfileDto> getUserProfileByLogin(String login) throws NotFoundException {
+        User user = FindUtils.findUserByUid(userRepository, login);
+        UserInfo userInfo = FindUtils.findUserInfoById(userInfoRepository, user.getId());
+        UserProfileDto userProfileDto = mapper.map(userInfo, UserProfileDto.class);
+        return ResponseEntity.ok(userProfileDto);
+    }
 
+    @Override
+    public ResponseEntity<List<UserProfileDto>> getUserProfilesByPartLogin(String login, Integer limit, Integer page) throws
+            NotFoundException {
+        int trueLimit = (limit == null) ? Constants.MAX_ITEMS_PER_PAGE : limit;
+        int truePage = (page == null) ? 0 : page;
+        List<UserProfileDto> userProfileDtos = new ArrayList<>();
+        List<User> users = userRepository.findByUidContaining(login, trueLimit, truePage);
+        for (User user : users) {
+            UserInfo userInfo = FindUtils.findUserInfoById(userInfoRepository, user.getId());
+            UserProfileDto userProfileDto = mapper.map(userInfo, UserProfileDto.class);
+            userProfileDtos.add(userProfileDto);
+        }
         return ResponseEntity.ok(userProfileDtos);
     }
-
-    private void getUserProfileInfo(List<UserProfileDto> userProfileDtos, User user) {
-        Optional<UserInfo> userInfo = userInfoRepository.findById(user.getId());
-        UserProfileDto userProfileDto;
-        if (userInfo.isPresent()) {
-            userProfileDto = mapper.map(userInfo, UserProfileDto.class);
-        } else {
-            userProfileDto = new UserProfileDto();
-        }
-        userProfileDto.setUid(user.getUid());
-        userProfileDtos.add(userProfileDto);
-    }
-
 
     @Override
     @Transactional
@@ -131,7 +113,7 @@ public class UserServiceImpl implements UserService {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("No rights");
         }
-        User user = FindUtils.findUser(userRepository, profileDto.getUid());
+        User user = FindUtils.findUserByUid(userRepository, profileDto.getUid());
         UserInfo userInfo = user.getUserInfo();
         if (userInfo == null) {
             throw new NotFoundException("Couldn't find user info");
@@ -166,15 +148,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException,
-            UserException {
+    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("No rights");
         }
         UserInfo userInfo = mapper.map(profileDto, UserInfo.class);
-        User user = FindUtils.findUser(userRepository, profileDto.getUid());
+        User user = FindUtils.findUserByUid(userRepository, profileDto.getUid());
         if (user.getUserInfo() != null) {
-            throw new UserException("User info already exists");
+            throw new BadRequestException("User info already exists");
         }
         userInfo.setUser(user);
         UserInfo newUser = userInfoRepository.save(userInfo);
@@ -200,11 +181,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, AuthException {
+    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException {
         UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
         userFromToken.setToken(null);
         userInfoRepository.save(userFromToken);
-        User user = userRepository.findById(userFromToken.getId()).orElseThrow(() -> new AuthException("Couldn't find user with id: " + userFromToken.getId()));
+        User user = FindUtils.findUserById(userRepository, userFromToken.getId());
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
         userRepository.save(user);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -213,8 +194,9 @@ public class UserServiceImpl implements UserService {
 
     private void sendMessage(UserInfo userInfo, String token) {
         if (!userInfo.getEmail().isEmpty()) {
-            String message = String.format("Hello, %s\n" +
-                            "You sent an issue to change your password. Please, confirm your email: https://server.talkychef.ru/api/v1/restore-password/%s",
+            String message = String.format(
+                    "Hello, %s\n" + "You sent an issue to change your password. Please, confirm your email: " +
+                            "https://server.talkychef.ru/api/v1/restore-password/%s",
                     userInfo.getDisplayName(), token);
             mailSender.send(userInfo.getEmail(), "Activation code", message);
         }
@@ -226,7 +208,7 @@ public class UserServiceImpl implements UserService {
         if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
             throw new BadRequestException("No rights");
         }
-        User user = FindUtils.findUser(userRepository, userDto.getLogin());
+        User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         user.setPassword(passwordEncoder.getPasswordEncoder().encode(userDto.getPassword()));
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(new IdDto().id(savedUser.getId()));

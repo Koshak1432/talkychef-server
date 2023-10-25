@@ -50,9 +50,9 @@ public class RecipeApiController implements RecipeApi {
         return recipeService.deleteRecipe(id);
     }
 
-    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit) throws NotFoundException,
+    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit, Integer page) throws NotFoundException,
             AuthException {
-        return recipeService.searchRecipesByName(name, limit);
+        return recipeService.searchRecipesByName(name, limit, page);
     }
 
     @Override

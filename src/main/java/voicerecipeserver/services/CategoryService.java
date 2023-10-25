@@ -9,7 +9,7 @@ import java.util.List;
 public interface CategoryService {
     ResponseEntity<List<CategoryDto>> getCategories();
 
-    ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit);
+    ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit, Integer page);
 
     ResponseEntity<Void> deleteRecipesFromCategory(Long id, Long recipeId);
 

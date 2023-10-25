@@ -14,7 +14,7 @@ public interface CollectionService {
 
     ResponseEntity<Void> addRecipeToCollection(Long recipe, Long collectionId) throws NotFoundException, AuthException;
 
-    ResponseEntity<CollectionDto> getCollectionPage(Long collectionId) throws NotFoundException, AuthException;
+    ResponseEntity<CollectionDto> getCollectionById(Long collectionId) throws NotFoundException, AuthException;
 
     ResponseEntity<Void> deleteCollection(Long id) throws NotFoundException, AuthException;
 
@@ -25,7 +25,7 @@ public interface CollectionService {
 
     ResponseEntity<List<CollectionDto>> getCollections(String login) throws NotFoundException;
 
-    ResponseEntity<List<CollectionDto>> getCollectionPageByName(String name, Long pageNum) throws NotFoundException;
+    ResponseEntity<List<CollectionDto>> getCollectionsByName(String name, Long pageNum) throws NotFoundException;
 
     ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) throws NotFoundException;
 

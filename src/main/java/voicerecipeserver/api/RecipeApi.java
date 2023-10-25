@@ -47,8 +47,9 @@ public interface RecipeApi {
     @GetMapping(value = "/search/{name}")
     ResponseEntity<List<RecipeDto>> recipeSearchNameGet(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
-            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
-            NotFoundException, AuthException;
+            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit,
+            @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws NotFoundException,
+            AuthException;
 
     @GetMapping(value = "/{id}/categories")
     ResponseEntity<List<CategoryDto>> getCategories(

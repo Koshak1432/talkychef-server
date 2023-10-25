@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(Constants.BASE_API_PATH + "/collections/**").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/marks/**").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/profile/*").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH + "/profile/search/*").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/profile/restore-password").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/profile/restore-password/**").permitAll()
                         .requestMatchers("/", Constants.BASE_API_PATH + "/recipes/**").permitAll() //todo вывод только рецептов

@@ -1,5 +1,7 @@
 package voicerecipeserver.controllers;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,12 +11,8 @@ import voicerecipeserver.model.dto.CollectionDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.services.CollectionService;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.PositiveOrZero;
 
 import java.util.List;
 
@@ -58,27 +56,32 @@ public class CollectionApiController implements CollectionApi {
     }
 
     @Override
-    public ResponseEntity<Void> collectionContentDelete(Long recipe, Long collectionId) throws NotFoundException, AuthException {
+    public ResponseEntity<Void> collectionContentDelete(Long recipe, Long collectionId) throws NotFoundException,
+            AuthException {
         return service.deleteRecipeFromCollection(recipe, collectionId);
     }
 
     @Override
-    public ResponseEntity<Void> collectionContentPost(Long recipe, Long collectionId) throws NotFoundException, AuthException {
+    public ResponseEntity<Void> collectionContentPost(Long recipe, Long collectionId) throws NotFoundException,
+            AuthException {
         return service.addRecipeToCollection(recipe, collectionId);
     }
 
     @Override
-    public ResponseEntity<CollectionDto> collectionGetByName(Long collectionId) throws NotFoundException, AuthException, BadRequestException {
-            return service.getCollectionPage(collectionId);
+    public ResponseEntity<CollectionDto> getCollectionById(Long collectionId) throws NotFoundException,
+            AuthException {
+        return service.getCollectionById(collectionId);
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecipesFromCollection(Long id) throws NotFoundException, AuthException, BadRequestException {
+    public ResponseEntity<List<RecipeDto>> getRecipesFromCollection(Long id) throws NotFoundException {
         return service.getCollectionRecipesById(id);
     }
 
     @Override
-    public ResponseEntity<List<CollectionDto>> collectionGetByName(String name, @Valid @PositiveOrZero Long limit) throws NotFoundException, AuthException, BadRequestException {
-        return service.getCollectionPageByName(name, limit);
+    public ResponseEntity<List<CollectionDto>> getCollectionsByName(String name,
+                                                                    @Valid @PositiveOrZero Long limit) throws
+            NotFoundException {
+        return service.getCollectionsByName(name, limit);
     }
 }

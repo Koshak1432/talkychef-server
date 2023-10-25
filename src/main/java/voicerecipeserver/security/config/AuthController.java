@@ -8,7 +8,6 @@ import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
@@ -28,14 +27,14 @@ public class AuthController {
 
     @PostMapping("/registration/mobile")
     public ResponseEntity<JwtResponse> registrationMobile(@RequestBody UserDto user) throws AuthException,
-            NotFoundException, UserException, BadRequestException {
+            NotFoundException, BadRequestException {
         final JwtResponse token = authServiceMobile.registration(user);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/registration/web")
     public ResponseEntity<JwtResponse> registrationWeb(@RequestBody UserDto user) throws AuthException,
-            NotFoundException, UserException, BadRequestException {
+            NotFoundException, BadRequestException {
         final JwtResponse token = authServiceWeb.registration(user);
         return ResponseEntity.ok(token);
     }
@@ -77,8 +76,6 @@ public class AuthController {
         final JwtResponse token = authServiceMobile.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
-
-
 
 
     @PutMapping("/profile/password/mobile")

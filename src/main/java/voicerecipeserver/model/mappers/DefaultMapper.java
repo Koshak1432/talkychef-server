@@ -42,6 +42,11 @@ public class DefaultMapper extends ModelMapper {
             mapper.map(src -> src.getIngredient().getName(), IngredientsDistributionDto::setName);
         });
 
+        this.typeMap(UserInfo.class, UserProfileDto.class).addMappings(mapper -> {
+            mapper.map(src -> src.getMedia().getId(), UserProfileDto::setMediaId);
+            mapper.map(src -> src.getUser().getUid(), UserProfileDto::setUid);
+        });
+
         this.addConverter(new OffsetDateTimeToLocalDateTimeConverter());
         this.typeMap(Recipe.class, RecipeDto.class).addMappings(
                 m -> {

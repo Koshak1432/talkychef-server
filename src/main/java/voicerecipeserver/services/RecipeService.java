@@ -18,7 +18,7 @@ public interface RecipeService {
     ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException;
 
-    ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException,
+    ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) throws NotFoundException,
             AuthException;
 
     ResponseEntity<Void> deleteRecipe(Long id) throws NotFoundException;

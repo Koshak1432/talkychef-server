@@ -28,22 +28,22 @@ public class CategoryApiController implements CategoryApi {
 
 
     @Override
-    public ResponseEntity<List<CategoryDto>> categoriesGet() throws NotFoundException {
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
         return service.getCategories();
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> categoriesGetById(Long id, Integer limit) throws NotFoundException, AuthException, BadRequestException {
-       return service.getRecipesFromCategory(id, limit);
+    public ResponseEntity<List<RecipeDto>> getCategoryRecipes(Long id, Integer limit, Integer page)  {
+       return service.getRecipesFromCategory(id, limit, page);
     }
 
     @Override
-    public ResponseEntity<Void> categoriesDeleteByCategoryAndRecipeId(Long id, Long recipeId) throws NotFoundException {
+    public ResponseEntity<Void> deleteRecipeFromCategory(Long id, Long recipeId) {
         return service.deleteRecipesFromCategory(id, recipeId);
     }
 
     @Override
-    public ResponseEntity<Void> addCategoryToRecipe(Long id, Long categoryId) throws NotFoundException, AuthException, BadRequestException {
+    public ResponseEntity<Void> addCategoryToRecipe(Long id, Long categoryId) {
         return service.addCategoryToRecipe(id, categoryId);
     }
 }
