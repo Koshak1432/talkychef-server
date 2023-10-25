@@ -25,19 +25,24 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
             """, nativeQuery = true)
     List<Collection> findByNameContaining(Long limit, String namePart);
 
-    @Modifying()
+    Optional<Collection> findCollectionByName(String name);
+
+    @Modifying
     @Query(value = """
             INSERT INTO collections_distribution(collection_id, recipe_id) VALUES (:collectionId, :recipeId);
             UPDATE collections
             SET number = number + 1
-            WHERE  id=:collectionId
+            WHERE id = :collectionId
             """, nativeQuery = true)
     void addRecipeToCollection(long recipeId, long collectionId);
 
     @Modifying
     @Query(value = """
             DELETE FROM collections_distribution
-            WHERE  collection_id = :collectionId AND recipe_id = :recipeId
+            WHERE  (collection_id = :collectionId AND recipe_id = :recipeId);
+            UPDATE collections
+            SET number = number - 1
+            WHERE id = :collectionId
             """, nativeQuery = true)
     void deleteRecipeFromCollection(Long recipeId, Long collectionId);
 
