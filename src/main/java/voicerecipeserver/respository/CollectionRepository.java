@@ -49,6 +49,13 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
     List<Collection> findByAuthorId(Long id);
 
     @Query(value = """
+                SELECT * FROM collections
+                WHERE author_id = :id
+                LIMIT :limit OFFSET :limit * :page
+            """, nativeQuery = true)
+    List<Collection> findByAuthorIdWithOffset(Long id, int limit, int page);
+
+    @Query(value = """
             SELECT * FROM collections
             JOIN collections_distribution cd ON collections.id = cd.collection_id
             WHERE recipe_id = :recipeId AND collection_id = :collectionId

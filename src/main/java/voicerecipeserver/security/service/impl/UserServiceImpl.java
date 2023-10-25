@@ -20,6 +20,7 @@ import voicerecipeserver.respository.*;
 import voicerecipeserver.security.config.BeanConfig;
 import voicerecipeserver.security.service.UserService;
 import voicerecipeserver.utils.FindUtils;
+import voicerecipeserver.utils.GetUtil;
 
 import java.util.*;
 
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException {
+    public ResponseEntity<IdDto> addUser(UserDto userDto) throws NotFoundException {
         User user = mapper.map(userDto, User.class);
         user.setId(null);
         user.setUid(userDto.getLogin());
@@ -70,6 +71,7 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         UserInfo userInfo = new UserInfo();
         userInfo.setUser(user);
+        userInfo.setEmail(userDto.getEmail());
         userInfo.setDisplayName(userDto.getDisplayName());
         userInfoRepository.save(userInfo);
         return ResponseEntity.ok(new IdDto().id(savedUser.getId()));
@@ -94,10 +96,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<List<UserProfileDto>> getUserProfilesByPartLogin(String login, Integer limit, Integer page) throws
             NotFoundException {
-        int trueLimit = (limit == null) ? Constants.MAX_ITEMS_PER_PAGE : limit;
-        int truePage = (page == null) ? 0 : page;
         List<UserProfileDto> userProfileDtos = new ArrayList<>();
-        List<User> users = userRepository.findByUidContaining(login, trueLimit, truePage);
+        List<User> users = userRepository.findByUidContaining(login, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
         for (User user : users) {
             UserInfo userInfo = FindUtils.findUserInfoById(userInfoRepository, user.getId());
             UserProfileDto userProfileDto = mapper.map(userInfo, UserProfileDto.class);
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException,
+    public ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) throws BadRequestException,
             NotFoundException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("No rights");
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("No rights");
         }

@@ -27,28 +27,28 @@ public class ProfileApiController implements ProfileApi {
 
 
     @Override
-    public ResponseEntity<UserProfileDto> profileGet() throws NotFoundException {
+    public ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException {
         return userService.getCurrentUserProfile();
     }
 
     @Override
-    public ResponseEntity<IdDto> profilePut(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
-        return userService.profileUpdate(profileDto);
+    public ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+        return userService.updateProfile(profileDto);
     }
 
     @Override
-    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
-        return userService.profilePost(profileDto);
+    public ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+        return userService.addProfile(profileDto);
     }
 
     @Override
-    public ResponseEntity<List<UserProfileDto>> profilesByPartUidGet(String login, Integer limit, Integer page) throws
+    public ResponseEntity<List<UserProfileDto>> getProfilesByPartUid(String login, Integer limit, Integer page) throws
             NotFoundException {
         return userService.getUserProfilesByPartLogin(login, limit, page);
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> profileByUidGet(String login) throws NotFoundException {
+    public ResponseEntity<UserProfileDto> getProfileByUid(String login) throws NotFoundException {
         return userService.getUserProfileByLogin(login);
     }
 

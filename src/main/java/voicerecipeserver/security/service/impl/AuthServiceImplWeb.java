@@ -49,7 +49,6 @@ public class AuthServiceImplWeb implements AuthService {
         }
     }
 
-
     public JwtResponse getAccessToken(@NonNull String refreshToken) throws NotFoundException {
         JwtResponse jwtResponse = new JwtResponse();
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
@@ -91,7 +90,7 @@ public class AuthServiceImplWeb implements AuthService {
         if (userRepository.findByUid(userDto.getLogin()).isPresent()) {
             throw new AuthException("User already exists");
         }
-        userServiceImpl.postUser(userDto);
+        userServiceImpl.addUser(userDto);
         User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponseAndFillCookie(user);
     }

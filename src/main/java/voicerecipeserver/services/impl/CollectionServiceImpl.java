@@ -19,6 +19,7 @@ import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.CollectionService;
 import voicerecipeserver.utils.FindUtils;
+import voicerecipeserver.utils.GetUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -122,29 +123,33 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<List<CollectionDto>> getCollections(String login) throws NotFoundException {
+    public ResponseEntity<List<CollectionDto>> getCollections(String login, Integer limit, Integer page) throws
+            NotFoundException {
         String findLogin = login == null ? AuthServiceCommon.getUserLogin() : login;
         User user = FindUtils.findUserByUid(userRepository, findLogin);
-        List<Collection> collections = collectionRepository.findByAuthorId(user.getId());
+        List<Collection> collections = collectionRepository.findByAuthorIdWithOffset(user.getId(),
+                                                                                     GetUtil.getCurrentLimit(limit),
+                                                                                     GetUtil.getCurrentPage(page));
         List<CollectionDto> collectionDtos = collections.stream().map(
                 collection -> mapper.map(collection, CollectionDto.class)).toList();
         return ResponseEntity.ok(collectionDtos);
     }
 
-    // todo limit = pageNum wtf?
     @Override
-    public ResponseEntity<List<CollectionDto>> getCollectionsByName(String name, Long limit) throws
+    public ResponseEntity<List<CollectionDto>> getCollectionsByName(String name, Integer limit, Integer page) {
+        List<Collection> collections = collectionRepository.findByNameContaining(name, GetUtil.getCurrentLimit(limit),
+                                                                                 GetUtil.getCurrentPage(page));
+        List<CollectionDto> collectionDtos = collections.stream().map(
+                collection -> mapper.map(collection, CollectionDto.class)).toList();
+        return ResponseEntity.ok(collectionDtos);
+    }
+
+    @Override
+    public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id, Integer limit, Integer page) throws
             NotFoundException {
-        List<Collection> collections = FindUtils.findCollectionsByName(collectionRepository, name, limit);
-        List<CollectionDto> collectionDtos = collections.stream().map(
-                collection -> mapper.map(collection, CollectionDto.class)).toList();
-        return ResponseEntity.ok(collectionDtos);
-    }
-
-    @Override
-    public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id) throws NotFoundException {
         FindUtils.findCollectionById(collectionRepository, id);
-        List<Recipe> recipes = recipeRepository.findByCollectionId(id);
+        List<Recipe> recipes = recipeRepository.findByCollectionId(id, GetUtil.getCurrentLimit(limit),
+                                                                   GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(element -> mapper.map(element, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
@@ -163,13 +168,5 @@ public class CollectionServiceImpl implements CollectionService {
         }
         collectionRepository.addRecipeToCollection(recipeId, likedCollection.getId());
         return ResponseEntity.ok(new IdDto().id(likedCollection.getId()));
-    }
-
-    private List<Collection> findCollectionsByName(String name, Long limit) throws NotFoundException {
-        List<Collection> collections = collectionRepository.findByNameContaining(limit, name);
-        if (collections.isEmpty()) {
-            throw new NotFoundException("Couldn't find collections with substring: " + name);
-        }
-        return collections;
     }
 }

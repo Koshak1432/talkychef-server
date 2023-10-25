@@ -13,6 +13,7 @@ import voicerecipeserver.model.entities.Recipe;
 import voicerecipeserver.respository.CategoryRepository;
 import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.services.CategoryService;
+import voicerecipeserver.utils.GetUtil;
 
 import java.util.List;
 
@@ -41,9 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit,
                                                                   Integer page) { //todo проверить на пустой категории
-        int trueLimit = (limit == null) ? Constants.MAX_ITEMS_PER_PAGE : limit;
-        int truePage = (page == null) ? 0 : page;
-        List<Recipe> recipes = recipeRepository.findByCategoryId(id, trueLimit, truePage);
+        List<Recipe> recipes = recipeRepository.findByCategoryId(id, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(
                 element -> modelMapper.map(element, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
@@ -51,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteRecipesFromCategory(Long id, Long recipeId) {
+    public ResponseEntity<Void> deleteRecipeFromCategory(Long id, Long recipeId) {
         categoryRepository.deleteByCategoryRecipeId(id, recipeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

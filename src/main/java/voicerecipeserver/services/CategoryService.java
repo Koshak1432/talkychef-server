@@ -11,7 +11,7 @@ public interface CategoryService {
 
     ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit, Integer page);
 
-    ResponseEntity<Void> deleteRecipesFromCategory(Long id, Long recipeId);
+    ResponseEntity<Void> deleteRecipeFromCategory(Long id, Long recipeId);
 
     ResponseEntity<Void> addCategoryToRecipe(Long id, Long categoryId);
 }

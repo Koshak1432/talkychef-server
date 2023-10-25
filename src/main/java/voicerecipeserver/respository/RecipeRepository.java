@@ -71,6 +71,7 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                 SELECT recipes.* FROM recipes
                 JOIN collections_distribution distr ON recipes.id = distr.recipe_id
                 WHERE collection_id = :id
+                LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
-    List<Recipe> findByCollectionId(Long id);
+    List<Recipe> findByCollectionId(Long id, int limit, int page);
 }

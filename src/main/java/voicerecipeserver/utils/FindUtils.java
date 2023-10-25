@@ -63,15 +63,6 @@ public class FindUtils {
                 () -> new NotFoundException("Couldn't find selection with id " + id));
     }
 
-    public static List<Collection> findCollectionsByName(CollectionRepository repository, String name,
-                                                         Long limit) throws NotFoundException {
-        List<Collection> collections = repository.findByNameContaining(limit, name);
-        if (collections.isEmpty()) {
-            throw new NotFoundException("Couldn't find collections with substring: " + name);
-        }
-        return collections;
-    }
-
     public static UserInfo findUserInfoById(UserInfoRepository repository, Long id) throws NotFoundException {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find user info"));
     }

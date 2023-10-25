@@ -24,26 +24,26 @@ public interface ProfileApi {
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<UserProfileDto> profileGet() throws NotFoundException;
+    ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException;
 
     @PutMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<IdDto> profilePut(@RequestBody UserProfileDto profileDto) throws BadRequestException,
+    ResponseEntity<IdDto> updateProfile(@RequestBody UserProfileDto profileDto) throws BadRequestException,
             NotFoundException;
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<IdDto> profilePost(@RequestBody UserProfileDto profileDto) throws BadRequestException,
+    ResponseEntity<IdDto> addProfile(@RequestBody UserProfileDto profileDto) throws BadRequestException,
             NotFoundException;
 
     @GetMapping("/search/{login}")
-    ResponseEntity<List<UserProfileDto>> profilesByPartUidGet(
+    ResponseEntity<List<UserProfileDto>> getProfilesByPartUid(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login,
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit,
             @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws NotFoundException;
 
     @GetMapping("/{login}")
-    ResponseEntity<UserProfileDto> profileByUidGet(
+    ResponseEntity<UserProfileDto> getProfileByUid(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login) throws
             NotFoundException;
 

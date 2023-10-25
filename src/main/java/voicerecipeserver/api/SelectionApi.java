@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping(Constants.BASE_API_PATH + "/selections")
 public interface SelectionApi {
     @GetMapping
-    ResponseEntity<List<SelectionDto>> getAllSelections() ;
+    ResponseEntity<List<SelectionDto>> getAllSelections();
 
     @GetMapping(value = "/{id}")
     ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(@PathVariable(value = "id") @Positive Long id) throws

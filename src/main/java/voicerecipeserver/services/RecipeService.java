@@ -23,7 +23,7 @@ public interface RecipeService {
 
     ResponseEntity<Void> deleteRecipe(Long id) throws NotFoundException;
 
-    ResponseEntity<List<RecipeDto>> filterContent(Integer limit, Integer page) throws AuthException, NotFoundException;
+    ResponseEntity<List<RecipeDto>> getRecommendations(Integer limit, Integer page) throws AuthException, NotFoundException;
 
-    ResponseEntity<List<CategoryDto>> getCategoriesById(Long id);
+    ResponseEntity<List<CategoryDto>> getCategoriesByRecipeId(Long id);
 }

@@ -11,7 +11,7 @@ import voicerecipeserver.model.exceptions.NotFoundException;
 import java.util.List;
 
 public interface UserService {
-    ResponseEntity<IdDto> postUser(UserDto userDto) throws NotFoundException, BadRequestException;
+    ResponseEntity<IdDto> addUser(UserDto userDto) throws NotFoundException, BadRequestException;
 
     ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException;
 
@@ -20,9 +20,9 @@ public interface UserService {
 
     ResponseEntity<UserProfileDto> getUserProfileByLogin(String login) throws NotFoundException;
 
-    ResponseEntity<IdDto> profileUpdate(UserProfileDto profileDto) throws BadRequestException, NotFoundException;
+    ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException;
 
-    ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException;
+    ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException;
 
     ResponseEntity<Void> sendEmailInstructions(String email) throws NotFoundException;
 

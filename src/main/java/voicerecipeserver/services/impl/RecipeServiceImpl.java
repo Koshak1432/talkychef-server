@@ -20,6 +20,7 @@ import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
 import voicerecipeserver.utils.FindUtils;
+import voicerecipeserver.utils.GetUtil;
 
 import java.util.*;
 
@@ -234,9 +235,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) throws NotFoundException {
-        int trueLimit = (limit == null) ? Constants.MAX_ITEMS_PER_PAGE : limit;
-        int truePage = (page == null) ? 0 : page;
-        List<Recipe> recipes = findRecipesByName(name, trueLimit, truePage);
+        List<Recipe> recipes = findRecipesByName(name, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
@@ -252,14 +251,14 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit, Integer page) throws NotFoundException {
+    public ResponseEntity<List<RecipeDto>> getRecommendations(Integer limit, Integer page) throws NotFoundException {
         SlopeOne recommendAlgSlopeOne = new SlopeOne(mapper, userRepository, markRepository, recipeRepository);
         List<RecipeDto> recipes = recommendAlgSlopeOne.recommendAlgSlopeOne(limit, page);
         return ResponseEntity.ok(recipes);
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getCategoriesById(Long id) {
+    public ResponseEntity<List<CategoryDto>> getCategoriesByRecipeId(Long id) {
         List<Category> categories = categoryRepository.findByRecipeId(id);
         List<CategoryDto> categoryDtos = categories.stream().map(
                 element -> mapper.map(element, CategoryDto.class)).toList();

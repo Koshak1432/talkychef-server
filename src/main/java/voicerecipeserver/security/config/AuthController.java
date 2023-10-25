@@ -1,6 +1,7 @@
 package voicerecipeserver.security.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
@@ -12,18 +13,22 @@ import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
 import voicerecipeserver.security.dto.RefreshJwtRequest;
+import voicerecipeserver.security.service.AuthService;
 import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.security.service.impl.AuthServiceImplWeb;
 
 @RestController
 @RequestMapping(Constants.BASE_API_PATH)
-@RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthServiceImplMobile authServiceMobile;
-    private final AuthServiceImplWeb authServiceWeb;
-    private final UserRepository userRepository;
+    private final AuthService authServiceMobile;
+    private final AuthService authServiceWeb;
 
+    public AuthController(@Qualifier("authServiceImplMobile") AuthService authServiceMobile,
+                          @Qualifier("authServiceImplWeb") AuthService authServiceWeb) {
+        this.authServiceMobile = authServiceMobile;
+        this.authServiceWeb = authServiceWeb;
+    }
 
     @PostMapping("/registration/mobile")
     public ResponseEntity<JwtResponse> registrationMobile(@RequestBody UserDto user) throws AuthException,

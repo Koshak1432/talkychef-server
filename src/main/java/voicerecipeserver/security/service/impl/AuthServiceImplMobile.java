@@ -92,7 +92,7 @@ public class AuthServiceImplMobile implements AuthService {
         if (userRepository.findByUid(userDto.getLogin()).isPresent()) {
             throw new AuthException("User already exists");
         }
-        userServiceImpl.postUser(userDto);
+        userServiceImpl.addUser(userDto);
         User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponse(user);
     }

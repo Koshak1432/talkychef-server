@@ -29,42 +29,40 @@ public class RecipeApiController implements RecipeApi {
 
 
     @Override
-    public ResponseEntity<RecipeDto> recipeIdGet(Long id) throws NotFoundException, AuthException {
+    public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException, AuthException {
         return recipeService.getRecipeById(id);
     }
 
     @Override
-    public ResponseEntity<IdDto> recipePost(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException {
         return recipeService.addRecipe(recipeDto);
     }
 
     @Override
-    public ResponseEntity<IdDto> recipeUpdate(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException {
         return recipeService.updateRecipe(recipeDto);
     }
 
     @Override
-    public ResponseEntity<Void> recipeDelete(Long id) throws NotFoundException {
+    public ResponseEntity<Void> deleteRecipe(Long id) throws NotFoundException {
         return recipeService.deleteRecipe(id);
     }
 
-    public ResponseEntity<List<RecipeDto>> recipeSearchNameGet(String name, Integer limit, Integer page) throws NotFoundException,
+    public ResponseEntity<List<RecipeDto>> getRecipesByName(String name, Integer limit, Integer page) throws NotFoundException,
             AuthException {
         return recipeService.searchRecipesByName(name, limit, page);
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getCategories(Long id) throws NotFoundException, BadRequestException {
-        return recipeService.getCategoriesById(id);
+    public ResponseEntity<List<CategoryDto>> getCategoriesByRecipeId(Long id) {
+        return recipeService.getCategoriesByRecipeId(id);
     }
 
     @Override
     public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit, Integer page) throws
             NotFoundException, AuthException {
-        return recipeService.filterContent(limit, page);
+        return recipeService.getRecommendations(limit, page);
     }
-
-
 }
