@@ -17,16 +17,17 @@ import java.util.List;
 @RequestMapping(Constants.BASE_API_PATH + "/categories")
 public interface CategoryApi {
     @GetMapping
-    ResponseEntity<List<CategoryDto>> categoriesGet() throws NotFoundException;
+    ResponseEntity<List<CategoryDto>> getAllCategories() throws NotFoundException;
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<List<RecipeDto>> categoriesGetById(@PathVariable(value = "id") Long id,
-                                                      @RequestParam(value = "limit", required = false) @PositiveOrZero Integer limit) throws
+    ResponseEntity<List<RecipeDto>> getCategoryRecipes(@PathVariable(value = "id") Long id,
+                                                       @RequestParam(value = "limit", required = false) @PositiveOrZero Integer limit,
+                                                       @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws
             NotFoundException, AuthException, BadRequestException;
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<Void> categoriesDeleteByCategoryAndRecipeId(@PathVariable(value = "id") Long id,
-                                                               @RequestParam(value = "recipe_id") @PositiveOrZero Long recipeId) throws
+    ResponseEntity<Void> deleteRecipeFromCategory(@PathVariable(value = "id") Long id,
+                                                  @RequestParam(value = "recipe_id") @PositiveOrZero Long recipeId) throws
             NotFoundException;
 
     @PostMapping(value = "/recipes/{id}")

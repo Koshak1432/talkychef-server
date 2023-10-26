@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import voicerecipeserver.config.Constants;
 import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IdDto;
 import voicerecipeserver.model.dto.RecipeDto;
@@ -19,6 +20,7 @@ import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
 import voicerecipeserver.utils.FindUtils;
+import voicerecipeserver.utils.GetUtil;
 
 import java.util.*;
 
@@ -110,7 +112,7 @@ public class RecipeServiceImpl implements RecipeService {
             throw new BadRequestException("Media id must be present");
         }
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
-        User author = FindUtils.findUser(userRepository, recipe.getAuthor().getUid());
+        User author = FindUtils.findUserByUid(userRepository, recipe.getAuthor().getUid());
         recipe.setAuthor(author);
         recipe.setId(null);
         checkMediaUniqueness(recipe);
@@ -128,7 +130,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe savedRecipe = recipeRepository.save(recipe);
         Collection recipeCollection = findUserRecipesCollection(author.getId());
         if (recipeCollection == null) {
-            Collection collection = new Collection(author.getUid()+"_saved", 0, author);
+            Collection collection = new Collection(author.getUid() + "_saved", 0, author);
             recipeCollection = collectionRepository.save(collection);
         }
         collectionRepository.addRecipeToCollection(savedRecipe.getId(), recipeCollection.getId());
@@ -143,7 +145,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
-        User author = FindUtils.findUser(userRepository, recipe.getAuthor().getUid());
+        User author = FindUtils.findUserByUid(userRepository, recipe.getAuthor().getUid());
         recipe.setAuthor(author);
     }
 
@@ -222,8 +224,9 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private List<Recipe> findRecipesByName(String name, int limit) throws NotFoundException {
-        List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit);
+    private List<Recipe> findRecipesByName(String name, int limit, int pageNum) throws NotFoundException {
+
+        List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit, pageNum);
         if (recipes.isEmpty()) {
             throw new NotFoundException("Couldn't find recipes with substring: " + name);
         }
@@ -231,11 +234,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException {
-        if (limit == null) {
-            limit = 0;
-        }
-        List<Recipe> recipes = findRecipesByName(name, limit);
+    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) throws NotFoundException {
+        List<Recipe> recipes = findRecipesByName(name, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
@@ -251,14 +251,14 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit, Integer page) throws NotFoundException {
+    public ResponseEntity<List<RecipeDto>> getRecommendations(Integer limit, Integer page) throws NotFoundException {
         SlopeOne recommendAlgSlopeOne = new SlopeOne(mapper, userRepository, markRepository, recipeRepository);
         List<RecipeDto> recipes = recommendAlgSlopeOne.recommendAlgSlopeOne(limit, page);
         return ResponseEntity.ok(recipes);
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getCategoriesById(Long id) {
+    public ResponseEntity<List<CategoryDto>> getCategoriesByRecipeId(Long id) {
         List<Category> categories = categoryRepository.findByRecipeId(id);
         List<CategoryDto> categoryDtos = categories.stream().map(
                 element -> mapper.map(element, CategoryDto.class)).toList();

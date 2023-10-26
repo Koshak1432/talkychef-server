@@ -38,7 +38,7 @@ public class AuthServiceImplMobile implements AuthService {
     }
 
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException, NotFoundException {
-        User user = FindUtils.findUser(userRepository, authRequest.getLogin());
+        User user = FindUtils.findUserByUid(userRepository, authRequest.getLogin());
         if (passwordEncoder.getPasswordEncoder().matches(authRequest.getPassword(), user.getPassword())) {
             return getJwtResponse(user);
         } else {
@@ -61,7 +61,7 @@ public class AuthServiceImplMobile implements AuthService {
             final String login = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                User user = FindUtils.findUser(userRepository, login);
+                User user = FindUtils.findUserByUid(userRepository, login);
                 final String accessToken = jwtProviderImpl.generateAccessToken(user);
                 JwtResponse jwtResponse = new JwtResponse();
                 jwtResponse.accessToken(accessToken);
@@ -77,7 +77,7 @@ public class AuthServiceImplMobile implements AuthService {
             final String login = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                User user = FindUtils.findUser(userRepository, login);
+                User user = FindUtils.findUserByUid(userRepository, login);
                 return getJwtResponse(user);
             }
         }
@@ -92,8 +92,8 @@ public class AuthServiceImplMobile implements AuthService {
         if (userRepository.findByUid(userDto.getLogin()).isPresent()) {
             throw new AuthException("User already exists");
         }
-        userServiceImpl.postUser(userDto);
-        User user = FindUtils.findUser(userRepository, userDto.getLogin());
+        userServiceImpl.addUser(userDto);
+        User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponse(user);
     }
 
@@ -102,7 +102,7 @@ public class AuthServiceImplMobile implements AuthService {
             throw new AuthException("No rights");
         }
         userServiceImpl.updateUserPassword(userDto);
-        User user = FindUtils.findUser(userRepository, userDto.getLogin());
+        User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponse(user);
     }
 

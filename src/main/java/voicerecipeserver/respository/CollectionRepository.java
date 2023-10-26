@@ -21,9 +21,9 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
                     WHERE name ILIKE '% ' || :namePart || '%'
                     ORDER BY name
                 )
-                LIMIT :limit
+                LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
-    List<Collection> findByNameContaining(Long limit, String namePart);
+    List<Collection> findByNameContaining(String namePart, int limit, int page);
 
     Optional<Collection> findCollectionByName(String name);
 
@@ -47,6 +47,13 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
     void deleteRecipeFromCollection(Long recipeId, Long collectionId);
 
     List<Collection> findByAuthorId(Long id);
+
+    @Query(value = """
+                SELECT * FROM collections
+                WHERE author_id = :id
+                LIMIT :limit OFFSET :limit * :page
+            """, nativeQuery = true)
+    List<Collection> findByAuthorIdWithOffset(Long id, int limit, int page);
 
     @Query(value = """
             SELECT * FROM collections

@@ -6,15 +6,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.ProfileApi;
 import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.dto.UserProfileDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.security.service.UserService;
-import voicerecipeserver.services.RecipeService;
 
 import java.util.List;
 
@@ -30,22 +27,29 @@ public class ProfileApiController implements ProfileApi {
 
 
     @Override
-    public ResponseEntity<UserProfileDto> profileGet() throws Exception {
-        return userService.getUserProfile();
+    public ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException {
+        return userService.getCurrentUserProfile();
     }
 
     @Override
-    public ResponseEntity<IdDto> profilePut(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
-        return userService.profileUpdate(profileDto);
-    }
-    @Override
-    public ResponseEntity<IdDto> profilePost(UserProfileDto profileDto) throws BadRequestException, NotFoundException, UserException {
-        return userService.profilePost(profileDto);
+    public ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+        return userService.updateProfile(profileDto);
     }
 
     @Override
-    public ResponseEntity<List<UserProfileDto>> profileByUidGet(String login, Integer limit) throws Exception {
-        return userService.getUserProfile(login, limit);
+    public ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+        return userService.addProfile(profileDto);
+    }
+
+    @Override
+    public ResponseEntity<List<UserProfileDto>> getProfilesByPartUid(String login, Integer limit, Integer page) throws
+            NotFoundException {
+        return userService.getUserProfilesByPartLogin(login, limit, page);
+    }
+
+    @Override
+    public ResponseEntity<UserProfileDto> getProfileByUid(String login) throws NotFoundException {
+        return userService.getUserProfileByLogin(login);
     }
 
     @Override
@@ -59,7 +63,8 @@ public class ProfileApiController implements ProfileApi {
     }
 
     @Override
-    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, BadRequestException, AuthException {
+    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException,
+            BadRequestException, AuthException {
         return userService.changePassword(token, userDto);
 
     }

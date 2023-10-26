@@ -21,51 +21,57 @@ import java.util.List;
 public interface CollectionApi {
 
     @GetMapping
-    ResponseEntity<List<CollectionDto>> collectionGet(
-            @RequestParam(value = "login", required = false) String login) throws NotFoundException;
+    ResponseEntity<List<CollectionDto>> getUserCollections(
+            @RequestParam(value = "login", required = false) String login,
+            @RequestParam(value = "limit", required = false) @PositiveOrZero Integer limit,
+            @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws NotFoundException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
-    ResponseEntity<IdDto> collectionPost(@Valid @RequestBody CollectionDto body) throws NotFoundException;
+    ResponseEntity<IdDto> addCollection(@Valid @RequestBody CollectionDto body) throws NotFoundException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @DeleteMapping
-    ResponseEntity<Void> collectionDelete(@RequestParam @PositiveOrZero Long id) throws NotFoundException,
+    ResponseEntity<Void> deleteCollection(@RequestParam @PositiveOrZero Long id) throws NotFoundException,
             AuthException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PutMapping
-    ResponseEntity<IdDto> collectionPut(@RequestParam("collection_id") @PositiveOrZero Long id,
-                                        @Valid @RequestBody CollectionDto body) throws NotFoundException, AuthException;
-
+    ResponseEntity<IdDto> updateCollection(@RequestParam("collection_id") @PositiveOrZero Long id,
+                                           @Valid @RequestBody CollectionDto body) throws NotFoundException,
+            AuthException;
 
     @PostMapping(value = "/liked")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<IdDto> collectionLikedRecipePost(@RequestParam("recipe_id") @PositiveOrZero Long id) throws NotFoundException, AuthException;
+    ResponseEntity<IdDto> addRecipeToLiked(@RequestParam("recipe_id") @PositiveOrZero Long id) throws NotFoundException,
+            AuthException;
 
     @PostMapping(value = "/content")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<Void> collectionContentPost(@RequestParam("recipe_id") @PositiveOrZero Long recipeId,
+    ResponseEntity<Void> addRecipeToCollection(@RequestParam("recipe_id") @PositiveOrZero Long recipeId,
                                                @RequestParam("collection_id") @NotBlank Long collectionId) throws
             NotFoundException, AuthException;
 
 
     @DeleteMapping(value = "/content")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<Void> collectionContentDelete(@RequestParam("recipe_id") @PositiveOrZero Long recipeId,
-                                                 @RequestParam("collection_id") @NotBlank Long collectionId) throws
+    ResponseEntity<Void> deleteRecipeFromCollection(@RequestParam("recipe_id") @PositiveOrZero Long recipeId,
+                                                    @RequestParam("collection_id") @NotBlank Long collectionId) throws
             NotFoundException, AuthException;
 
     @GetMapping(value = "/search")
-    ResponseEntity<CollectionDto> collectionGetByName(@RequestParam(value = "collection_id") Long collectionId) throws
+    ResponseEntity<CollectionDto> getCollectionById(@RequestParam(value = "collection_id") Long collectionId) throws
             NotFoundException, AuthException, BadRequestException;
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<List<RecipeDto>> getRecipesFromCollection(@PathVariable(value = "id") Long id) throws
+    ResponseEntity<List<RecipeDto>> getRecipesFromCollection(@PathVariable(value = "id") Long id,
+                                                             @RequestParam(value = "limit", required = false) @PositiveOrZero Integer limit,
+                                                             @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws
             NotFoundException, AuthException, BadRequestException;
 
     @GetMapping(value = "/search/{name}")
-    ResponseEntity<List<CollectionDto>> collectionGetByName(@PathVariable(value = "name") String name,
-                                                            @RequestParam(value = "limit", required = false) @PositiveOrZero Long limit) throws
+    ResponseEntity<List<CollectionDto>> getCollectionsByName(@PathVariable(value = "name") String name,
+                                                             @RequestParam(value = "limit", required = false) @PositiveOrZero Integer limit,
+                                                             @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws
             NotFoundException, AuthException, BadRequestException;
 }
