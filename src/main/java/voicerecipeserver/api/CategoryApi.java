@@ -26,12 +26,12 @@ public interface CategoryApi {
             NotFoundException, AuthException, BadRequestException;
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<Void> deleteRecipeFromCategory(@PathVariable(value = "id") Long id,
+    ResponseEntity<Void> deleteRecipeFromCategory(@PathVariable(value = "id") Long categoryId,
                                                   @RequestParam(value = "recipe_id") @PositiveOrZero Long recipeId) throws
-            NotFoundException;
+            NotFoundException, AuthException;
 
     @PostMapping(value = "/recipes/{id}")
-    ResponseEntity<Void> addCategoryToRecipe(@PathVariable(value = "id") Long id,
+    ResponseEntity<Void> addCategoryToRecipe(@PathVariable(value = "id") Long recipeId,
                                              @RequestParam(value = "category_id") Long categoryId) throws
             NotFoundException, AuthException, BadRequestException;
 
