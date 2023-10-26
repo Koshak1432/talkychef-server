@@ -90,6 +90,7 @@ public class AuthServiceImplWeb implements AuthService {
         if (userRepository.findByUid(userDto.getLogin()).isPresent()) {
             throw new AuthException("User already exists");
         }
+        AuthServiceCommon.checkRegisterConstraints(userDto);
         userServiceImpl.addUser(userDto);
         User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponseAndFillCookie(user);

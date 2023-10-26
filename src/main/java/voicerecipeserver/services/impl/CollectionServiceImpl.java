@@ -22,7 +22,6 @@ import voicerecipeserver.utils.FindUtils;
 import voicerecipeserver.utils.GetUtil;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -157,16 +156,17 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     @Transactional
     public ResponseEntity<IdDto> postLikedRecipe(Long recipeId) throws NotFoundException {
+        FindUtils.findRecipe(recipeRepository, recipeId);
         String login = AuthServiceCommon.getUserLogin();
-        Collection likedCollection;
-        Optional<Collection> optional = collectionRepository.findCollectionByName(login + "_liked");
-        if (optional.isEmpty()) {
-            Collection collection = new Collection(login + "_liked", 0, FindUtils.findUserByUid(userRepository, login));
-            likedCollection = collectionRepository.save(collection);
-        } else {
-            likedCollection = optional.get();
+        String likedName = login + "_liked";
+        Collection likedCollection = collectionRepository.findCollectionByName(likedName).orElse(null);
+        if (likedCollection == null) {
+            likedCollection = collectionRepository.save(
+                    new Collection(likedName, 0, FindUtils.findUserByUid(userRepository, login)));
         }
-        collectionRepository.addRecipeToCollection(recipeId, likedCollection.getId());
+        if (collectionRepository.findRecipeInCollection(recipeId, likedCollection.getId()).isEmpty()) {
+            collectionRepository.addRecipeToCollection(recipeId, likedCollection.getId());
+        }
         return ResponseEntity.ok(new IdDto().id(likedCollection.getId()));
     }
 }

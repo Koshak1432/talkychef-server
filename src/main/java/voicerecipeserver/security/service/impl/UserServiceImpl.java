@@ -59,8 +59,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> addUser(UserDto userDto) throws NotFoundException {
+    public ResponseEntity<IdDto> addUser(UserDto userDto) throws NotFoundException, BadRequestException {
         User user = mapper.map(userDto, User.class);
+        if (userInfoRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            throw new BadRequestException("Email is already registered");
+        }
+        if (userRepository.findByUid(userDto.getLogin()).isPresent()) {
+            throw new BadRequestException("Login is already registered");
+        }
         user.setId(null);
         user.setUid(userDto.getLogin());
         Role userRole = findRole("USER");
