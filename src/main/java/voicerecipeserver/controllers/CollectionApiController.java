@@ -53,7 +53,7 @@ public class CollectionApiController implements CollectionApi {
     }
 
     @Override
-    public ResponseEntity<IdDto> collectionLikedRecipePost(Long recipeId) throws NotFoundException, AuthException {
+    public ResponseEntity<IdDto> collectionLikedRecipePost(Long recipeId) throws NotFoundException {
         return service.postLikedRecipe(recipeId);
     }
 

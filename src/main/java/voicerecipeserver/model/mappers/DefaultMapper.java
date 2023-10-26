@@ -64,5 +64,4 @@ public class DefaultMapper extends ModelMapper {
             return null;
         }
     }
-
 }

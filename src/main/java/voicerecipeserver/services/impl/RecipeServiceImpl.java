@@ -125,7 +125,6 @@ public class RecipeServiceImpl implements RecipeService {
             throw new NotFoundException("Couldn't find media with id: " + recipe.getMedia().getId());
         }
 
-        System.out.println(recipe);
         Recipe savedRecipe = recipeRepository.save(recipe);
         Collection recipeCollection = findUserRecipesCollection(author.getId());
         if (recipeCollection == null) {
@@ -134,7 +133,6 @@ public class RecipeServiceImpl implements RecipeService {
         }
         collectionRepository.addRecipeToCollection(savedRecipe.getId(), recipeCollection.getId());
         return ResponseEntity.ok(new IdDto().id(savedRecipe.getId()));
-
     }
 
     private Collection findUserRecipesCollection(Long id) {
