@@ -20,9 +20,6 @@ public interface CommentApi {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto) throws NotFoundException;
 
-    // TODO мб следует ещё один эксепшн с другим кодом создать, чтобы различать not found recipe и not found comment
-    // или же просто говорить что всё ок(так плохо делать)
-
     @PutMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     ResponseEntity<IdDto> commentUpdate(@RequestBody CommentDto commentDto) throws NotFoundException,

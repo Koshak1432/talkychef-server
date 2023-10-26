@@ -46,7 +46,6 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
             """, nativeQuery = true)
     void deleteRecipeFromCollection(Long recipeId, Long collectionId);
 
-    List<Collection> findByAuthorId(Long id);
 
     @Query(value = """
                 SELECT * FROM collections
@@ -60,7 +59,7 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
             JOIN collections_distribution cd ON collections.id = cd.collection_id
             WHERE recipe_id = :recipeId AND collection_id = :collectionId
               """, nativeQuery = true)
-    Optional<Collection> findRecipe(Long recipeId, Long collectionId);
+    Optional<Collection> findRecipeInCollection(Long recipeId, Long collectionId);
 
     @Query(value = """
             SELECT * FROM collections
