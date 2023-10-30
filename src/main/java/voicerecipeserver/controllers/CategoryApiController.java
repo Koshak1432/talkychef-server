@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import voicerecipeserver.api.CategoryApi;
 import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.RecipeDto;
+import voicerecipeserver.model.exceptions.AuthException;
+import voicerecipeserver.model.exceptions.NotFoundException;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.CategoryService;
 
 import java.util.List;
@@ -32,12 +35,14 @@ public class CategoryApiController implements CategoryApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipeFromCategory(Long id, Long recipeId) {
-        return service.deleteRecipeFromCategory(id, recipeId);
+    public ResponseEntity<Void> deleteRecipeFromCategory(Long categoryId, Long recipeId) throws NotFoundException,
+            AuthException {
+        return service.deleteRecipeFromCategory(categoryId, recipeId);
     }
 
     @Override
-    public ResponseEntity<Void> addCategoryToRecipe(Long id, Long categoryId) {
-        return service.addCategoryToRecipe(id, categoryId);
+    public ResponseEntity<Void> addCategoryToRecipe(Long recipeId, Long categoryId) throws AuthException,
+            NotFoundException {
+        return service.addCategoryToRecipe(recipeId, categoryId);
     }
 }
