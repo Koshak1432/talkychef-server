@@ -218,19 +218,9 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private List<Recipe> findRecipesByName(String name, int limit, int pageNum) throws NotFoundException {
-
-        List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit, pageNum);
-        if (recipes.isEmpty()) {
-            throw new NotFoundException("Couldn't find recipes with substring: " + name);
-        }
-        return recipes;
-    }
-
     @Override
-    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) throws
-            NotFoundException {
-        List<Recipe> recipes = findRecipesByName(name, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
+    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) {
+        List<Recipe> recipes = recipeRepository.findByNameContaining(name, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
