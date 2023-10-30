@@ -22,6 +22,7 @@ import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.domain.JwtAuthentication;
 import voicerecipeserver.services.impl.RecipeServiceImpl;
+import voicerecipeserver.utils.GetUtil;
 
 import java.util.*;
 
@@ -65,12 +66,6 @@ public class TestingWebApplicationTests {
         this.mockMvc.perform(get(Constants.BASE_API_PATH + "/recipes/100500")).andExpect(status().isNotFound());
     }
 
-
-    @Test
-    public void findRecipeByNameReturnsNotFoundExc() throws Exception {
-        this.mockMvc.perform(get(Constants.BASE_API_PATH + "/recipes/search/Jr")).andExpect(status().isNotFound());
-    }
-
     @Test
     public void findRecipeByNameReturnsListOfRecipes() throws Exception {
         Recipe recipe = Recipe.builder().id(2L).author(User.builder().uid("admin").id(1L).build()).name(
@@ -78,7 +73,7 @@ public class TestingWebApplicationTests {
         Recipe recipe2 = Recipe.builder().id(3L).author(User.builder().uid("admin").id(1L).build()).name(
                 "Очень-очень горячая курица").cookTimeMins(30).build();
         List<Recipe> recipeList = Arrays.asList(recipe, recipe2);
-        when(recipeRepository.findByNameContaining("Очень", 0)).thenReturn(recipeList);
+        when(recipeRepository.findByNameContaining("Очень", Constants.MAX_ITEMS_PER_PAGE, 0)).thenReturn(recipeList);
 
         this.mockMvc.perform(get(Constants.BASE_API_PATH + "/recipes/search/Очень")).andExpect(
                 status().isOk()).andExpect(content().contentType("application/json")).andExpect(

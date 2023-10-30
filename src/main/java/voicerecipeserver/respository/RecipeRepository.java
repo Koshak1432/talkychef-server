@@ -24,9 +24,9 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                     WHERE name ILIKE '% ' || :namePart || '%'
                     ORDER BY name
                 )
-                LIMIT :limit
+                LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
-    List<Recipe> findByNameContaining(@Param("namePart") String inline, Integer limit);
+    List<Recipe> findByNameContaining(String namePart, int limit, int page);
 
     // https://medium.com/swlh/sql-pagination-you-are-probably-doing-it-wrong-d0f2719cc166 - performance issue
     // вообще хотелось бы этот метод в репозиторий коллекций добавить, но там проблема с конвертацией.
@@ -35,9 +35,9 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                 JOIN collections_distribution distr ON recipes.id = distr.recipe_id
                 WHERE distr.collection_id = :collectionId
                 ORDER BY distr.recipe_id
-                LIMIT :numRecipes OFFSET :offset
+                LIMIT :numRecipes OFFSET :numRecipes * :page
             """, nativeQuery = true)
-    List<Recipe> findRecipesWithOffsetFromCollectionById(int numRecipes, int offset, long collectionId);
+    List<Recipe> findRecipesWithOffsetFromCollectionById(int numRecipes, int page, long collectionId);
 
     Optional<Recipe> findRecipeByMediaId(Long mediaId);
 
@@ -55,22 +55,23 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                FROM recipes
                JOIN avg_marks ON recipes.id = avg_marks.recipe_id
                ORDER BY avg_mark DESC
-               LIMIT :limit OFFSET :offset
+               LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
-    List<Recipe> findTopRecipesWithLimitAndOffset(int limit, int offset);
+    List<Recipe> findTopRecipesWithLimitAndOffset(int limit, int page);
 
     @Query(value = """
                 SELECT recipes.* FROM recipes
                 JOIN categories_distribution distr ON recipes.id = distr.recipe_id
                 WHERE category_id = :id
-                LIMIT :limit
+                LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
-    List<Recipe> findByCategoryId(Long id, Integer limit);
+    List<Recipe> findByCategoryId(Long id, int limit, int page);
 
     @Query(value = """
                 SELECT recipes.* FROM recipes
                 JOIN collections_distribution distr ON recipes.id = distr.recipe_id
                 WHERE collection_id = :id
+                LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
-    List<Recipe> findByCollectionId(Long id);
+    List<Recipe> findByCollectionId(Long id, int limit, int page);
 }

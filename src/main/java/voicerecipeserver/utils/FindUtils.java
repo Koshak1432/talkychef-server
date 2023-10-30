@@ -11,9 +11,13 @@ public class FindUtils {
     private FindUtils() {
     }
 
-    public static User findUser(UserRepository repository, String userUid) throws NotFoundException {
+    public static User findUserByUid(UserRepository repository, String userUid) throws NotFoundException {
         return repository.findByUid(userUid).orElseThrow(
                 () -> new NotFoundException("Couldn't find user with uid: " + userUid));
+    }
+
+    public static User findUserById(UserRepository repository, Long id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find user with id: " + id));
     }
 
     public static UserInfo findUserByToken(UserInfoRepository userInfoRepository, String token) throws
@@ -22,6 +26,9 @@ public class FindUtils {
                 () -> new NotFoundException("Couldn't find user with token: " + token));
     }
 
+    public static Category findCategory(CategoryRepository repository, Long id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find category with id: " + id));
+    }
 
     public static Recipe findRecipe(RecipeRepository repository, Long id) throws NotFoundException {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find recipe with id: " + id));
@@ -59,14 +66,7 @@ public class FindUtils {
                 () -> new NotFoundException("Couldn't find selection with id " + id));
     }
 
-    public static List<Collection> findCollectionsByName(CollectionRepository repository, String name,
-                                                         Long limit) throws NotFoundException {
-        List<Collection> collections = repository.findByNameContaining(limit, name);
-        if (collections.isEmpty()) {
-            throw new NotFoundException("Couldn't find collections with substring: " + name);
-        }
-        return collections;
+    public static UserInfo findUserInfoById(UserInfoRepository repository, Long id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find user info"));
     }
-
-
 }

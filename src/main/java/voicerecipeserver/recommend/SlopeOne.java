@@ -17,6 +17,7 @@ import voicerecipeserver.respository.RecipeRepository;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.utils.FindUtils;
+import voicerecipeserver.utils.GetUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,11 +49,9 @@ public class SlopeOne {
     }
 
     public List<RecipeDto> recommendAlgSlopeOne(Integer limit, Integer page) throws NotFoundException {
-        int trueLimit = (limit == null) ? Constants.MAX_RECIPES_PER_PAGE : limit;
-        int truePage = (page == null) ? 0 : page;
         Map<User, HashMap<Recipe, Double>> inputData = initializeData();
         buildDifferencesMatrix(inputData);
-        return predict(inputData, trueLimit, truePage);
+        return predict(inputData, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
     }
 
     private Map<User, HashMap<Recipe, Double>> initializeData() {
@@ -168,7 +167,7 @@ public class SlopeOne {
     private List<RecipeDto> getSortedRecipeDtos(int limit, int page) throws NotFoundException {
         List<RecipeDto> recipeDtos;
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            User user = FindUtils.findUser(userRepository, AuthServiceCommon.getUserLogin());
+            User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
             HashMap<Recipe, Double> outputUserData = outputData.get(user);
             if (outputUserData != null) {
                 List<Recipe> sortedList = outputUserData.entrySet().stream()
@@ -180,11 +179,11 @@ public class SlopeOne {
                 recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
                 }.getType());
             } else {
-                recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimitAndOffset(limit, page * limit), new TypeToken<List<RecipeDto>>() {
+                recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimitAndOffset(limit, page), new TypeToken<List<RecipeDto>>() {
                 }.getType());
             }
         } else {
-            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimitAndOffset(limit, page * limit), new TypeToken<List<RecipeDto>>() {
+            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimitAndOffset(limit, page), new TypeToken<List<RecipeDto>>() {
             }.getType());
         }
 

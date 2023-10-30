@@ -23,42 +23,42 @@ import java.util.List;
 public interface RecipeApi {
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<RecipeDto> recipeIdGet(
+    ResponseEntity<RecipeDto> getRecipeById(
             @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
             NotFoundException, AuthException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
-    ResponseEntity<IdDto> recipePost(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+    ResponseEntity<IdDto> addRecipe(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException;
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PutMapping
-    ResponseEntity<IdDto> recipeUpdate(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException,
+    ResponseEntity<IdDto> updateRecipe(@RequestBody RecipeDto recipeDto) throws NotFoundException, BadRequestException,
             AuthException;
-
 
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<Void> recipeDelete(
+    ResponseEntity<Void> deleteRecipe(
             @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
             NotFoundException, BadRequestException;
 
     @GetMapping(value = "/search/{name}")
-    ResponseEntity<List<RecipeDto>> recipeSearchNameGet(
+    ResponseEntity<List<RecipeDto>> getRecipesByName(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("name") String name,
-            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit) throws
-            NotFoundException, AuthException;
+            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit,
+            @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws NotFoundException,
+            AuthException;
 
     @GetMapping(value = "/{id}/categories")
-    ResponseEntity<List<CategoryDto>> getCategories(
+    ResponseEntity<List<CategoryDto>> getCategoriesByRecipeId(
             @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
             NotFoundException, BadRequestException;
 
 
     @GetMapping
     ResponseEntity<List<RecipeDto>> getRecipesRecommendations(
-            @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit,
+            @RequestParam(value = "limit", required = false) @Positive Integer limit,
             @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws NotFoundException,
             AuthException;
 }

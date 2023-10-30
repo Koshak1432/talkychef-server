@@ -1,6 +1,7 @@
 package voicerecipeserver.security.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import voicerecipeserver.config.Constants;
@@ -8,34 +9,37 @@ import voicerecipeserver.model.dto.UserDto;
 import voicerecipeserver.model.exceptions.AuthException;
 import voicerecipeserver.model.exceptions.BadRequestException;
 import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.model.exceptions.UserException;
 import voicerecipeserver.respository.UserRepository;
 import voicerecipeserver.security.dto.JwtRequest;
 import voicerecipeserver.security.dto.JwtResponse;
 import voicerecipeserver.security.dto.RefreshJwtRequest;
+import voicerecipeserver.security.service.AuthService;
 import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
 import voicerecipeserver.security.service.impl.AuthServiceImplWeb;
 
 @RestController
 @RequestMapping(Constants.BASE_API_PATH)
-@RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthServiceImplMobile authServiceMobile;
-    private final AuthServiceImplWeb authServiceWeb;
-    private final UserRepository userRepository;
+    private final AuthService authServiceMobile;
+    private final AuthService authServiceWeb;
 
+    public AuthController(@Qualifier("authServiceImplMobile") AuthService authServiceMobile,
+                          @Qualifier("authServiceImplWeb") AuthService authServiceWeb) {
+        this.authServiceMobile = authServiceMobile;
+        this.authServiceWeb = authServiceWeb;
+    }
 
     @PostMapping("/registration/mobile")
     public ResponseEntity<JwtResponse> registrationMobile(@RequestBody UserDto user) throws AuthException,
-            NotFoundException, UserException, BadRequestException {
+            NotFoundException, BadRequestException {
         final JwtResponse token = authServiceMobile.registration(user);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/registration/web")
     public ResponseEntity<JwtResponse> registrationWeb(@RequestBody UserDto user) throws AuthException,
-            NotFoundException, UserException, BadRequestException {
+            NotFoundException, BadRequestException {
         final JwtResponse token = authServiceWeb.registration(user);
         return ResponseEntity.ok(token);
     }
@@ -77,8 +81,6 @@ public class AuthController {
         final JwtResponse token = authServiceMobile.getAccessToken(request.getRefreshToken());
         return ResponseEntity.ok(token);
     }
-
-
 
 
     @PutMapping("/profile/password/mobile")

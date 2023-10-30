@@ -41,7 +41,7 @@ public class AuthServiceImplWeb implements AuthService {
     private final UserRepository userRepository;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException, NotFoundException {
-        User user = FindUtils.findUser(userRepository, authRequest.getLogin());
+        User user = FindUtils.findUserByUid(userRepository, authRequest.getLogin());
         if (passwordEncoder.getPasswordEncoder().matches(authRequest.getPassword(), user.getPassword())) {
             return getJwtResponseAndFillCookie(user);
         } else {
@@ -49,13 +49,12 @@ public class AuthServiceImplWeb implements AuthService {
         }
     }
 
-
     public JwtResponse getAccessToken(@NonNull String refreshToken) throws NotFoundException {
         JwtResponse jwtResponse = new JwtResponse();
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
-            User user = FindUtils.findUser(userRepository, login);
+            User user = FindUtils.findUserByUid(userRepository, login);
             final String accessToken = jwtProviderImpl.generateAccessToken(user);
             jwtResponse.setAccessToken(accessToken);
         }
@@ -79,7 +78,7 @@ public class AuthServiceImplWeb implements AuthService {
         }
         final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
         final String login = claims.getSubject();
-        User user = FindUtils.findUser(userRepository, login);
+        User user = FindUtils.findUserByUid(userRepository, login);
         return getJwtResponseAndFillCookie(user);
     }
 
@@ -91,8 +90,9 @@ public class AuthServiceImplWeb implements AuthService {
         if (userRepository.findByUid(userDto.getLogin()).isPresent()) {
             throw new AuthException("User already exists");
         }
-        userServiceImpl.postUser(userDto);
-        User user = FindUtils.findUser(userRepository, userDto.getLogin());
+        AuthServiceCommon.checkRegisterConstraints(userDto);
+        userServiceImpl.addUser(userDto);
+        User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponseAndFillCookie(user);
     }
 
@@ -101,7 +101,7 @@ public class AuthServiceImplWeb implements AuthService {
             throw new AuthException("No rights");
         }
         userServiceImpl.updateUserPassword(userDto);
-        User user = FindUtils.findUser(userRepository, userDto.getLogin());
+        User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponseAndFillCookie(user);
 
     }

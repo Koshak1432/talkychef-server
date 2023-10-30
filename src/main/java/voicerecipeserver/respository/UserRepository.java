@@ -23,8 +23,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
                         WHERE uid ILIKE '% ' || :namePart || '%'
                         ORDER BY uid
                     )
-                    LIMIT :limit
+                    LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
-    List<User> findByUidContaining(@Param("namePart") String inline, Integer limit);
+    List<User> findByUidContaining(String namePart, Integer limit, Integer page);
 
 }

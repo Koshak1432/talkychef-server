@@ -19,6 +19,7 @@ import voicerecipeserver.respository.*;
 import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.RecipeService;
 import voicerecipeserver.utils.FindUtils;
+import voicerecipeserver.utils.GetUtil;
 
 import java.util.*;
 
@@ -49,9 +50,6 @@ public class RecipeServiceImpl implements RecipeService {
         this.stepRepository = stepRepository;
         this.mapper = mapper;
         this.userRepository = userRepository;
-
-        this.mapper.typeMap(Recipe.class, RecipeDto.class).addMappings(
-                m -> m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid));
         this.markRepository = markRepository;
         this.mediaRepository = mediaRepository;
         this.collectionRepository = collectionRepository;
@@ -66,22 +64,27 @@ public class RecipeServiceImpl implements RecipeService {
         return ResponseEntity.ok(recipeDto);
     }
 
-    private void checkRecipeMediaUniqByStep(Step step) throws BadRequestException {
-        Optional<Recipe> recipeOptional = recipeRepository.findRecipeByMediaId(step.getMedia().getId());
-        if (recipeOptional.isPresent()) {
+    private void checkRecipeMediaUniqByStep(Long stepMediaId) throws BadRequestException {
+        if (recipeRepository.findRecipeByMediaId(stepMediaId).isPresent()) {
             throw new BadRequestException("Media id must be unique");
         }
     }
 
-    private void checkStepMediaUniqByRecipe(Recipe recipe) throws BadRequestException {
-        Optional<Step> stepOptional = stepRepository.findStepByMediaId(recipe.getMedia().getId());
-        if (stepOptional.isPresent()) {
+    private void checkStepMediaUniqByRecipe(Long recipeMediaId) throws BadRequestException {
+        if (stepRepository.findStepByMediaId(recipeMediaId).isPresent()) {
+            throw new BadRequestException("Media id must be unique");
+        }
+    }
+
+    private void checkRecipeMediaUniq(Long recipeMediaId) throws BadRequestException {
+        if (recipeRepository.findRecipeByMediaId(recipeMediaId).isPresent()) {
             throw new BadRequestException("Media id must be unique");
         }
     }
 
     private void checkMediaUniqueness(Recipe recipe) throws BadRequestException {
-        checkStepMediaUniqByRecipe(recipe);
+        checkStepMediaUniqByRecipe(recipe.getMedia().getId());
+        checkRecipeMediaUniq(recipe.getMedia().getId());
         Set<Long> mediaIds = new HashSet<>();
         mediaIds.add(recipe.getMedia().getId());
 
@@ -89,7 +92,7 @@ public class RecipeServiceImpl implements RecipeService {
             if (step.getMedia() == null) {
                 continue;
             }
-            checkRecipeMediaUniqByStep(step);
+            checkRecipeMediaUniqByStep(step.getMedia().getId());
             Long mediaId = step.getMedia().getId();
             if (mediaIds.contains(mediaId)) {
                 throw new BadRequestException("Media id must be unique");
@@ -110,9 +113,12 @@ public class RecipeServiceImpl implements RecipeService {
             throw new BadRequestException("Media id must be present");
         }
         Recipe recipe = mapper.map(recipeDto, Recipe.class);
-        User author = FindUtils.findUser(userRepository, recipe.getAuthor().getUid());
+        User author = FindUtils.findUserByUid(userRepository, recipe.getAuthor().getUid());
         recipe.setAuthor(author);
         recipe.setId(null);
+        if (mediaRepository.findById(recipe.getMedia().getId()).isEmpty()) {
+            throw new NotFoundException("Couldn't find media with id: " + recipe.getMedia().getId());
+        }
         checkMediaUniqueness(recipe);
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
@@ -121,31 +127,19 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         setDistribution(recipe);
-        if (mediaRepository.findById(recipe.getMedia().getId()).isEmpty()) {
-            throw new NotFoundException("Couldn't find media with id: " + recipe.getMedia().getId());
-        }
-
-        System.out.println(recipe);
         Recipe savedRecipe = recipeRepository.save(recipe);
-        Collection recipeCollection = findUserRecipesCollection(author.getId());
-        if (recipeCollection == null) {
-            Collection collection = new Collection(author.getUid()+"_saved", 0, author);
-            recipeCollection = collectionRepository.save(collection);
+        String savedName = author.getUid() + "_saved";
+        Collection saveCollection = collectionRepository.findByAuthorIdUserRecipeCollection(author.getId(),
+                                                                                                savedName).orElse(null);
+        if (saveCollection == null) {
+            saveCollection = collectionRepository.save(new Collection(savedName, 0, author));
         }
-        collectionRepository.addRecipeToCollection(savedRecipe.getId(), recipeCollection.getId());
+        collectionRepository.addRecipeToCollection(savedRecipe.getId(), saveCollection.getId());
         return ResponseEntity.ok(new IdDto().id(savedRecipe.getId()));
-
     }
-
-    private Collection findUserRecipesCollection(Long id) {
-        Optional<Collection> optionalCollection = collectionRepository.findByAuthorIdUserRecipeCollection(id,
-                                                                                                          "Мои рецепты");
-        return optionalCollection.orElse(null);
-    }
-
 
     private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
-        User author = FindUtils.findUser(userRepository, recipe.getAuthor().getUid());
+        User author = FindUtils.findUserByUid(userRepository, recipe.getAuthor().getUid());
         recipe.setAuthor(author);
     }
 
@@ -224,20 +218,9 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private List<Recipe> findRecipesByName(String name, int limit) throws NotFoundException {
-        List<Recipe> recipes = recipeRepository.findByNameContaining(name, limit);
-        if (recipes.isEmpty()) {
-            throw new NotFoundException("Couldn't find recipes with substring: " + name);
-        }
-        return recipes;
-    }
-
     @Override
-    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit) throws NotFoundException {
-        if (limit == null) {
-            limit = 0;
-        }
-        List<Recipe> recipes = findRecipesByName(name, limit);
+    public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) {
+        List<Recipe> recipes = recipeRepository.findByNameContaining(name, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
@@ -253,14 +236,14 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> filterContent(Integer limit, Integer page) throws NotFoundException {
+    public ResponseEntity<List<RecipeDto>> getRecommendations(Integer limit, Integer page) throws NotFoundException {
         SlopeOne recommendAlgSlopeOne = new SlopeOne(mapper, userRepository, markRepository, recipeRepository);
         List<RecipeDto> recipes = recommendAlgSlopeOne.recommendAlgSlopeOne(limit, page);
         return ResponseEntity.ok(recipes);
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getCategoriesById(Long id) {
+    public ResponseEntity<List<CategoryDto>> getCategoriesByRecipeId(Long id) {
         List<Category> categories = categoryRepository.findByRecipeId(id);
         List<CategoryDto> categoryDtos = categories.stream().map(
                 element -> mapper.map(element, CategoryDto.class)).toList();
