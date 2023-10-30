@@ -10,9 +10,13 @@ import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.RecipeDto;
 import voicerecipeserver.model.entities.Category;
 import voicerecipeserver.model.entities.Recipe;
+import voicerecipeserver.model.exceptions.AuthException;
+import voicerecipeserver.model.exceptions.NotFoundException;
 import voicerecipeserver.respository.CategoryRepository;
 import voicerecipeserver.respository.RecipeRepository;
+import voicerecipeserver.security.service.impl.AuthServiceCommon;
 import voicerecipeserver.services.CategoryService;
+import voicerecipeserver.utils.FindUtils;
 import voicerecipeserver.utils.GetUtil;
 
 import java.util.List;
@@ -50,15 +54,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteRecipeFromCategory(Long id, Long recipeId) {
-        categoryRepository.deleteByCategoryRecipeId(id, recipeId);
+    public ResponseEntity<Void> deleteRecipeFromCategory(Long categoryId, Long recipeId) throws NotFoundException,
+            AuthException {
+        Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
+        if (!AuthServiceCommon.checkAuthorities(recipe.getAuthor().getUid())) {
+            throw new AuthException("No rights");
+        }
+
+        categoryRepository.deleteByCategoryRecipeId(categoryId, recipeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Void> addCategoryToRecipe(Long id, Long categoryId) {
-        categoryRepository.addRecipeToCategory(id, categoryId);
+    public ResponseEntity<Void> addCategoryToRecipe(Long recipeId, Long categoryId) throws AuthException,
+            NotFoundException {
+        Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
+        if (!AuthServiceCommon.checkAuthorities(recipe.getAuthor().getUid())) {
+            throw new AuthException("No rights");
+        }
+        Category category = FindUtils.findCategory(categoryRepository, categoryId);
+        if (!recipe.getCategories().contains(category)) {
+            categoryRepository.addRecipeToCategory(recipeId, categoryId);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

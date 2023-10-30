@@ -26,6 +26,9 @@ public class FindUtils {
                 () -> new NotFoundException("Couldn't find user with token: " + token));
     }
 
+    public static Category findCategory(CategoryRepository repository, Long id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find category with id: " + id));
+    }
 
     public static Recipe findRecipe(RecipeRepository repository, Long id) throws NotFoundException {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find recipe with id: " + id));
