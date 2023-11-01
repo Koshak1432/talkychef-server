@@ -8,6 +8,7 @@ import voicerecipeserver.model.dto.*;
 import voicerecipeserver.model.entities.*;
 import voicerecipeserver.model.mappers.DefaultMapper;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -165,13 +166,14 @@ public class DefaultMapperTest {
         User user = new User("anton", "1234", Set.of(new Role("ADMIN")));
         Recipe recipe = new Recipe();
         recipe.setId(25L);
-        Comment comment = new Comment(1L, recipe, user, null, "Очень густо");
+        Comment comment = new Comment(2L, recipe, user, LocalDateTime.now(), "Очень густо");
         CommentDto dto = mapper.map(comment, CommentDto.class);
 
         assertEquals(dto.getId(), comment.getId());
         assertEquals(dto.getUserUid(), comment.getUser().getUid());
         assertEquals(dto.getRecipeId(), comment.getRecipe().getId());
         assertEquals(dto.getContent(), comment.getContent());
+        assertEquals(dto.getPostTime(), comment.getPostTime());
     }
 
     @Test
