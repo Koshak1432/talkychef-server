@@ -114,7 +114,7 @@ public class MarkServiceImpl implements MarkService {
     @Transactional
     public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws AuthException,
             NotFoundException {
-        if (!checkAuthorities(userUid)) {
+        if (!AuthServiceCommon.checkAuthorities(userUid)) {
             throw new AuthException("No rights");
         }
         User user = FindUtils.findUserByUid(userRepository, userUid);

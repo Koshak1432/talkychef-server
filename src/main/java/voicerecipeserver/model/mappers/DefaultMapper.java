@@ -11,20 +11,20 @@ import voicerecipeserver.model.entities.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 @Component
 public class DefaultMapper extends ModelMapper {
     //TODO декомпозици вообще можно декомпозицию сделать для конструктора
-    public DefaultMapper(){
+    public DefaultMapper() {
         super();
         this.emptyTypeMap(RecipeDto.class, Recipe.class).addMappings(mapper -> {
             mapper.skip(Recipe::setAuthor);
-            mapper.map(RecipeDto::getAuthorUid, (d, v) -> d.getAuthor().setUid((String)v));
+            mapper.map(RecipeDto::getAuthorUid, (d, v) -> d.getAuthor().setUid((String) v));
         }).implicitMappings();
 
-        Converter<String, String> toLowercase =
-                ctx -> ctx.getSource() == null ? null : ctx.getSource().toLowerCase();
+        Converter<String, String> toLowercase = ctx -> ctx.getSource() == null ? null : ctx.getSource().toLowerCase();
         Converter<Long, IngredientsDistributionKey> clearKey = ctx -> new IngredientsDistributionKey();
 
         this.emptyTypeMap(IngredientsDistributionDto.class, IngredientsDistribution.class).addMappings(mapper -> {
@@ -34,7 +34,8 @@ public class DefaultMapper extends ModelMapper {
             mapper.<Long>map(src -> null, (dest, v) -> dest.getIngredient().setId(v));
             mapper.map(IngredientsDistributionDto::getCount, IngredientsDistribution::setMeasureUnitCount);
             //все ингредиенты в нижнем регистре живут
-            mapper.using(toLowercase).<String>map(IngredientsDistributionDto::getName, (dest, v) -> dest.getIngredient().setName(v));
+            mapper.using(toLowercase).<String>map(IngredientsDistributionDto::getName,
+                                                  (dest, v) -> dest.getIngredient().setName(v));
         }).implicitMappings();
 
         this.typeMap(IngredientsDistribution.class, IngredientsDistributionDto.class).addMappings(mapper -> {
@@ -47,16 +48,18 @@ public class DefaultMapper extends ModelMapper {
             mapper.map(src -> src.getUser().getUid(), UserProfileDto::setUid);
         });
 
-        this.addConverter(new OffsetDateTimeToLocalDateTimeConverter());
-        this.typeMap(Recipe.class, RecipeDto.class).addMappings(
-                m -> {
-                    m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
-                });
-        this.typeMap(Comment.class, CommentDto.class).addMappings(
-                m -> {
-                    m.map(Comment::getPostTime, CommentDto::postTime);
-                }
-        );
+        this.typeMap(Recipe.class, RecipeDto.class).addMappings(m -> {
+            m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
+        });
+//        this.typeMap(Comment.class, CommentDto.class).addMappings(m -> {
+//            m.using(new LocalDateTimeToOffsetDateTimeConverter())
+//                .map(Comment::getPostTime, CommentDto::postTime);
+//        });
+//        this.typeMap(CommentDto.class, Comment.class).addMappings(
+//                m -> {
+//                    m.using(new OffsetDateTimeToLocalDateTimeConverter()).map(CommentDto::getPostTime, Comment::setPostTime);
+//                }
+//        );
     }
 
     private static class OffsetDateTimeToLocalDateTimeConverter extends
@@ -69,4 +72,15 @@ public class DefaultMapper extends ModelMapper {
             return null;
         }
     }
+
+    private static class LocalDateTimeToOffsetDateTimeConverter extends AbstractConverter<LocalDateTime, OffsetDateTime> {
+        @Override
+        protected OffsetDateTime convert(LocalDateTime source) {
+            if (source != null) {
+                return source.atOffset(ZoneOffset.UTC);
+            }
+            return null;
+        }
+    }
+
 }

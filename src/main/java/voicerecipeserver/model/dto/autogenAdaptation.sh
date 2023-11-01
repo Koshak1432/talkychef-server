@@ -4,3 +4,4 @@ sed -i '/import io.swagger.v3.oas*/d' ./*.java
 sed -i '/@Schema*/d' ./*.java
 sed -i 's/import io.swagger.model./import voicerecipeserver.model.dto./' ./*.java
 sed -i "s/javax/jakarta/g" ./*.java
+sed -i 's/OffsetDateTime/LocalDateTime/g' ./*.java

@@ -1,6 +1,6 @@
 package voicerecipeserver.model.dto;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -26,7 +26,7 @@ public class CommentDto   {
   private Long recipeId = null;
 
   @JsonProperty("post_time")
-  private OffsetDateTime postTime = null;
+  private LocalDateTime postTime = null;
 
   @JsonProperty("content")
   private String content = null;
@@ -88,7 +88,7 @@ public class CommentDto   {
     this.recipeId = recipeId;
   }
 
-  public CommentDto postTime(OffsetDateTime postTime) {
+  public CommentDto postTime(LocalDateTime postTime) {
     this.postTime = postTime;
     return this;
   }
@@ -99,11 +99,11 @@ public class CommentDto   {
    **/
   
     @Valid
-    public OffsetDateTime getPostTime() {
+    public LocalDateTime getPostTime() {
     return postTime;
   }
 
-  public void setPostTime(OffsetDateTime postTime) {
+  public void setPostTime(LocalDateTime postTime) {
     this.postTime = postTime;
   }
 
