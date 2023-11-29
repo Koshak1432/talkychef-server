@@ -49,6 +49,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.1.2'
 }
 
+task getDeps(type: Copy) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from configurations.compileClasspath into "libs/"
+    from configurations.runtimeClasspath into "libs/"
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
