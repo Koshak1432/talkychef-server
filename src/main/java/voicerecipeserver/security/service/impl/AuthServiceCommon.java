@@ -49,11 +49,11 @@ public class AuthServiceCommon {
     public static void checkRegisterConstraints(UserDto dto) throws BadRequestException {
         if (!isLoginValid(dto.getLogin())) {
             throw new BadRequestException(
-                    "Invalid email, must be  " + Constants.LOGIN_MIN_SYMBOLS + "-" + Constants.LOGIN_MAX_SYMBOLS + " symbols, and contain valid symbols");
+                    "Invalid login, must be  " + Constants.LOGIN_MIN_SYMBOLS + "-" + Constants.LOGIN_MAX_SYMBOLS + " symbols, and contain valid symbols");
         }
         if (!isPasswordValid(dto.getPassword())) {
             throw new BadRequestException(
-                    "Invalid email, must be  " + Constants.PASSWORD_MIN_SYMBOLS + "-" + Constants.PASSWORD_MAX_SYMBOLS + " symbols, and contain at least 1 digit and 1 non-digit");
+                    "Invalid password, must be  " + Constants.PASSWORD_MIN_SYMBOLS + "-" + Constants.PASSWORD_MAX_SYMBOLS + " symbols, and contain at least 1 digit and 1 non-digit");
         }
         if (!isEmailValid(dto.getEmail())) {
             throw new BadRequestException("Invalid email, must follow rfc 822 & rfc 5322");
