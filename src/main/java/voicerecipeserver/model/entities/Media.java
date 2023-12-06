@@ -26,7 +26,7 @@ public class Media {
     @ToString.Exclude
     private MediaType mediaType;
 
-    @Column(name = "file_data", columnDefinition = "BLOB")
+    @Column(name = "file_data", columnDefinition = "bytea")
     @JdbcTypeCode(Types.VARBINARY)
     @NotNull
     private byte[] fileData;

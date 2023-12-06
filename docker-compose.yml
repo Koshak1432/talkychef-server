@@ -1,0 +1,34 @@
+version: "3"
+services:
+  database:
+    image: 'postgres:15.2'
+    container_name: database
+    ports:
+      - "5434:5432"
+    env_file:
+      - postgres.env
+
+  flyway:
+    container_name: my-flyway
+    image: flyway/flyway:latest
+    command: -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+    volumes:
+      - ./src/main/resources/db:/flyway/sql
+      - ./conf/flyway.conf:/flyway/conf/flyway.config
+    environment:
+      FLYWAY_CONFIG_FILES: /flyway/conf/flyway.conf
+    env_file:
+      - flyway.env
+    depends_on:
+      - database
+
+  talky:
+    build:
+      context: .
+    container_name: talkyChef
+    ports:
+      - "8080:8080"
+    depends_on:
+      - flyway
+    env_file:
+      - server.env

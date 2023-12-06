@@ -1,0 +1,2266 @@
+[33mcommit 6c070c559bfd0a143c4cc289608e7bed057e4d99[m[33m ([m[1;36mHEAD -> [m[1;32mfilter[m[33m, [m[1;32mdevelop[m[33m)[m
+Merge: 3501af0 4be2255
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Dec 6 15:39:39 2023 +0700
+
+    Merge branch 'docker' of github.com:Koshak1432/talkychef-server into develop
+
+[33mcommit 4be2255d252261dfa206afa908ed91f1da233e9e[m[33m ([m[1;31morigin/docker[m[33m)[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Dec 6 14:09:58 2023 +0700
+
+    Hide flyway
+
+[33mcommit 3501af052cf1614316d296bede1ad60fc663d204[m[33m ([m[1;31morigin/develop[m[33m)[m
+Merge: 10d5dba a40a4c3
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Dec 6 11:12:55 2023 +0700
+
+    Merge pull request #75 from Koshak1432/fix_auth_token_api
+    
+    fixed
+
+[33mcommit a40a4c30a0d2120aee569214bd264d0a833e3bae[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Dec 6 11:11:17 2023 +0700
+
+    fixed
+
+[33mcommit 10d5dba57f5d07ae511bd6e3522c4619fa114a10[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Dec 4 18:37:48 2023 +0700
+
+    Update AuthServiceCommon.java
+    
+    fix invalid login & password message
+
+[33mcommit dd05115d04ba61e37fcf52335ede3d41439a620b[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Nov 29 15:49:58 2023 +0700
+
+    Needed media fix
+
+[33mcommit 4d5165dfaffaeac87c8a482f0b0218d65783039f[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Nov 29 14:45:54 2023 +0700
+
+    Did some docker work
+
+[33mcommit fb33e2f0e6d6ffd3ac0100f17e501771ec545caa[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 15 15:29:37 2023 +0700
+
+    Delete .github/workflows directory
+
+[33mcommit 3f4bed1b471be5b1029039f1cadc9061032cf4b8[m
+Merge: d26b97f 5b59321
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 15 15:15:32 2023 +0700
+
+    Merge pull request #74 from Koshak1432/Koshak1432-fix-put-collection-mediaId
+    
+    Koshak1432 fix put collection media
+
+[33mcommit 5b593212fa4727f1e7a986f798f80cff6167a933[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 15 15:13:55 2023 +0700
+
+    Update CollectionServiceImpl.java
+
+[33mcommit d26b97f1721f5883fed94aeb369a91c023aa80ba[m
+Merge: 5fdb957 cf44d39
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 1 12:42:22 2023 +0700
+
+    Merge pull request #73 from Koshak1432/insert_selections_and_categories
+    
+    Insert selections and categories
+
+[33mcommit 5fdb957889c7bde6b0aee8ad2a2211b1fd30d053[m
+Merge: c4f3ae4 6c709f9
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 1 12:42:05 2023 +0700
+
+    Merge pull request #72 from Koshak1432/fix_date_comment
+    
+    change offsetDateTime to localdatetime, fixed time convert bug
+
+[33mcommit cf44d39ae74f0a1c003df0635c850d6e919244a4[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 1 12:41:35 2023 +0700
+
+    renamed migration file
+
+[33mcommit 13815fd57f7929404924dad68af9b86d470ef9e3[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 1 12:34:21 2023 +0700
+
+    moved
+
+[33mcommit 638d14f35b8848196f1993c6aa64816cfda295da[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 1 12:33:56 2023 +0700
+
+    inserted
+
+[33mcommit 6c709f9f38c6b0a5eba2211a7cd12f9e5993737c[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Nov 1 12:33:03 2023 +0700
+
+    change offsetDateTime to localdatetime, fixed time convert bug
+
+[33mcommit 2e9f25ee567d008b2d0ae8ce1fa5174132026b2c[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Merge: 73d431e c4f3ae4
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Oct 30 11:55:47 2023 +0700
+
+    Merge pull request #71 from Koshak1432/develop
+    
+    Develop
+
+[33mcommit c4f3ae42bc0aa7dd7541c642ec2f164076c2f22a[m
+Merge: 7dcc204 552f5a8
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Oct 30 11:47:18 2023 +0700
+
+    Merge branch 'develop' of https://github.com/Koshak1432/talkychef-server into develop
+
+[33mcommit 7dcc204268e6091c7caf7b4fafe40c7d2fb14a3e[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Oct 30 11:46:57 2023 +0700
+
+    fixed tests and delete notfound in rrecipes search
+
+[33mcommit 73d431e222fc78cf72835e3938619e9ab06a7f7f[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Oct 30 10:50:19 2023 +0700
+
+    Update ci.yml
+
+[33mcommit 552f5a86871598d38b4c0b94cff843fb2323c47e[m
+Merge: c4e47c5 7a8c516
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Oct 30 10:29:40 2023 +0700
+
+    Merge pull request #70 from Koshak1432/fix_add_recipe_to_category_not_author
+    
+    fixed
+
+[33mcommit 7a8c516e21aea609531c6d6e97111d982a90cabf[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Oct 26 14:05:54 2023 +0700
+
+    fixed
+
+[33mcommit c4e47c5e4962421e0fddd75149783ac57bcb0c20[m
+Merge: 66e0286 7ab3e9c
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Oct 26 13:30:20 2023 +0700
+
+    Merge pull request #69 from Koshak1432/fix_duplicated_collections_and_add_register_validation
+    
+    fixed
+
+[33mcommit 66e0286bcea18c0e924c4f108addf6457af83225[m
+Merge: 89e75aa 7ed1969
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Oct 26 13:29:43 2023 +0700
+
+    Merge pull request #68 from Koshak1432/fix_pagination_and_some_sql
+    
+    Fix pagination and some sql
+
+[33mcommit 89e75aaeb258f8577912ac6894f3b600a06e0e42[m
+Merge: 7ca3310 1d4ca39
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Oct 26 13:29:36 2023 +0700
+
+    Merge pull request #67 from Koshak1432/fix_collections
+    
+    refactored some collections api
+
+[33mcommit 7ab3e9ca99d8b7ea0bce133816b7d1ee22149783[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Oct 26 13:23:57 2023 +0700
+
+    fixed
+
+[33mcommit 7ed1969ff32a99003e94fb2730090a5488524e1d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 25 20:01:40 2023 +0700
+
+    refactor many apis, implemented pagination
+
+[33mcommit fac00410f8363295fdbb14b7caa20a8a0136f3de[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 25 16:19:58 2023 +0700
+
+    implementing pagination
+
+[33mcommit 1d4ca39bc26d646dcb0a56f413ad5840d2bbe70c[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 25 12:29:45 2023 +0700
+
+    refactored some collections api
+
+[33mcommit 149a814d068aa62b8903df6f097ee89e39096349[m
+Merge: 7cb79c4 7ca3310
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Oct 19 11:38:35 2023 +0700
+
+    Merge pull request #66 from Koshak1432/develop
+    
+    Develop
+
+[33mcommit 7ca3310667dce486eb60f4eba5c28d38bfdd244d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Oct 19 11:31:27 2023 +0700
+
+    fixed nullp exception commentdto to comment
+
+[33mcommit a76e4e700dd4b7ad5f5bb0f17330ba40b8a95745[m
+Merge: ae4b01f e04ec9f
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Wed Oct 18 12:02:46 2023 +0700
+
+    Merge pull request #65 from Koshak1432/fix_post_date
+    
+    fixed dto postTime mapping to entity postTime
+
+[33mcommit e04ec9fe0c720b933ca0c679da49d304533a32ce[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 11:57:59 2023 +0700
+
+    fixed dto postTime mapping to entity postTime
+
+[33mcommit 7cb79c42495c2491619b2fc3d3d4d564eb026c39[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:57:23 2023 +0700
+
+    Create ci.yml
+
+[33mcommit a69c376315460e8a3e4ee03b089934b51b9b3adc[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:56:56 2023 +0700
+
+    Create cd.yml
+
+[33mcommit 91a89a894810662bed4bda6eab1eb0a683632ff2[m
+Merge: 03c49f1 ae4b01f
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:56:11 2023 +0700
+
+    Merge pull request #64 from Koshak1432/develop
+    
+    Develop
+
+[33mcommit 03c49f1f7567f5bf96f13047e40fad02086ffe51[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:55:55 2023 +0700
+
+    Delete .github/workflows directory
+
+[33mcommit acd93ebe57dfcfdfe6e8632bfa8927926692fc67[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:55:13 2023 +0700
+
+    reCreate cd.yml
+
+[33mcommit fb4f227d517057a2536c60210f00e71f9fc348fc[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:54:46 2023 +0700
+
+    Delete .github/workflows/main.yml
+
+[33mcommit fe2e643ada061288c4ff95ba07c3ffbeefd4167b[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:54:13 2023 +0700
+
+    reCreate main.yml
+
+[33mcommit 3b1867f9c77ff4cce7c33075c2e6e05cfea3750f[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:53:47 2023 +0700
+
+    reCreate ci.yml
+
+[33mcommit 0f78957f5d4438470bc62bca95eb8a7f82b22950[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 18 10:52:23 2023 +0700
+
+    Delete .github/workflows directory
+
+[33mcommit ae4b01f436ff78ad149d9f7668e454f712faad42[m
+Merge: 2caf440 1fb0a28
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Wed Oct 18 10:38:39 2023 +0700
+
+    Merge pull request #63 from Koshak1432/fix_numer_decrease
+    
+    Fix numer decrease
+
+[33mcommit 2caf440444138089c90c9b90987a95e61c8e67c7[m
+Merge: 4aabfa2 c9fd583
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Wed Oct 18 10:37:06 2023 +0700
+
+    Merge pull request #62 from Koshak1432/add_notfound
+    
+    Add notfound
+
+[33mcommit 4aabfa2d70dfcd3db047e2a24526fd0fe4c1a582[m
+Merge: f375f00 f00cf0f
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Wed Oct 18 10:34:45 2023 +0700
+
+    Merge pull request #60 from Koshak1432/refactor_and_add_transactional
+    
+    refactored some queries, delete and add @transactional
+
+[33mcommit 1fb0a2884154ea6c02018c307f476e6420af9513[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sat Oct 14 20:03:44 2023 +0700
+
+    fixed
+
+[33mcommit c9fd58357cd8988515c7430ca423db4bea832f5c[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 11 15:56:40 2023 +0700
+
+    change to en
+
+[33mcommit e2ecd24661eb02459f30b4718519dd2b9eddd3c2[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 11 15:40:41 2023 +0700
+
+    add not found exceptions to collections and selections rquests
+
+[33mcommit a31d2ce2a5975a0adcf35e0b8a3ffddaf1adbdb9[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 11 14:57:58 2023 +0700
+
+    add selections
+
+[33mcommit f00cf0fe96f4c31cb3ecdf37e5b89f2f4ba0be05[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Oct 11 10:30:31 2023 +0700
+
+    add transactional to user service
+
+[33mcommit 90d5ff96f979cf4c424cfe3328679ff9488b906e[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Oct 5 20:11:26 2023 +0700
+
+    refactored some queries, delete and add @transactional
+
+[33mcommit f375f0053bcc04ec7d095bcb409b5f56d9376e45[m
+Merge: d01aa0c 5f856bb
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Wed Oct 4 12:21:13 2023 +0700
+
+    Merge pull request #59 from Koshak1432/fix_recipes_queries
+    
+    optimized some recipe queries
+
+[33mcommit d01aa0c3a05f69ea99238cd48cef26aaac946b6c[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Oct 4 12:17:48 2023 +0700
+
+    Added liked and saved recipes
+
+[33mcommit 5f856bbc7e3154d2a01e0f4bde988c50caa54e10[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Sep 29 23:49:05 2023 +0700
+
+    optimized some recipe queries
+
+[33mcommit 98ffadd45ea74eb165084ca8c06888a7e17029b3[m
+Merge: 23acd74 5109de8
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 27 15:56:52 2023 +0700
+
+    Merge pull request #58 from Koshak1432/add_servings
+    
+    add recipe servings
+
+[33mcommit 5109de89457afad696ee773df2276ffe0563b635[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 27 15:54:51 2023 +0700
+
+    add recipe servings
+
+[33mcommit 23acd749e683f21361515358525bd5ee090a2380[m
+Merge: aac0da5 bd8c98c
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 27 14:29:50 2023 +0700
+
+    Merge pull request #57 from Koshak1432/categories__creation
+    
+    Categories  creation
+
+[33mcommit bd8c98c2c7b69ec8b8c5b8a3a81dfeb77f124ebb[m
+Merge: c25a1d4 3d648fc
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Sep 27 13:41:38 2023 +0700
+
+    Fix conflicts
+
+[33mcommit c25a1d497cedae8dffcfbccdf6fdb2091dc9d43b[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Sep 27 13:37:50 2023 +0700
+
+    Added endpoint for categories and fixed style
+
+[33mcommit 3d648fc23d27967269043a8054bdd062a8613df9[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 27 13:11:21 2023 +0700
+
+    Update CategoryApi.java
+
+[33mcommit 6abc7172a59ecf91a27294c31f81f7aeccf2feb6[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Sep 27 12:57:39 2023 +0700
+
+    Removed ci/cd files and deleted comments
+
+[33mcommit cf72d69aa14ef6368e1d73448c0f1e8c4eec2fcc[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 27 12:52:07 2023 +0700
+
+    Update cd.yml
+
+[33mcommit a75134c8b2aff1be01beee0030109320a4f51db4[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Sep 27 12:51:53 2023 +0700
+
+    Added two more endpoints and fixed collections
+
+[33mcommit 4766b72588623b562917379591637c17cef974a4[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 27 12:50:55 2023 +0700
+
+    Update ci.yml
+
+[33mcommit 988d76a5798916be0957c213eb8289f680c9b569[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 27 12:39:29 2023 +0700
+
+    Update cd.yml
+
+[33mcommit 33daf481039591bbcbeb60a7a474777fcea40e67[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Sat Sep 23 00:15:41 2023 +0700
+
+    Added categories/adding endpoints
+
+[33mcommit 460d0091928cc674a90d04faf23493941c41c237[m
+Merge: 09612bd 62fae80
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Fri Sep 22 21:58:02 2023 +0700
+
+    Merge pull request #56 from Koshak1432/add_recommendation_pagination
+    
+    Add recommendation pagination
+
+[33mcommit 62fae802b85b6cb0f6c7210c1f8dea68b7b5eead[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 20 23:34:19 2023 +0700
+
+    test workflow?
+
+[33mcommit 09612bdafd928a452d91ea46ed397a27b1b58f09[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 20 23:30:38 2023 +0700
+
+    Update ci.yml
+
+[33mcommit 6c5f9ea938606e20ce988ca36fb60568639685e2[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 20 22:50:42 2023 +0700
+
+    Update ci.yml
+
+[33mcommit b937bc0e3bf9da0c58a7c61822d4236b886e142f[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 20 21:34:37 2023 +0700
+
+    fix test
+
+[33mcommit ef0c1efb8b151b86477d23d29591d6cf3efa21d9[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Sep 20 21:21:39 2023 +0700
+
+    added pagination for recommendation get request
+
+[33mcommit aac0da5a82af5195b1c52642e2b8797d93dc3293[m
+Merge: 7155a7d 343d4b8
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Wed Aug 2 10:51:17 2023 +0300
+
+    Merge pull request #55 from Koshak1432/add_my_recipes
+    
+    Added media to collections
+
+[33mcommit 343d4b897bd011162d04b74a40e8ad97c5cad679[m[33m ([m[1;31morigin/add_my_recipes[m[33m)[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Aug 2 10:49:22 2023 +0300
+
+    Added media to collections
+
+[33mcommit d7e1ad3146baa8646ee131e13f0f47f59732d66a[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 23:36:42 2023 +0700
+
+    Update cd.yml
+
+[33mcommit 5d0c64c6ca1d853c0f55ffa4f7a3989061735526[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 23:30:41 2023 +0700
+
+    Update cd.yml
+
+[33mcommit 2171033e5a2d5dfac3f8de68f262ee7013fd212e[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 23:19:58 2023 +0700
+
+    Update cd.yml
+
+[33mcommit f42a7d919cb30a1bbb5e74ed412db5375d5e6c80[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 22:52:55 2023 +0700
+
+    Update cd.yml
+
+[33mcommit cb4dcd90cd269c9020381c93d75e7cf20fb35d75[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 22:43:52 2023 +0700
+
+    Update cd.yml
+
+[33mcommit 76661d3fe3d3f3424934e892b934e96f5bb15c9d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 22:07:01 2023 +0700
+
+    Update cd.yml
+
+[33mcommit b766dd1b41440ff222ef462947119ae91026733e[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 21:40:23 2023 +0700
+
+    Update cd.yml
+
+[33mcommit 08bbb895165c6454aea580f4a7060e8374049917[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 21:33:01 2023 +0700
+
+    Update cd.yml
+
+[33mcommit c5565469fea4cee83a1ba5e3e379485d9e330765[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 21:27:14 2023 +0700
+
+    Update cd.yml
+
+[33mcommit 0056277a09d3db3ca66205d7643e9fd755761b2f[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 21:16:02 2023 +0700
+
+    Update cd.yml
+
+[33mcommit 7e325e5814bf7e2d501ce4e869a1e3fec543c92d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 21:10:29 2023 +0700
+
+    Update cd.yml
+
+[33mcommit c568bf652630bf86907a4c338bbc72146b5a33f6[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 21:09:47 2023 +0700
+
+    Update ci.yml
+
+[33mcommit 0ef3bbaeb009731f6bc6c5e51e8b97350ffde59c[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 21:04:25 2023 +0700
+
+    Update cd.yml
+
+[33mcommit f10f2f2b37dafee6e51be7f704c08ce0d23c4164[m
+Merge: e21916f c6f187a
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 20:52:01 2023 +0700
+
+    Merge pull request #54 from Koshak1432/Koshak1432-patch-1
+    
+    Create cd.yml
+
+[33mcommit c6f187a9e5f112282b7b5ae50629393ecc185d1b[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 20:49:53 2023 +0700
+
+    Create cd.yml
+    
+    add cd file
+
+[33mcommit 7155a7dfaedcb05ce575b596da6002dfd24783f1[m
+Merge: 730b98d 51bad80
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 17:09:59 2023 +0700
+
+    Merge pull request #53 from Koshak1432/make_tests_great_again
+    
+    fix
+
+[33mcommit 51bad80cf0d44e80ad4256c98f33ad6c98dde652[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 17:02:25 2023 +0700
+
+    fix
+
+[33mcommit 730b98db064eeee30854db0aba449be0f7836be6[m
+Merge: c9695aa a198bfc
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 12:20:31 2023 +0700
+
+    Merge pull request #52 from Koshak1432/add_my_recipes
+    
+    Add my recipes
+
+[33mcommit a198bfc078c9006b153cbd976914060b0836cfe6[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 12:18:25 2023 +0700
+
+    Update CollectionServiceImpl.java
+
+[33mcommit dec47d23d3690cb7d559468768e9445331e056df[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 31 12:04:27 2023 +0700
+
+    Fixed imports
+
+[33mcommit 7b9ef00b0972889dc83ab0928e21a972a613784a[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 31 11:52:04 2023 +0700
+
+    Added collection my_recipes
+
+[33mcommit e21916ffa6755f728558c451c4279c0ddb8f7787[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 10:22:22 2023 +0700
+
+    Update and rename ci-cd.yml to ci.yml
+
+[33mcommit c9695aa3076d54de60cfa5b18230702e9ebed958[m
+Merge: 4ab1d2d 5927c93
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 10:02:42 2023 +0700
+
+    Merge pull request #51 from Koshak1432/add_email
+    
+    Add email
+
+[33mcommit 5927c93b543428eb95800371bea86972a09a08f3[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 10:02:14 2023 +0700
+
+    Update UserServiceImpl.java
+
+[33mcommit c4fa53854e2fc788df8a99e908fe3a4e12087d44[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 09:53:58 2023 +0700
+
+    Update FindUtils.java
+    
+    fix
+
+[33mcommit f214094b2431462bc8a57bca3202ca8a14baa12d[m
+Merge: f8c84fe 4ab1d2d
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 31 09:46:08 2023 +0700
+
+    Merge branch 'develop' into add_email
+
+[33mcommit f8c84fe20d62773ecc2ea8b299e7021ac1d3ee34[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 31 09:22:53 2023 +0700
+
+    Deleted extras
+
+[33mcommit 391310f64dd98ee0815e24d30889c32335e9fd33[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 31 09:17:38 2023 +0700
+
+    Fixed small bugs
+
+[33mcommit c4c53fdfa9b31f6d5ac058c31b785700fa386f05[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:43:13 2023 +0700
+
+    Update ci-cd.yml
+
+[33mcommit 974ad59e31c1847e13f4828b30765aa03e98d482[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:40:17 2023 +0700
+
+    Update ci-cd.yml
+
+[33mcommit f8c7953666462f8755417fc035d9be4df0ded8ba[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:38:08 2023 +0700
+
+    Create ci-cd.yml
+
+[33mcommit 280393db66e99f4aac3e49f7185a0fa659177fdd[m
+Merge: 5c44b46 4ab1d2d
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:37:03 2023 +0700
+
+    Merge pull request #50 from Koshak1432/develop
+    
+    Develop
+
+[33mcommit 5c44b46c05f3e63bc371b7f825fb0e75fbdf658b[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:36:29 2023 +0700
+
+    Delete .github/workflows directory
+
+[33mcommit 1fcd4f88dda6e4614bea809beea0e6ee9fbcecaa[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:33:27 2023 +0700
+
+    Update ci-cd.yml
+
+[33mcommit 225b5dd0a9b54d212065edfb01e186596a97aafa[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:29:53 2023 +0700
+
+    Update ci-cd.yml
+
+[33mcommit d2bb30d1341b36dfec06bc748e0219ebc5c3cba2[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:24:14 2023 +0700
+
+    Update ci-cd.yml
+
+[33mcommit a36a42da593ba6a1ceabe75dce029e53e2b9d487[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:03:22 2023 +0700
+
+    Update ci-cd.yml
+    
+    fix
+
+[33mcommit fdfa3ba62956805265087260e37be54ee00db612[m
+Merge: fcbb8e6 cfd3642
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:01:39 2023 +0700
+
+    Merge pull request #49 from Koshak1432/Add_ci/cd_file
+    
+    Create ci-cd.yml
+
+[33mcommit cfd364214ec9afc7aed2df3127b3ec34e2b52fc1[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 18:00:49 2023 +0700
+
+    Create ci-cd.yml
+
+[33mcommit 4ab1d2d372a35275d8160ba17026df79d8b41ca2[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Jul 30 17:53:54 2023 +0700
+
+    refactor bulid file
+
+[33mcommit dc2a72fc50f58cf909d2f1a6d0aa2e1262b9cead[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 28 16:15:15 2023 +0300
+
+    Added email
+
+[33mcommit 4c67aab23b282ec72e0b28145222a7a9ed6b5be4[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 18:02:28 2023 +0700
+
+    remove has authority on get avg
+
+[33mcommit fabb07451f322ed43401e01fa92ddbe0624c4eae[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 17:55:26 2023 +0700
+
+    fixed bug
+
+[33mcommit 2220501f10c151c0faa91dbaa677804fe75982c2[m
+Merge: 7282801 f4bb2a9
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 17:49:06 2023 +0700
+
+    Merge pull request #48 from Koshak1432/change_exceptions_ru2en
+    
+    changed exceptions language and some fixes
+
+[33mcommit f4bb2a96f456815d7a077624bc304c4aa2c4161e[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 17:47:12 2023 +0700
+
+    changed exceptions language and some fixes
+
+[33mcommit 7282801f7467a633ef21d79741a9cbbc5af75262[m
+Merge: dec3a50 3334cab
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 15:25:54 2023 +0700
+
+    Merge pull request #46 from Koshak1432/fix_avg_not_present
+    
+    fixed avg mark if not present
+
+[33mcommit 3334cab26acc8f7cc7a68944ada495f5d530a09b[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 15:22:24 2023 +0700
+
+    fixed avg mark if not present
+
+[33mcommit dec3a503699e4684e4bfa923f261d96a0b727771[m
+Merge: 3eef996 2fe2308
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 14:38:58 2023 +0700
+
+    Merge pull request #45 from Koshak1432/fix_collections
+    
+    Fix collections
+
+[33mcommit 2fe23084368d6161f85455e331419382a16ceb13[m
+Merge: 361a243 e59d1e1
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 28 13:01:27 2023 +0700
+
+    Merge branch 'fix_collections' of github.com:Koshak1432/talkychef-server into fix_collections
+
+[33mcommit 361a2436b73b12a48264b9ea220bcc9d196d0871[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 28 13:00:29 2023 +0700
+
+    Fixed collection dto
+
+[33mcommit e59d1e1d4723c760e6b5ec69a57d4ad27b3ab337[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 12:38:56 2023 +0700
+
+    Update V1_0_2_5__change_collections.sql
+    
+    delete trigger
+
+[33mcommit 44643ad1f03cc72c08a44cdad421a3f93101b176[m
+Merge: 2d1a7fd c3d10cd
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 28 12:29:27 2023 +0700
+
+    Added couple of endpoints to collections
+
+[33mcommit 3eef996c7d258630db050e1d47b4f0db3e160edb[m
+Merge: 0c1e66c 5de182e
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 12:07:11 2023 +0700
+
+    Merge pull request #44 from Koshak1432/move_secrets_to_env
+    
+    move jwt secrets to environment
+
+[33mcommit 5de182ebe26ab76ec646f81ef4f9290e218ccc89[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 28 12:06:33 2023 +0700
+
+    move jwt secrets to environment
+
+[33mcommit 0c1e66cc2ad09c77fd27ced56ee4e706f8fef468[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 17:59:26 2023 +0700
+
+    fix slope one
+
+[33mcommit ba7b40b65e9527883819924c5bf334639b58834d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 17:28:15 2023 +0700
+
+    fix user info
+
+[33mcommit 2d1a7fdc9d28d2469334b4a4797d8a7a84873ceb[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 27 15:18:12 2023 +0700
+
+    Working on collections
+
+[33mcommit c3d10cd0d92dc0bf0947d5b47c0ce2c21323a464[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 15:15:22 2023 +0700
+
+    fix exception import
+
+[33mcommit b542f5a6bca4948548e3987ef6e77dfe67c7237a[m
+Merge: 4d8e58c 05bc4e1
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 14:40:16 2023 +0700
+
+    Merge branch 'develop' of https://github.com/Koshak1432/talkychef-server into develop
+
+[33mcommit 4d8e58cda28a0a152d895a8e5d111636aa4d058b[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 14:39:32 2023 +0700
+
+    changed image field to media_id
+
+[33mcommit 05bc4e13c720deea12097107e57f7e519d6d6e5f[m
+Merge: d3d6c6d ffff581
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Thu Jul 27 14:23:30 2023 +0700
+
+    Merge pull request #43 from Koshak1432/colab_filtering
+    
+    Added handlers
+
+[33mcommit ffff581dfe0f21151844acf3e101227f87b872db[m
+Merge: d7243f1 d3d6c6d
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Thu Jul 27 14:23:22 2023 +0700
+
+    Merge branch 'develop' into colab_filtering
+
+[33mcommit d3d6c6d9758fd0c33d1af7279b0f67ec7b5ff90a[m
+Merge: 982e6ef 2f4f437
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 13:42:27 2023 +0700
+
+    Merge pull request #42 from Koshak1432/colab_filtering
+    
+    Colab filtering
+
+[33mcommit 2f4f437ca567a6f377e4427c913b9e1ba68be475[m
+Merge: 203d63c 982e6ef
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 13:39:23 2023 +0700
+
+    Merge branch 'develop' into colab_filtering
+
+[33mcommit 982e6ef87a654fd96ffb8964a9a65a1c6f1a58d8[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 12:17:52 2023 +0700
+
+    fixed mapping error
+
+[33mcommit d7243f1b173f044b55fdc3e1ef60337a99226308[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 27 12:05:03 2023 +0700
+
+    Added handlers
+
+[33mcommit 46c25a838a1320b9a2763a5d75ee4de830c42b43[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 11:27:30 2023 +0700
+
+    change multiple mappings
+
+[33mcommit 0559f10e1da6b12de883906a3474451dd5038cfb[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 11:08:40 2023 +0700
+
+    move type mappings to class
+
+[33mcommit 203d63c83f3f5c6de2d73a76505e232fd37796ab[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 27 11:08:16 2023 +0700
+
+    Removed comments...
+
+[33mcommit 2f7b949335a94dc731fd101ca1ba4b7fef918b8e[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 27 11:06:48 2023 +0700
+
+    Formated couple of files
+
+[33mcommit f0722ade2f54e13a03a5a7eaab95d48f03f09ef3[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 27 11:05:39 2023 +0700
+
+    Returned toString
+
+[33mcommit afb922c228dbd190a8363f57f3f928dea4b28d7e[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 27 11:03:53 2023 +0700
+
+    Fixed style and response
+
+[33mcommit c704b9a26026a49b9af305095b27ced2cd005bd5[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 10:59:23 2023 +0700
+
+    fix mapper
+
+[33mcommit 307387e3d08c1cd8f145e1dbd1cac95847e00e05[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 10:27:26 2023 +0700
+
+    fixed tests
+
+[33mcommit 338269e4eec4edbdab2eb19c1d29e7ba6da1d9e1[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 27 10:19:07 2023 +0700
+
+    change idDto in other dtos to just Long
+
+[33mcommit 961aefdb2141d905894e5f91458417e2198439b2[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 27 10:12:17 2023 +0700
+
+    Added debug version
+
+[33mcommit 0eca31ae57654f2368cbf5c5dd22e8fbbb3f73cf[m
+Merge: 91f5d04 2d337fd
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 26 22:48:29 2023 +0700
+
+    fixed conflicts
+
+[33mcommit 91f5d049ab9465c1b016f642e71e60ac1a3fb4f0[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 26 22:38:35 2023 +0700
+
+    delete set avg mark to recipe and base.sql file
+
+[33mcommit 5f0ff8ab2f59c1eb7cf9a94aeb90fc3a0eec729d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 26 22:24:37 2023 +0700
+
+    add unathorized access to get avg mark
+
+[33mcommit 84f9c93f23a2fa69baef481497ce6a264fb67f90[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 26 17:55:08 2023 +0700
+
+    Added endpoint for recommendation
+
+[33mcommit ca77ed225e1a190392878f15b12899fc7af16fd7[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 26 17:13:28 2023 +0700
+
+    Added starts of colab filetereing
+
+[33mcommit 34c2ce29593dfe0bc6805884f88c71a74f5f907a[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 26 17:03:32 2023 +0700
+
+    add get mark api and extract some find methods to util class
+
+[33mcommit 2d337fd0cf0018336eb85c900483c76377d4364b[m
+Merge: 21346ba 1e3a610
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 26 09:27:25 2023 +0700
+
+    Merge pull request #40 from Koshak1432/fix_name
+    
+    Added collection marks
+
+[33mcommit 1e3a610a8e5a673b533dfb18310f01f182642f59[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Tue Jul 25 18:11:13 2023 +0700
+
+    Added collection marks
+
+[33mcommit 21346baa5de8a417bdf7e8a922a923368882cbe1[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Tue Jul 25 16:48:31 2023 +0700
+
+    Added collection marks
+
+[33mcommit 5ee82b24e0c5f81f2e53a47c21b7a69efaf2aaad[m
+Merge: aa158eb 7e11b69
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 25 14:50:44 2023 +0700
+
+    Merge pull request #39 from Koshak1432/user_profile
+    
+    User profile
+
+[33mcommit 7e11b69a7938bfadad628112d4fe6921ab5ba101[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Tue Jul 25 14:41:58 2023 +0700
+
+    Fixet profile view
+
+[33mcommit c965f1885aacdd69670cb344631c61fcb4650a82[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Tue Jul 25 12:20:40 2023 +0700
+
+    Added get/put/post for profile
+
+[33mcommit 5fe1383f4931bd377492800cf2634c3440ccf820[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 24 17:54:23 2023 +0700
+
+    Profile tests in process
+
+[33mcommit cd52f6f7f9cf6847bdfad2a0c2ec720919d730ce[m
+Merge: 28aca42 aa158eb
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 24 11:56:13 2023 +0700
+
+    Pulled develop
+
+[33mcommit 28aca4235bf7c149ed5bead9ef8185453b427cde[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 24 11:50:44 2023 +0700
+
+    Added user mark to dto
+
+[33mcommit 367a886709f8e0af80e19ec3fa666eafc8615af3[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 24 10:56:16 2023 +0700
+
+    Added script for deletions
+
+[33mcommit aa158ebd0dd30899a01488c49138c8f7998f6b3d[m
+Merge: f47205c 94db4fc
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sat Jul 22 13:44:34 2023 +0700
+
+    Merge pull request #38 from Koshak1432/extract_exception_responses
+    
+    Move exception msg to constants
+
+[33mcommit 94db4fc92493e625e47631bb25b76a5882afcd86[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sat Jul 22 13:41:07 2023 +0700
+
+    refactor some
+
+[33mcommit 3f0ac5d718961934085494e7d1d8018b273a490b[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 21 22:45:45 2023 +0700
+
+    change new response entity to .ok(body)
+
+[33mcommit f47205cb2a145b008dc3300a3f9d657a7076949e[m
+Merge: f91a8b6 666e7f2
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 21 22:07:35 2023 +0700
+
+    Merge pull request #37 from Koshak1432/fix_cookie
+    
+    Add non cookie realization
+
+[33mcommit 666e7f23ba66e461733d106926dde664362d4ef0[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 21 22:04:45 2023 +0700
+
+    Update RecipeServiceImpl.java
+    
+    downscale by one if
+
+[33mcommit b1fc62a8b55f4a3bd234db7459e0c2ad3ee3ac18[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 21 22:01:59 2023 +0700
+
+    Update RecipeServiceImpl.java
+    
+    delete ;
+
+[33mcommit 913a9b0c1c774b8fcb0fa05f83823d61480ef7f0[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 21 21:45:23 2023 +0700
+
+    Update CommentServiceImpl.java
+    
+    delete is ContainsRoleName
+
+[33mcommit 2d5480c5707971d960e3d09e77e17f0e8b19c772[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 21 21:44:14 2023 +0700
+
+    Update CommentServiceImpl.java
+
+[33mcommit 337f8d19617ea72738bb3da36a5c36d185fa19c5[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 21 20:47:01 2023 +0700
+
+    Deleted extras
+
+[33mcommit dda7f1ee9da9caa1fd28ed3d33c211d6f264858f[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 21 20:44:36 2023 +0700
+
+    Fixed accessToken time && recipe post
+
+[33mcommit d8c8f0991ca11230093f71681e0a2099c69987b2[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 21 18:01:11 2023 +0700
+
+    Added fixes
+
+[33mcommit d871effe3f19428eb84e1d88962658e9b2e8a984[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 21 17:11:08 2023 +0700
+
+    Fix style
+
+[33mcommit 30146a01105eef93b45449358309a85c51d378f3[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 21 17:05:40 2023 +0700
+
+    Add non cookie realization
+
+[33mcommit f91a8b6a67b3451a4a19720eea9d67222a6fc2d9[m
+Merge: 484a944 73b00b7
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 20 17:49:17 2023 +0700
+
+    Merge pull request #36 from Koshak1432/fix_marks
+    
+    Fix marks
+
+[33mcommit 73b00b7961260a5c89236d714287312b9b5ccb8d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 20 17:45:18 2023 +0700
+
+    fixed marks
+
+[33mcommit 81d0a4bff1ae193e2011f22eed770b521ec064ad[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 19 17:53:13 2023 +0700
+
+    Added composite primary key
+
+[33mcommit 484a944452f66730b90fe159fc6805e1f98619dc[m
+Merge: 046bc76 5af707b
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Wed Jul 19 14:39:41 2023 +0700
+
+    Merge pull request #35 from Koshak1432/add_cookie
+    
+    Fixed refresh token request in refresh and token
+
+[33mcommit 5af707b3e90950f9f1ab0e542579cc96d201e4e3[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 19 14:23:10 2023 +0700
+
+    Fixed refresh token request in refresh and token
+
+[33mcommit 046bc76076a656f630235e183f7da1bcebc453cb[m
+Merge: 038f166 b10a747
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 19 12:59:58 2023 +0700
+
+    Merge pull request #34 from Koshak1432/add_cookie
+    
+    Added cookie + fixed marks
+
+[33mcommit b10a7475dc822706bba7e3dd4c299450fbe61d43[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 19 12:36:54 2023 +0700
+
+    Changed time for access token to 15mins
+
+[33mcommit 0cc21ba92dd8c61b5c7f7f214bbfbe1a4961f917[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 19 12:32:59 2023 +0700
+
+    Added cookie + fixed marks
+
+[33mcommit 038f1663ca850b1b707e0c376a5424051f873b24[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Tue Jul 18 17:56:56 2023 +0700
+
+    Added tests + small fixes
+
+[33mcommit feef916305b9bc3368bf160a0bc1b58f80a113aa[m
+Merge: 113503f ef959e0
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Tue Jul 18 17:48:49 2023 +0700
+
+    Merge branch 'develop' of github.com:Koshak1432/talkychef-server into develop
+
+[33mcommit 113503f24982418c683da3d0498fa705063c3155[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Tue Jul 18 17:48:33 2023 +0700
+
+    Added recipe tests
+
+[33mcommit ef959e042d9c71d66e95e64aeb0b5efe0dc10b6d[m
+Merge: 849bd72 b70516c
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Tue Jul 18 17:44:40 2023 +0700
+
+    Merge pull request #33 from Koshak1432/normalize_users
+    
+    Added userInfo entity
+
+[33mcommit b70516c34ddf2ab93f7150707e3603d998030737[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 17:02:38 2023 +0700
+
+    fixed userInfo and avgMark entities
+
+[33mcommit ffb04c2617d4fd1c6720c510ebd81a05e6548058[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 16:28:20 2023 +0700
+
+    fixed tests
+
+[33mcommit 2ff22d82e8db70a59865ce9d6f7ca3d50d457963[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 16:13:14 2023 +0700
+
+    add userInfo entity
+
+[33mcommit 849bd72d3bb12dabb5d0c6d52beec4ec8163b7e6[m
+Merge: fa91faf 5dc822b
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 14:06:27 2023 +0700
+
+    Merge pull request #32 from Koshak1432/fix_roles
+    
+    fixed comments
+
+[33mcommit 5dc822b79c1bedb132f8128fe65932e77e327bc8[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 14:05:24 2023 +0700
+
+    fixed comments
+
+[33mcommit fa91faf38ecdad98826da890d2172c5da46c9806[m
+Merge: afd7797 97be9cb
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 13:03:44 2023 +0700
+
+    Merge pull request #31 from Koshak1432/fix_roles
+    
+    fixed media path
+
+[33mcommit 97be9cbb73351d96c00bb8188a8fe435258dd8b3[m
+Merge: e54c002 afd7797
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 13:03:35 2023 +0700
+
+    Merge branch 'develop' into fix_roles
+
+[33mcommit e54c002301c6e61b0675dce9baa3a6f02b9ca227[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 13:01:44 2023 +0700
+
+    fixed media path
+
+[33mcommit afd7797baa9c8d304c4552df47f25b692deced75[m
+Merge: a7934d9 91f2827
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:54:36 2023 +0700
+
+    Merge pull request #30 from Koshak1432/fix_roles
+    
+    fixed media path
+
+[33mcommit 91f282777cf2cfd2b162cdd8be725b2d3cc309de[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:53:32 2023 +0700
+
+    fixed media path
+
+[33mcommit a7934d99561b170d77954df5b7eed9329cb7e7c9[m
+Merge: 284edf7 b15c385
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:45:58 2023 +0700
+
+    Merge pull request #29 from Koshak1432/fix_roles
+    
+    fixed collections permission
+
+[33mcommit b15c38588b89d9ffc796cfdebc5e22297147a609[m
+Merge: ed98ad5 284edf7
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:45:50 2023 +0700
+
+    Merge branch 'develop' into fix_roles
+
+[33mcommit ed98ad503f6cea9d47055448c21b841cc7f268a2[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:44:05 2023 +0700
+
+    fixed collections permission
+
+[33mcommit 284edf7a620d9c3c288314667caab90222e8afcd[m
+Merge: db720e9 1dd6951
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:22:27 2023 +0700
+
+    Merge pull request #28 from Koshak1432/fix_roles
+    
+    fix tests
+
+[33mcommit 1dd6951793bfe53bac26a83cb4c2813fb78e56db[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:20:40 2023 +0700
+
+    fix tests
+
+[33mcommit db720e980a7b778a362d828f97e0ac608215dbfc[m
+Merge: 3b601fc f0cab94
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:07:07 2023 +0700
+
+    Merge pull request #27 from Koshak1432/fix_roles
+    
+    Fix roles
+
+[33mcommit f0cab94ebca0c69eaa99ebbf55242719202d71a3[m
+Merge: 6aeb1c1 3b601fc
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:07:00 2023 +0700
+
+    Merge branch 'develop' into fix_roles
+
+[33mcommit 6aeb1c1b7f253ca340d69f0c3be7858ea6417755[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 12:04:17 2023 +0700
+
+    fixed roles
+
+[33mcommit ca5f49cc9781a9f288769cebb05a53df28fd3147[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 18 00:36:44 2023 +0700
+
+    fixing security, jwt utils error
+
+[33mcommit 68d5cd0cd669bb40e80d606644bd8ea48b9f9460[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 17 17:47:52 2023 +0700
+
+    some fixes
+
+[33mcommit c4508d23543d0e58adf84fa4282dff2d810f2f04[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 17 14:29:18 2023 +0700
+
+    fix sucurity migration file
+
+[33mcommit 3b601fcb7fb7d4d1b0b6815c6f8039867a1ba6be[m
+Merge: 00cbf79 4ca4893
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Mon Jul 17 11:23:51 2023 +0700
+
+    Merge pull request #26 from Koshak1432/security_work
+    
+    Security work
+
+[33mcommit 4ca489311975b33193e2aa98a9c16d97746069a3[m
+Merge: 4c06719 00cbf79
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 17 11:21:59 2023 +0700
+
+    Pulled develop
+
+[33mcommit 4c0671914e20da05c0dbcab2ec6b797535a59996[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 17 11:17:07 2023 +0700
+
+    Added small fixes
+
+[33mcommit 00cbf79dbede9c2a7e68d8e44c00e54780074c11[m
+Merge: 35f7d1f 927efd9
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 17 10:00:23 2023 +0700
+
+    Merge pull request #25 from Koshak1432/security_work
+    
+    Security work
+
+[33mcommit 927efd9c97a7bf92b65aa9e075892f73f2fb3f6c[m
+Merge: 373f919 e208e94
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 17 09:59:26 2023 +0700
+
+    merged
+
+[33mcommit 373f9193fd6969b1a46a434d5bb77dee5daaf9f7[m
+Merge: 64d9723 35f7d1f
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 17 09:56:38 2023 +0700
+
+    merged
+
+[33mcommit 64d97237f725c42eda8955f0b46165dfde9d34e1[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 17 09:40:28 2023 +0700
+
+    remove depricated enableglobalmethodsecurity
+
+[33mcommit e208e94cc624e0993c4262a6d25b73137b039f5a[m
+Merge: 35f7d1f 93c9921
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 17 09:37:32 2023 +0700
+
+    merged security
+
+[33mcommit 93c9921ed334bb4c89a390b97be71dd14b9074a9[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 14 17:20:58 2023 +0700
+
+    Added preAuthorization
+
+[33mcommit 0dd618c1d774a36f300b5813deb668a4fed8a5c8[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 14 16:52:51 2023 +0700
+
+    Added rules of deleting/updating marks/recepies/comments + added password change
+
+[33mcommit 35f7d1f679fa878ae9277f06567d91ee0ef4ec38[m
+Merge: 865a02d 52d99be
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 14 15:16:16 2023 +0700
+
+    Merge pull request #24 from Koshak1432/add_exception_description
+    
+    add description to exceptions handler
+
+[33mcommit 52d99be0b31303681c6de4f2461f514f7e3e31db[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 14 15:15:35 2023 +0700
+
+    add description to exceptions handler
+
+[33mcommit 865a02d661f1819f61a7e07b387227e3f91c83de[m
+Merge: 96aa432 6b8f13f
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 14 09:15:20 2023 +0700
+
+    Merge pull request #23 from Koshak1432/fix_indexed_params
+    
+    fixed indexed params to named ones
+
+[33mcommit 6b8f13f3ab3a902ebc498fa8554bf4e7340a63e5[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 14 09:14:01 2023 +0700
+
+    fixed indexed params to named ones
+
+[33mcommit c780df1820eba83bf310df082ed2b7c367538237[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 13 18:04:18 2023 +0700
+
+    Working on check authorites by login in token, needs testing
+
+[33mcommit 96aa4321b25c8b67501dead000cf057034ff6f56[m
+Merge: 16a3335 e417ea2
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 16:47:04 2023 +0700
+
+    Merge pull request #21 from Koshak1432/fix_post_time
+    
+    fixed post time
+
+[33mcommit e417ea24a07b999ffdd4882cf705c1aea72f0175[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 16:45:57 2023 +0700
+
+    fixed post time
+
+[33mcommit dc26635b868a4289bad638dbed8a85b02e5cd5a6[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 13 16:42:07 2023 +0700
+
+    Deleted tmp file
+
+[33mcommit 930dbfa725920a0b6de0c6325162d3236b15ce76[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 13 16:13:48 2023 +0700
+
+    Migrate to the last security version
+
+[33mcommit 42e7f0566a5122c5332931cb4d35f001d02e023c[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 13 15:09:48 2023 +0700
+
+    Encrypting passwords
+
+[33mcommit 16a3335d20f85669ed047d07e15956d19bd80f36[m
+Merge: 00f1e8d 10d9172
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 12:20:00 2023 +0700
+
+    Merge pull request #20 from Koshak1432/get_recipe_comments
+    
+    finally fixed tests
+
+[33mcommit 10d9172361335cbce60bb129120d25e3aeb21ab7[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 12:19:02 2023 +0700
+
+    finally fixed tests
+
+[33mcommit 00f1e8d8f799784f1bf57ca5078c10a031da55bd[m
+Merge: 5faa5da 5cae719
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 12:08:26 2023 +0700
+
+    Merge pull request #19 from Koshak1432/get_recipe_comments
+    
+    fixed tests
+
+[33mcommit 5cae719c8b4f79b60be2ee977cda59e1d1b3b53d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 12:07:16 2023 +0700
+
+    fixed tests
+
+[33mcommit 5faa5dabb0fe116b34e74b711e5eb8eb03179360[m
+Merge: 9c9784f 29a2fcc
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 12:01:04 2023 +0700
+
+    Merge pull request #18 from Koshak1432/get_recipe_comments
+    
+    fixed date data type
+
+[33mcommit 29a2fcc852086744031e5bcbdc4d6f5433940efe[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 11:59:52 2023 +0700
+
+    fixed date data type
+
+[33mcommit 9c9784f1d2bf46acd087bacc37be1078e9962c44[m
+Merge: 9edc048 1e867f4
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 11:51:17 2023 +0700
+
+    Merge pull request #17 from Koshak1432/get_recipe_comments
+    
+    add post_time to comment dto
+
+[33mcommit 1e867f43f54cc891fade5578e599db6348ecf94a[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 11:49:49 2023 +0700
+
+    add post_time to comment dto
+
+[33mcommit 9edc048701ee7c9f46fe94616b53ddf742b95a6c[m
+Merge: 7607609 1e378a9
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 09:56:32 2023 +0700
+
+    Merge pull request #16 from Koshak1432/get_recipe_comments
+    
+    Get recipe comments
+
+[33mcommit 1e378a942f953d14851ddfbf2ee974e83333cb27[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 13 09:54:42 2023 +0700
+
+    add get comments by recipe id
+
+[33mcommit c1fda16e6417c3d30bbe381ffc15910012667266[m
+Merge: e5fd826 7607609
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 12 18:03:08 2023 +0700
+
+    Merge branch 'develop' of https://github.com/Koshak1432/talkychef-server into develop
+
+[33mcommit e5fd8263f429fceb85b3f11d85c2c3692f29dc30[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 12 18:02:25 2023 +0700
+
+    minor fix
+
+[33mcommit 8c342937fd69f352340841420c1b4dc8c43b118f[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 12 17:57:12 2023 +0700
+
+    Added user registration
+
+[33mcommit 4912521e52d060f092d7152ae0cfa24584ec2df5[m
+Merge: 0343df4 7607609
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 12 16:10:26 2023 +0700
+
+    Merge branch 'develop' of github.com:Koshak1432/talkychef-server into security_work
+
+[33mcommit 0343df443649c95176ae9c97e2674aef7642760f[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 12 16:10:10 2023 +0700
+
+    Changed authController
+
+[33mcommit 76076093fc5f529b465ac136fbb0bed29964749c[m
+Merge: 8f1c551 47fd768
+Author: Alina Pashkova <87114350+Just0Lina@users.noreply.github.com>
+Date:   Wed Jul 12 14:38:00 2023 +0700
+
+    Merge pull request #15 from Koshak1432/change_authorId_to_authorUid
+    
+    Change author id to author uid and refactor api
+
+[33mcommit 6e565d7dc15cd742b71879fecb20039ee7a7589c[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 12 13:02:30 2023 +0700
+
+    Working on interface segregation
+
+[33mcommit 47fd7683129214327d049dcf931acb10cce0c1cc[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 12 12:59:51 2023 +0700
+
+    change authorId to authorUid(and author_id to author_uid in dto)
+
+[33mcommit 090733e6d64d903a255e6edd11baac41db8e439c[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 12 11:42:48 2023 +0700
+
+    finally refactor, app works properly
+
+[33mcommit 2e6424a53c764090e7a9da97f5f9b0e09bf4d69f[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 12 11:18:22 2023 +0700
+
+    refactor and segregate api
+
+[33mcommit 8f1c551d15cf823e179c584190bb0799298bb832[m
+Merge: b395f68 e849e7c
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 11 22:26:17 2023 +0700
+
+    Merge pull request #13 from Koshak1432/add_unique_to_media
+    
+    add unique constraint to media in recipes and recipe_steps, prevent non unique between tables
+
+[33mcommit e849e7cef52685cd25b5088c02a0b7fbc5bdb1a5[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 11 22:22:51 2023 +0700
+
+    add unique constraint to media in recipes and recipe_steps, prevent non unique between tables
+
+[33mcommit c6c7b6e722981c38b392441615a77c3ce55375a4[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Tue Jul 11 18:00:00 2023 +0700
+
+    Added jwt tokens
+
+[33mcommit b395f68fbdbe4ee572344676b5f28bbd79b976a5[m
+Merge: 53c9d41 e7a2070
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 11 14:26:05 2023 +0700
+
+    Merge pull request #12 from Koshak1432/refactor_api_v2
+    
+    refactor forgotten api
+
+[33mcommit e7a2070a1ecf4e80c522dd4c07ad98840f9f471d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 11 14:25:26 2023 +0700
+
+    refactor forgotten api
+
+[33mcommit 53c9d4172d27be8d48a207d1fae1637a9051d13c[m
+Merge: 5e72270 711c194
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 11 11:44:01 2023 +0700
+
+    Merge pull request #11 from Koshak1432/make_migrations_work
+    
+    pull old migration files
+
+[33mcommit 711c19488cddd71e805b8637caec608fb0e3e91f[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 11 11:42:42 2023 +0700
+
+    pull old migration files
+
+[33mcommit 5e722702798286dfb3667a57f21f1703801ba38a[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 16:03:41 2023 +0700
+
+    minor fixes
+
+[33mcommit 211d13853cff2d6630014c30c53e105e6990ef53[m
+Merge: ce9f869 350e843
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 15:57:53 2023 +0700
+
+    Merge pull request #10 from Koshak1432/refactor_api
+    
+    refactor api paths
+
+[33mcommit 350e84317ff4a96ebbe2a0b2148a4c0ea4e4e76a[m
+Merge: 11b7da2 ce9f869
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 15:57:44 2023 +0700
+
+    Merge branch 'develop' into refactor_api
+
+[33mcommit 11b7da24c3a0ca7161f1a276c478708297e732ec[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 15:55:38 2023 +0700
+
+    refactor api paths
+
+[33mcommit ce9f8692372e6bc36a9a234c40645ead91df3858[m
+Merge: f4337a8 d1e1175
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 15:05:41 2023 +0700
+
+    Merge pull request #9 from Koshak1432/test_delete_on_recipe
+    
+    Test delete on recipe
+
+[33mcommit d1e1175804e6c145ac8b302a8c727071ceeef537[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 10 14:24:22 2023 +0700
+
+    Removed comments
+
+[33mcommit fde4365a02f1ecb908fad38265b59c112e35f3ec[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 10 13:03:41 2023 +0700
+
+    Fixed marks removal
+
+[33mcommit a9160e529a36a39e6bba2c912511ab83b533fc23[m
+Merge: 3c32263 ddc12d9
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 10 12:28:10 2023 +0700
+
+    Merged make_it_works
+
+[33mcommit 3c322636eb3e05e663404d45676abfbae0763630[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 10 12:19:57 2023 +0700
+
+    Added small fixes
+
+[33mcommit ddc12d999386d1545cd3448b4480f74598c0f55c[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 12:18:48 2023 +0700
+
+    made it work
+
+[33mcommit e79219e356957da904276a412ac250f29467afe9[m
+Merge: ae5bce6 c2606fb
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Mon Jul 10 11:29:52 2023 +0700
+
+    Added delete
+
+[33mcommit f4337a8bdcbc5cfb48d80a2cdfd13c935aae2f95[m
+Merge: ae5bce6 63f0c58
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 11:15:41 2023 +0700
+
+    Merge pull request #8 from Koshak1432/make_it_work
+    
+    change mark json property
+
+[33mcommit 63f0c58df31006a4031d27b0044c44c4a3f4d62e[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 11:14:32 2023 +0700
+
+    change mark json property
+
+[33mcommit ae5bce6735bb68892189aedfb08548cb89b0a02d[m
+Merge: 4f7faf6 f83f8b3
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 09:03:58 2023 +0700
+
+    Merge pull request #7 from Koshak1432/repair_migrations
+    
+    repaired flyway migrations
+
+[33mcommit f83f8b34110a72b41a78171d18c73740a79cc837[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Jul 10 09:03:13 2023 +0700
+
+    repaired flyway migrations
+
+[33mcommit c2606fb2850fabfb7437b75b19999bff76473d9b[m
+Merge: 3eded1e 4f7faf6
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 7 18:07:03 2023 +0700
+
+    Still Working on delete
+
+[33mcommit 3eded1ec395c10cf882b6ae4d42c21e7974023b3[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 7 17:28:33 2023 +0700
+
+    Working on delete
+
+[33mcommit 4f7faf6e3c155b98080304605cc114e1d96edb65[m
+Merge: b9f42bc 8982158
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 7 17:24:02 2023 +0700
+
+    Merge pull request #5 from Koshak1432/adding_marks
+    
+    Adding marks
+
+[33mcommit 89821583c2f01765e07d1205f091a272de753690[m
+Merge: 41e7a3e b9f42bc
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 7 17:23:44 2023 +0700
+
+    Merge branch 'develop' into adding_marks
+
+[33mcommit 41e7a3e23cbbf08d857a241bf06f6993c416fe76[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 7 16:07:53 2023 +0700
+
+    Fixed style problems
+
+[33mcommit ae9b5c8992b6d91bb7b18e47fa94a3739fc48ace[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 7 15:23:52 2023 +0700
+
+    Fixed style problems
+
+[33mcommit 804b94c09aa2df3b3a3f4f334615a09059f4efff[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 7 15:22:33 2023 +0700
+
+    Fixed style problems
+
+[33mcommit a44de14c0d617a1cbc550253e2d55027dc5a3e40[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 7 15:13:41 2023 +0700
+
+    Fixed style problems
+
+[33mcommit 69fa21d0b70ee8d9c3d5ae95948bfb91f99c278b[m
+Merge: 6a02c03 6f9fe98
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 7 15:03:58 2023 +0700
+
+    Merge branch 'adding_marks' of github.com:Koshak1432/talkychef-server into adding_marks
+
+[33mcommit 6a02c03d5eed07dff3bf9b6f85928cea007045a4[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Fri Jul 7 14:54:46 2023 +0700
+
+    Added avgMarks
+
+[33mcommit b9f42bca9ed915235c721bdca3d8e1752cbfd474[m
+Merge: bf975f6 89ba982
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 7 09:52:40 2023 +0700
+
+    Merge pull request #6 from Koshak1432/implrementing-comments
+    
+    Implrementing comments
+
+[33mcommit 89ba9825266c71b44c8bb95ba15f56efe03e3d17[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Fri Jul 7 09:33:18 2023 +0700
+
+    add list of comments to recipeDto
+
+[33mcommit 6f9fe981ed151623f6a4cabafb03660be518059f[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 6 17:29:05 2023 +0700
+
+    Update build.gradle
+
+[33mcommit 6cb4535c4a8af86c18a95e8a3afc99ca4a0854a3[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 6 17:23:09 2023 +0700
+
+    idk what to do with path variables
+
+[33mcommit 5ca802dda056500af115b1e94f2c9b12255772f2[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 6 17:04:10 2023 +0700
+
+    Fixed adding, updating, deleting marks
+
+[33mcommit 9ecf771f56686b3a0b6dc436f220140effafd1d3[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 6 16:58:48 2023 +0700
+
+    implement comments api
+
+[33mcommit 06d4404bc1d43558c19a22b88c2101847ead3154[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 6 14:29:47 2023 +0700
+
+    changed recipe add
+
+[33mcommit f749ffa8e1b6ed2843d7d33b13f4b7c48208bf71[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 6 14:25:10 2023 +0700
+
+    add postComment
+
+[33mcommit 4b0d6e544f9028144fc97a3149bf200e2cb3a968[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 6 14:14:39 2023 +0700
+
+    Saving marks
+
+[33mcommit 5cc79517a1dfb2efc98d8603e4008f0aaa2d430a[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Thu Jul 6 12:26:49 2023 +0700
+
+    Still not working modelMapper
+
+[33mcommit 4615dbbaccb5c24f861a4e750ff31065c58aa6e0[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Thu Jul 6 12:23:28 2023 +0700
+
+    create comment map test
+
+[33mcommit 9300a2554dd7ce1f7e11dc704e9d83527305caea[m
+Author: Пашкова Алина Сергеевна <al.passshkova@gmail.com>
+Date:   Wed Jul 5 18:05:53 2023 +0700
+
+    Working on mapping mark
+
+[33mcommit d8c1ac022d59bdc9fdfeb436b281e7368b1df398[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 5 17:56:23 2023 +0700
+
+    add comment entity
+
+[33mcommit bb340296910f61a63d645b279046496b2d6194be[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Wed Jul 5 17:27:32 2023 +0700
+
+    add comment dto
+
+[33mcommit c3a948ed3f92aeebd2864010d1839e0c02593031[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 4 16:55:57 2023 +0700
+
+    smth changes, idk
+
+[33mcommit a26fbaae60b299aca619cbd19c1c5f976e1b104e[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Jul 4 16:55:30 2023 +0700
+
+    add comments sql file
+
+[33mcommit bf975f606518f710a092446434ee49124add9731[m
+Merge: d2a8cac b17fd4c
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Apr 23 15:51:07 2023 +0700
+
+    Merge pull request #2 from Koshak1432/updating_recipe
+    
+    Added updating recipe feature
+
+[33mcommit b17fd4cccdf4a5cb930aff2e0ca2f50c7899c3b6[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sat Apr 22 00:42:49 2023 +0700
+
+    fix small string in search
+
+[33mcommit 232814e25c0a829326411dc7231f9e8b2f248039[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Apr 17 12:30:07 2023 +0700
+
+    fix null media situation in getRecipeMedia
+
+[33mcommit f827c3a58e06d3d2bce5daba402e3dc67e85c51d[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Apr 17 12:16:46 2023 +0700
+
+    implemented update recipe feature and configure mapper to map Recipe.auhtorUid -> RecipeDto.authorId
+
+[33mcommit 820b3df800006d715214312e24a1207809356f1e[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Mon Apr 17 01:30:17 2023 +0700
+
+    some shit with updating, deletes orphan steps, but not media
+
+[33mcommit fbea33297985967cbee27111aaf1f0062b706a0f[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Apr 16 19:40:12 2023 +0700
+
+    fix update recipe with same recipe
+
+[33mcommit 9c1b85034ff3f790df0f955a9f6264bcdf219911[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Apr 16 17:44:11 2023 +0700
+
+    updates recipe, but didnt test media removal and it doesn't delete steps if has more steps than in updated
+
+[33mcommit 2989d3713c4aede27195610ec0b5feeac0c7ab69[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sat Apr 15 00:20:44 2023 +0700
+
+    start making updating feature
+
+[33mcommit d2a8cac0215ca92a9d2df5e45c03198794c9b90e[m
+Merge: 5d5bb5f f4f4b69
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Apr 4 19:24:51 2023 +0700
+
+    Merge pull request #1 from Koshak1432/get-request-impl
+    
+    Implement searching recipes by part name
+
+[33mcommit f4f4b695469a63eaaa57ca3f09dbc308a49dc6f4[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Tue Apr 4 16:54:52 2023 +0700
+
+    feat: add search recipes by part name
+
+[33mcommit c7655609a4fd4dfab17fda8cce1a65e127dfbe99[m
+Author: Koshak1432 <70834575+Koshak1432@users.noreply.github.com>
+Date:   Sun Apr 2 13:35:57 2023 +0700
+
+    test init commit
+
+[33mcommit 5d5bb5f648addc412d8caff8574e40384d031ac9[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sun Jan 29 18:09:26 2023 +0700
+
+    collection paging
+
+[33mcommit d5b9423a4cd0e807d27ca3e6f0e6acafcb2c9e86[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sat Jan 28 16:11:59 2023 +0700
+
+    remove ingredient controller and logic
+
+[33mcommit b27a72cf6455d3cca239e3b271e42b16363991cb[m
+Merge: aeefb74 1e6ccfe
+Author: Diif <30970636+Diif@users.noreply.github.com>
+Date:   Sat Jan 28 12:51:53 2023 +0700
+
+    Merge pull request #1 from Diif/minor-changes
+    
+    Minor changes
+
+[33mcommit 1e6ccfec1a8a1c542bc3848b9585c49342db23a5[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Fri Jan 27 17:27:18 2023 +0700
+
+    Множественные изменения. Совместимость должна остаться.
+    
+    *Сервер отправляет рецепт вместе с его id
+    *Наличие медиа для шага стало опциональным
+    *Изменение архитектуры сервера: сделай сервис-классы для бизнесс слоя, вынес логику из контроллеров
+    *Включил http2
+    *Создал конфигурацию для простого запуска тестов
+    *Сделал несколько тестов для маппера.
+    *В подборки добавлено количество рецептов. Текущие подборки будут пересчитаны, изменение новых будет менять счетчик.
+    *Переделана сущность пользователя (поля обговорил с Сашей) в коде и БД
+    *Сервер чуть лучше обрабатывает экспешены (но все часто кидает 500 без пояснений)
+    *Сервис для единиц измерения умер.
+    *Сервис для ингредиентов выключен, может тоже умрет в следущий раз
+    *Прочие изменения кода
+
+[33mcommit f519c609156f1855ffe9b457df38349a0ac38492[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sun Jan 22 14:33:50 2023 +0700
+
+    add test configuration
+
+[33mcommit aeefb7495497288017473f8405d9adf6dc9bf1ff[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Fri Jan 20 16:51:39 2023 +0700
+
+    separated business logic from controllers
+
+[33mcommit d4022435967ca36363f56570c04197d8a88b5bda[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Wed Dec 14 18:55:29 2022 +0700
+
+    mapper fix
+
+[33mcommit b7e1aa59e4baa39527ab68444ab7adfb7462945b[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Wed Dec 14 12:09:48 2022 +0700
+
+    add png media load
+
+[33mcommit 005556d7166a7c1ce1b4ebf49c035379e282b820[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Wed Dec 14 12:04:14 2022 +0700
+
+    change minutes to int
+
+[33mcommit 401264b8b4684607b6aff4d69f6dbcf585c8ca79[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Wed Dec 14 11:48:50 2022 +0700
+
+    db changes for png and users
+
+[33mcommit 16a18870d147642430dbe530ff258fca1ecb5b48[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Wed Dec 14 11:47:57 2022 +0700
+
+    ingredients bugfix
+
+[33mcommit 7f7551ebd7446d5c721e4754af8b7b4e72805e71[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sun Dec 11 11:01:51 2022 +0700
+
+    media extracting mimType from content-type header
+
+[33mcommit a3bfa5c874c3e3784f6d25e3bfa6e1cd8de0d5cc[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sat Dec 10 23:42:00 2022 +0700
+
+    collection feature
+
+[33mcommit 1acb79c7e4e16e5e6dbd3b10b8c8f7be214cd120[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sat Dec 10 22:57:10 2022 +0700
+
+    change manytomany list to set
+
+[33mcommit 12f270c7bb4e66cd966cfebfaee5fcdec4e47f67[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sat Dec 10 21:40:54 2022 +0700
+
+    remove slashes from mapping
+
+[33mcommit 1ee56d019c11379875f671906dbe5508f807113f[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sat Dec 10 21:39:49 2022 +0700
+
+    Small fixes: remove ignoringcase, fix equals, add ex throws
+
+[33mcommit fc2698f285cc8ae225957428adc196d50ddf7212[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sat Dec 10 21:35:11 2022 +0700
+
+    db recipes author_id now cant be NULL
+
+[33mcommit 8ce703432e92e6d3fd654099f9278c2959971890[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Tue Dec 6 13:24:40 2022 +0700
+
+    turn on https
+
+[33mcommit ce0b02013d9c273408c3ae28e3ff86a63861d329[m
+Author: Diif <30970636+Diif@users.noreply.github.com>
+Date:   Tue Dec 6 13:21:18 2022 +0700
+
+    Delete start.sh
+
+[33mcommit f12c210b9e2e140b4de890616b502c640dd5456d[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Tue Nov 29 22:38:45 2022 +0700
+
+    many imprs, looks to be ready for the first use
+
+[33mcommit 024cca838b812161e3b0bebbf058839581e0273c[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sun Nov 27 13:25:43 2022 +0700
+
+    db init db users change
+
+[33mcommit f3e39e53501ae5c5fa1eec6c07183087c582528b[m
+Author: prozella <kiwulik@yandex.ru>
+Date:   Sat Nov 26 18:22:01 2022 +0700
+
+    start develop branch
+
+[33mcommit fcbb8e60a390f0e7b628c943d20b5236ec4fa014[m
+Author: Diif <30970636+Diif@users.noreply.github.com>
+Date:   Fri Nov 25 22:04:14 2022 +0700
+
+    Initial commit
