@@ -55,7 +55,7 @@ public class AuthServiceImplMobile implements AuthService {
         return jwtResponse;
     }
 
-    public JwtResponse getAccessToken(@NonNull String refreshToken) throws NotFoundException {
+    public JwtResponse getAccessToken(@NonNull String refreshToken) throws NotFoundException, AuthException {
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
@@ -68,11 +68,11 @@ public class AuthServiceImplMobile implements AuthService {
                 return jwtResponse;
             }
         }
-        return new JwtResponse();
+        throw new AuthException("Invalid JWT");
     }
 
     public JwtResponse refresh(@NonNull String refreshToken) throws AuthException, NotFoundException {
-        if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
+        if (!jwtProviderImpl.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(login);

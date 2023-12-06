@@ -37,4 +37,5 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
             WHERE distr.selection_id = :id
             """, nativeQuery = true)
     List<Category> findBySelectionId(Long id);
+
 }

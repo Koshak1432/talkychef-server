@@ -45,4 +45,5 @@ public class CategoryApiController implements CategoryApi {
             NotFoundException {
         return service.addCategoryToRecipe(recipeId, categoryId);
     }
+
 }

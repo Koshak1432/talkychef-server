@@ -52,7 +52,7 @@ public interface RecipeApi {
 
     @GetMapping(value = "/{id}/categories")
     ResponseEntity<List<CategoryDto>> getCategoriesByRecipeId(
-            @PathVariable("id") @PositiveOrZero(message = "recipe id must be not negative") Long id) throws
+            @PathVariable("id") @Positive(message = "recipe id must be > 0") Long id) throws
             NotFoundException, BadRequestException;
 
 
