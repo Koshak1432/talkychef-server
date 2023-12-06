@@ -95,14 +95,16 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     @Transactional
     public ResponseEntity<IdDto> putCollection(Long id, CollectionDto body) throws AuthException, NotFoundException {
-        Media media = FindUtils.findMedia(mediaRepository, id);
         User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, id);
         if (collection.getAuthor() == null || !collection.getAuthor().getUid().equals(user.getUid())) {
             throw new AuthException("No rights");
         }
         collection.setName(body.getName());
-        collection.setMedia(media);
+        if (body.getMediaId() != null) {
+            Media media = FindUtils.findMedia(mediaRepository, body.getMediaId());
+            collection.setMedia(media);
+        }
         Collection savedCollection = collectionRepository.save(collection);
         return ResponseEntity.ok(new IdDto().id(savedCollection.getId()));
     }

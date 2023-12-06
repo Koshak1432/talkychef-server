@@ -30,9 +30,8 @@ public interface CategoryApi {
                                                   @RequestParam(value = "recipe_id") @PositiveOrZero Long recipeId) throws
             NotFoundException, AuthException;
 
-    @PostMapping(value = "/recipes/{id}")
-    ResponseEntity<Void> addCategoryToRecipe(@PathVariable(value = "id") Long recipeId,
+    @PostMapping(value = "/recipes")
+    ResponseEntity<Void> addCategoryToRecipe(@RequestParam(value = "recipe_id") Long recipeId,
                                              @RequestParam(value = "category_id") Long categoryId) throws
             NotFoundException, AuthException, BadRequestException;
-
 }

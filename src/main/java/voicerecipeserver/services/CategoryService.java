@@ -13,7 +13,7 @@ public interface CategoryService {
 
     ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit, Integer page);
 
-    ResponseEntity<Void> deleteRecipeFromCategory(Long id, Long recipeId) throws NotFoundException, AuthException;
+    ResponseEntity<Void> deleteRecipeFromCategory(Long categoryId, Long recipeId) throws NotFoundException, AuthException;
 
-    ResponseEntity<Void> addCategoryToRecipe(Long id, Long categoryId) throws AuthException, NotFoundException;
+    ResponseEntity<Void> addCategoryToRecipe(Long recipeId, Long categoryId) throws AuthException, NotFoundException;
 }
