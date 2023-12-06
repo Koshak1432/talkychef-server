@@ -7,14 +7,21 @@ services:
       - "5434:5432"
     env_file:
       - postgres.env
+
   flyway:
     container_name: my-flyway
     image: flyway/flyway:latest
-    command: -url=jdbc:postgresql://database:5432/postgres -schemas=public -user=postgres -password=postgres migrate
+    command: -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
     volumes:
-        - ./src/main/resources/db:/flyway/sql
+      - ./src/main/resources/db:/flyway/sql
+      - ./conf/flyway.conf:/flyway/conf/flyway.config
+    environment:
+      FLYWAY_CONFIG_FILES: /flyway/conf/flyway.conf
+    env_file:
+      - flyway.env
     depends_on:
-        - database
+      - database
+
   talky:
     build:
       context: .
