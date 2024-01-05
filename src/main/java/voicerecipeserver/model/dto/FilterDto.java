@@ -1,13 +1,14 @@
 package voicerecipeserver.model.dto;
 
-import java.util.Objects;
+import java.io.Serializable;
+import java.util.*;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import voicerecipeserver.model.dto.CategoryDto;
 import voicerecipeserver.model.dto.IngredientDto;
 import voicerecipeserver.model.dto.TimeDto;
-import java.util.ArrayList;
-import java.util.List;
+
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -19,20 +20,20 @@ import jakarta.validation.constraints.*;
 @jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-12-06T07:36:51.008951992Z[GMT]")
 
 
-public class FilterDto   {
+public class FilterDto  implements Serializable {
   @JsonProperty("category")
   @Valid
-  private List<CategoryDto> category = new ArrayList<CategoryDto>();
+  private Set<CategoryDto> category = new HashSet<>();
 
   @JsonProperty("time")
   @Valid
-  private List<TimeDto> time = new ArrayList<TimeDto>();
+  private Set<TimeDto> time = new HashSet<>();
 
   @JsonProperty("ingredients")
   @Valid
-  private List<IngredientDto> ingredients = new ArrayList<IngredientDto>();
+  private Set<IngredientDto> ingredients = new HashSet<IngredientDto>();
 
-  public FilterDto category(List<CategoryDto> category) {
+  public FilterDto category(Set<CategoryDto> category) {
     this.category = category;
     return this;
   }
@@ -48,15 +49,15 @@ public class FilterDto   {
    **/
       @NotNull
     @Valid
-    public List<CategoryDto> getCategory() {
+    public Set<CategoryDto> getCategory() {
     return category;
   }
 
-  public void setCategory(List<CategoryDto> category) {
+  public void setCategory(Set<CategoryDto> category) {
     this.category = category;
   }
 
-  public FilterDto time(List<TimeDto> time) {
+  public FilterDto time(Set<TimeDto> time) {
     this.time = time;
     return this;
   }
@@ -72,15 +73,15 @@ public class FilterDto   {
    **/
       @NotNull
     @Valid
-    public List<TimeDto> getTime() {
+    public Set<TimeDto> getTime() {
     return time;
   }
 
-  public void setTime(List<TimeDto> time) {
+  public void setTime(Set<TimeDto> time) {
     this.time = time;
   }
 
-  public FilterDto ingredients(List<IngredientDto> ingredients) {
+  public FilterDto ingredients(Set<IngredientDto> ingredients) {
     this.ingredients = ingredients;
     return this;
   }
@@ -96,11 +97,11 @@ public class FilterDto   {
    **/
       @NotNull
     @Valid
-    public List<IngredientDto> getIngredients() {
+    public Set<IngredientDto> getIngredients() {
     return ingredients;
   }
 
-  public void setIngredients(List<IngredientDto> ingredients) {
+  public void setIngredients(Set<IngredientDto> ingredients) {
     this.ingredients = ingredients;
   }
 

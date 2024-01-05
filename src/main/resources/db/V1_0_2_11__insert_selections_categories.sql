@@ -32,6 +32,7 @@ VALUES ('Итальянская кухня'),
        ('Обед'),
        ('Ужин');
 
+
 INSERT INTO selections_distribution(selection_id, category_id)
 VALUES (1, 1),
        (1, 2),

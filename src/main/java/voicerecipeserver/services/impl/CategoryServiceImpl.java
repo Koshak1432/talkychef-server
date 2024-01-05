@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit,
-                                                                  Integer page) { //todo проверить на пустой категории
+                                                                  Integer page) {
         List<Recipe> recipes = recipeRepository.findByCategoryId(id, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(
                 element -> modelMapper.map(element, RecipeDto.class)).toList();

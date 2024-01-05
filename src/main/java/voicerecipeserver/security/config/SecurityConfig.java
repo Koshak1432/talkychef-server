@@ -37,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers(Constants.BASE_API_PATH + "/login/*").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/media/**").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/comments/**").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH + "/helper/**").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH + "/helper").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/collections/**").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/marks/**").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/profile/*").permitAll()

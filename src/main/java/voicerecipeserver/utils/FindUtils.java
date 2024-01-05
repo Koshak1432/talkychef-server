@@ -69,4 +69,15 @@ public class FindUtils {
     public static UserInfo findUserInfoById(UserInfoRepository repository, Long id) throws NotFoundException {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find user info"));
     }
+
+    public static Ingredient findIngredient(IngredientRepository repository, Long id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Couldn't find ingredient with id " + id));
+    }
+
+    public static Time findTime(TimeRepository repository, Long id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Couldn't find time with id " + id));
+    }
+
 }
