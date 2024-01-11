@@ -51,6 +51,10 @@ public class DefaultMapper extends ModelMapper {
         this.typeMap(Recipe.class, RecipeDto.class).addMappings(m -> {
             m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
         });
+        this.typeMap(StepDto.class, Step.class).addMappings(m -> {
+            m.skip(Step::setId);
+            m.map(StepDto::getMediaId, (dest, v) -> dest.getMedia().setId((Long) v));
+        });
 //        this.typeMap(Comment.class, CommentDto.class).addMappings(m -> {
 //            m.using(new LocalDateTimeToOffsetDateTimeConverter())
 //                .map(Comment::getPostTime, CommentDto::postTime);

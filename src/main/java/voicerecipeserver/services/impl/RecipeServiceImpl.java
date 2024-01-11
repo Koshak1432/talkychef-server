@@ -122,8 +122,12 @@ public class RecipeServiceImpl implements RecipeService {
         checkMediaUniqueness(recipe);
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
+        System.out.println(recipeDto.getSteps());
+        System.out.println(recipe.getSteps());
         for (Step step : recipe.getSteps()) {
             step.setRecipe(recipe);
+            System.out.println(step);
+            System.out.println(step.getMedia().getId());
         }
 
         setDistribution(recipe);
