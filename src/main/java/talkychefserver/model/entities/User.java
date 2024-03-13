@@ -1,0 +1,69 @@
+package talkychefserver.model.entities;
+
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@ToString
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "uid")
+    private String uid;
+
+    @Column(name = "password")
+    private String password;
+
+    @OneToMany(mappedBy = "author")
+    @ToString.Exclude
+    private List<Recipe> recipes;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Mark> marks;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns =
+    @JoinColumn(name = "role_id"))
+    @ToString.Exclude
+    private Set<Role> roles;
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private UserInfo userInfo;
+
+    public User(String uid, String password, Set<Role> roles) {
+        this.uid = uid;
+        this.password = password;
+        this.roles = roles;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+}
