@@ -40,5 +40,4 @@ out/
 start.sh
 **/voicerecipe.p12
 
-
-!**/src/main/resources/hack.sql
+env
