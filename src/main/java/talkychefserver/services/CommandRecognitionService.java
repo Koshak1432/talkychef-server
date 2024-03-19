@@ -1,5 +1,7 @@
 package talkychefserver.services;
 
+import talkychefserver.model.dto.CommandDto;
+
 public interface CommandRecognitionService {
-    String recognizeCommand(String text);
+    CommandDto recognizeCommand(String text);
 }

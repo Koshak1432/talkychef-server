@@ -3,6 +3,7 @@ package talkychefserver.controllers;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import talkychefserver.api.CommandRecognitionApi;
+import talkychefserver.model.dto.CommandDto;
 import talkychefserver.services.CommandRecognitionService;
 
 @CrossOrigin(maxAge = 1440)
@@ -15,7 +16,7 @@ public class CommandRecognitionController implements CommandRecognitionApi {
     }
 
     @Override
-    public String recognizeCommand(String s2text) {
+    public CommandDto recognizeCommand(String s2text) {
         return service.recognizeCommand(s2text);
     }
 }

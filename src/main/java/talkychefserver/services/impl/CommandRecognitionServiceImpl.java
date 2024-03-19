@@ -1,16 +1,33 @@
 package talkychefserver.services.impl;
 
-import jep.Interpreter;
-import jep.JepException;
-import jep.SharedInterpreter;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import talkychefserver.config.Constants;
+import talkychefserver.model.dto.CommandDto;
+import talkychefserver.model.dto.CommandRecognitionRequest;
+import talkychefserver.model.dto.VoiceCommand;
+import talkychefserver.model.exceptions.BadRequestException;
 import talkychefserver.services.CommandRecognitionService;
+
+import java.net.URI;
 
 @Service
 public class CommandRecognitionServiceImpl implements CommandRecognitionService {
+    private final RestTemplate restTemplate;
+
+    public CommandRecognitionServiceImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
     @Override
-    public String recognizeCommand(String text) {
-        return null;
+    public CommandDto recognizeCommand(String text) {
+        CommandRecognitionRequest request = new CommandRecognitionRequest(text);
+        ResponseEntity<Integer> response = restTemplate.postForEntity(URI.create(Constants.RECOGNIZER_URL), request,
+                                                                         Integer.class);
+        if (response.getBody() == null) {
+            throw new RuntimeException("Couldn't get command recognition value");
+        }
+        return new CommandDto(VoiceCommand.getByValue(response.getBody()));
     }
 }
