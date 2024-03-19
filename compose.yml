@@ -29,6 +29,9 @@ services:
       - /env/postgres.env
     networks:
       - talkychef-net
+    volumes:
+      - ./db/backup:/db/backup
+      - ./db/data:/var/lib/postgresql/data
     healthcheck:
       test: /usr/bin/pg_isready
       interval: 15s
