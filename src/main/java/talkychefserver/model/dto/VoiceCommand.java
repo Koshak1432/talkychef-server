@@ -8,7 +8,7 @@ public enum VoiceCommand {
     TO_MENU(0),
     NEXT(1),
     BACK(2),
-    DETAILS(3),
+    OPEN_DETAILS(3),
     OPEN_SELECTIONS(4),
     SAY(5),
     START_TIMER(6),
