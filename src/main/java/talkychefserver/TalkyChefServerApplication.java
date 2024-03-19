@@ -14,10 +14,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO логирование сделать
 // TODO многопоточность
 @SpringBootApplication
-public class VoiceRecipeServerApplication {
+public class TalkyChefServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(VoiceRecipeServerApplication.class, args);
+        SpringApplication.run(TalkyChefServerApplication.class, args);
     }
 
 }
