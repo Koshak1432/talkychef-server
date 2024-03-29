@@ -1,21 +1,17 @@
-package voicerecipeserver.security.config;
+package talkychefserver.security.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.model.dto.UserDto;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.dto.JwtRequest;
-import voicerecipeserver.security.dto.JwtResponse;
-import voicerecipeserver.security.dto.RefreshJwtRequest;
-import voicerecipeserver.security.service.AuthService;
-import voicerecipeserver.security.service.impl.AuthServiceImplMobile;
-import voicerecipeserver.security.service.impl.AuthServiceImplWeb;
+import talkychefserver.config.Constants;
+import talkychefserver.model.dto.UserDto;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.security.dto.JwtRequest;
+import talkychefserver.security.dto.JwtResponse;
+import talkychefserver.security.dto.RefreshJwtRequest;
+import talkychefserver.security.service.AuthService;
 
 @RestController
 @RequestMapping(Constants.BASE_API_PATH)

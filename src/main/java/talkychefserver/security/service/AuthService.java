@@ -1,12 +1,12 @@
-package voicerecipeserver.security.service;
+package talkychefserver.security.service;
 
 import lombok.NonNull;
-import voicerecipeserver.model.dto.UserDto;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.security.dto.JwtRequest;
-import voicerecipeserver.security.dto.JwtResponse;
+import talkychefserver.model.dto.UserDto;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.security.dto.JwtRequest;
+import talkychefserver.security.dto.JwtResponse;
 
 public interface AuthService {
 

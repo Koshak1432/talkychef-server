@@ -1,8 +1,8 @@
-package voicerecipeserver.respository;
+package talkychefserver.respository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import voicerecipeserver.model.entities.MeasureUnit;
+import talkychefserver.model.entities.MeasureUnit;
 
 import java.util.Optional;
 

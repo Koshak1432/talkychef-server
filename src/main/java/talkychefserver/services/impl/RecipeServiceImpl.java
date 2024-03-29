@@ -1,4 +1,4 @@
-package voicerecipeserver.services.impl;
+package talkychefserver.services.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,20 +6,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import voicerecipeserver.model.dto.CategoryDto;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.entities.Collection;
-import voicerecipeserver.model.entities.*;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.recommend.SlopeOne;
-import voicerecipeserver.respository.*;
-import voicerecipeserver.security.service.impl.AuthServiceCommon;
-import voicerecipeserver.services.RecipeService;
-import voicerecipeserver.utils.FindUtils;
-import voicerecipeserver.utils.GetUtil;
+import talkychefserver.model.dto.CategoryDto;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.dto.RecipeDto;
+import talkychefserver.model.entities.Collection;
+import talkychefserver.model.entities.*;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.recommend.SlopeOne;
+import talkychefserver.respository.*;
+import talkychefserver.security.service.impl.AuthServiceCommon;
+import talkychefserver.services.RecipeService;
+import talkychefserver.utils.FindUtils;
+import talkychefserver.utils.GetUtil;
 
 import java.util.*;
 
@@ -122,8 +122,12 @@ public class RecipeServiceImpl implements RecipeService {
         checkMediaUniqueness(recipe);
         // через маппер можно сделать путем добавления конвертера. Только вот код
         // там будет хуже, его будет сильно больше, а производительность вряд ли вырастет
+        System.out.println(recipeDto.getSteps());
+        System.out.println(recipe.getSteps());
         for (Step step : recipe.getSteps()) {
             step.setRecipe(recipe);
+            System.out.println(step);
+            System.out.println(step.getMedia().getId());
         }
 
         setDistribution(recipe);

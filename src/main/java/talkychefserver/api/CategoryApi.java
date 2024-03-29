@@ -1,15 +1,15 @@
-package voicerecipeserver.api;
+package talkychefserver.api;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.model.dto.CategoryDto;
-import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
+import talkychefserver.config.Constants;
+import talkychefserver.model.dto.CategoryDto;
+import talkychefserver.model.dto.RecipeDto;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 

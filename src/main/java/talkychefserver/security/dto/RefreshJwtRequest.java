@@ -1,4 +1,4 @@
-package voicerecipeserver.security.dto;
+package talkychefserver.security.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

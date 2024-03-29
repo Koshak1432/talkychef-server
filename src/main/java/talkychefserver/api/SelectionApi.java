@@ -1,4 +1,4 @@
-package voicerecipeserver.api;
+package talkychefserver.api;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.model.dto.CategoryDto;
-import voicerecipeserver.model.dto.SelectionDto;
-import voicerecipeserver.model.exceptions.NotFoundException;
+import talkychefserver.config.Constants;
+import talkychefserver.model.dto.CategoryDto;
+import talkychefserver.model.dto.SelectionDto;
+import talkychefserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 

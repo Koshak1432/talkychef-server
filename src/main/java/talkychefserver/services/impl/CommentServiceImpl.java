@@ -1,4 +1,4 @@
-package voicerecipeserver.services.impl;
+package talkychefserver.services.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,18 +6,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import voicerecipeserver.model.dto.CommentDto;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.entities.Comment;
-import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.User;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.CommentRepository;
-import voicerecipeserver.respository.RecipeRepository;
-import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.service.impl.AuthServiceCommon;
-import voicerecipeserver.services.CommentService;
-import voicerecipeserver.utils.FindUtils;
+import talkychefserver.model.dto.CommentDto;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.entities.Comment;
+import talkychefserver.model.entities.Recipe;
+import talkychefserver.model.entities.User;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.respository.CommentRepository;
+import talkychefserver.respository.RecipeRepository;
+import talkychefserver.respository.UserRepository;
+import talkychefserver.security.service.impl.AuthServiceCommon;
+import talkychefserver.services.CommentService;
+import talkychefserver.utils.FindUtils;
 
 import java.util.List;
 

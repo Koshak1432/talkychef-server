@@ -1,8 +1,8 @@
-package voicerecipeserver.security.service;
+package talkychefserver.security.service;
 
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
-import voicerecipeserver.model.entities.User;
+import talkychefserver.model.entities.User;
 
 
 public interface JwtProvider {

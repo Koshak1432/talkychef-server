@@ -1,9 +1,9 @@
-package voicerecipeserver.services;
+package talkychefserver.services;
 
 import org.springframework.http.ResponseEntity;
-import voicerecipeserver.model.dto.CommentDto;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.exceptions.NotFoundException;
+import talkychefserver.model.dto.CommentDto;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package voicerecipeserver.model.entities;
+package talkychefserver.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

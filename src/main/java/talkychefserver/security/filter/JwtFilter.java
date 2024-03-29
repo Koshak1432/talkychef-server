@@ -1,9 +1,9 @@
-package voicerecipeserver.security.filter;
+package talkychefserver.security.filter;
 
 
-import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.security.service.impl.JwtProviderImpl;
-import voicerecipeserver.utils.JwtUtils;
+import talkychefserver.security.domain.JwtAuthentication;
+import talkychefserver.security.service.impl.JwtProviderImpl;
+import talkychefserver.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

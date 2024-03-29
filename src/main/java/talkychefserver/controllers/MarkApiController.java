@@ -1,16 +1,16 @@
-package voicerecipeserver.controllers;
+package talkychefserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import voicerecipeserver.api.MarkApi;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarkDto;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.services.MarkService;
+import talkychefserver.api.MarkApi;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.dto.MarkDto;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.services.MarkService;
 
 @CrossOrigin(maxAge = 1440)
 @RestController

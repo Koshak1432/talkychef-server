@@ -1,4 +1,4 @@
-package voicerecipeserver.recommend;
+package talkychefserver.recommend;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -6,18 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.entities.Mark;
-import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.User;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.MarkRepository;
-import voicerecipeserver.respository.RecipeRepository;
-import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.service.impl.AuthServiceCommon;
-import voicerecipeserver.utils.FindUtils;
-import voicerecipeserver.utils.GetUtil;
+import talkychefserver.model.dto.RecipeDto;
+import talkychefserver.model.entities.Mark;
+import talkychefserver.model.entities.Recipe;
+import talkychefserver.model.entities.User;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.respository.MarkRepository;
+import talkychefserver.respository.RecipeRepository;
+import talkychefserver.respository.UserRepository;
+import talkychefserver.security.service.impl.AuthServiceCommon;
+import talkychefserver.utils.FindUtils;
+import talkychefserver.utils.GetUtil;
 
 import java.util.HashMap;
 import java.util.List;

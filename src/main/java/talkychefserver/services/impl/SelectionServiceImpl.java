@@ -1,17 +1,17 @@
-package voicerecipeserver.services.impl;
+package talkychefserver.services.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import voicerecipeserver.model.dto.CategoryDto;
-import voicerecipeserver.model.dto.SelectionDto;
-import voicerecipeserver.model.entities.Category;
-import voicerecipeserver.model.entities.Selection;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.CategoryRepository;
-import voicerecipeserver.respository.SelectionRepository;
-import voicerecipeserver.services.SelectionService;
-import voicerecipeserver.utils.FindUtils;
+import talkychefserver.model.dto.CategoryDto;
+import talkychefserver.model.dto.SelectionDto;
+import talkychefserver.model.entities.Category;
+import talkychefserver.model.entities.Selection;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.respository.CategoryRepository;
+import talkychefserver.respository.SelectionRepository;
+import talkychefserver.services.SelectionService;
+import talkychefserver.utils.FindUtils;
 
 import java.util.List;
 

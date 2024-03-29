@@ -1,22 +1,14 @@
-package voicerecipeserver.controllers;
+package talkychefserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import voicerecipeserver.api.MediaApi;
-import voicerecipeserver.model.dto.IdDto;
-import org.springframework.http.HttpStatus;
+import talkychefserver.api.MediaApi;
+import talkychefserver.model.dto.IdDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import voicerecipeserver.model.entities.Media;
-import voicerecipeserver.model.entities.MediaType;
-import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.MediaRepository;
-import voicerecipeserver.respository.MediaTypeRepository;
-import voicerecipeserver.services.MediaService;
-
-import java.util.Optional;
+import talkychefserver.model.exceptions.InvalidMediaTypeException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.services.MediaService;
 
 @RestController
 @CrossOrigin(maxAge = 1440)

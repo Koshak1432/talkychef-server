@@ -1,8 +1,8 @@
-package voicerecipeserver.utils;
+package talkychefserver.utils;
 
 import io.jsonwebtoken.Claims;
-import voicerecipeserver.model.entities.Role;
-import voicerecipeserver.security.domain.JwtAuthentication;
+import talkychefserver.model.entities.Role;
+import talkychefserver.security.domain.JwtAuthentication;
 
 import java.util.List;
 import java.util.Set;

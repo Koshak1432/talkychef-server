@@ -1,4 +1,4 @@
-package voicerecipeserver.model.exceptions;
+package talkychefserver.model.exceptions;
 
 public class BadRequestException extends Exception{
     public BadRequestException(String msg){

@@ -1,4 +1,4 @@
-package voicerecipeserver;
+package talkychefserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO в бд холостое увеличение ID в сиквенсах происходит при неудачной попытке вставить значения
 // TODO тригеров сделать для дропа ненужных картинок, сетов единиц и т.д.
 // TODO проверить генерацию последовательностей для каждой таблицы
-// TODO категории реализовать
 // TODO cross-origin настроить только на сайт. Сейчас всё разрешил.
 // TODO в названиях ингредиентов/единиц измерений запретить спецсимволы и цифры
 // TODO на каждый сценарий добавления тестик бы бахнуть
@@ -15,10 +14,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // TODO логирование сделать
 // TODO многопоточность
 @SpringBootApplication
-public class VoiceRecipeServerApplication {
+public class TalkyChefServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(VoiceRecipeServerApplication.class, args);
+        SpringApplication.run(TalkyChefServerApplication.class, args);
     }
 
 }

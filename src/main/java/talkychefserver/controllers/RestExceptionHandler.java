@@ -1,4 +1,4 @@
-package voicerecipeserver.controllers;
+package talkychefserver.controllers;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import voicerecipeserver.model.dto.Error;
-import voicerecipeserver.model.exceptions.*;
+import talkychefserver.model.dto.Error;
+import talkychefserver.model.exceptions.*;
 
 import jakarta.validation.ConstraintViolationException;
 

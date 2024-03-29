@@ -1,11 +1,10 @@
-package voicerecipeserver.services;
+package talkychefserver.services;
 
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import voicerecipeserver.model.dto.CategoryDto;
-import voicerecipeserver.model.dto.SelectionDto;
-import voicerecipeserver.model.exceptions.NotFoundException;
+import talkychefserver.model.dto.CategoryDto;
+import talkychefserver.model.dto.SelectionDto;
+import talkychefserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 

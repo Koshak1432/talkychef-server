@@ -1,13 +1,8 @@
-package voicerecipeserver.model.dto;
+package talkychefserver.model.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import voicerecipeserver.model.dto.RecipeDto;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.validation.annotation.Validated;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 /**

@@ -1,6 +1,6 @@
-package voicerecipeserver.utils;
+package talkychefserver.utils;
 
-import voicerecipeserver.config.Constants;
+import talkychefserver.config.Constants;
 
 public class GetUtil {
     public static int getCurrentLimit(Integer possibleLimit) {

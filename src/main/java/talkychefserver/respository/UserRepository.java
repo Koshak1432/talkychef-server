@@ -1,9 +1,8 @@
-package voicerecipeserver.respository;
+package talkychefserver.respository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-import voicerecipeserver.model.entities.User;
+import talkychefserver.model.entities.User;
 
 import java.util.List;
 import java.util.Optional;

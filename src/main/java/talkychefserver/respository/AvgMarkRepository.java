@@ -1,6 +1,6 @@
-package voicerecipeserver.respository;
+package talkychefserver.respository;
 
 import org.springframework.data.repository.CrudRepository;
-import voicerecipeserver.model.entities.AvgMark;
+import talkychefserver.model.entities.AvgMark;
 
 public interface AvgMarkRepository extends CrudRepository<AvgMark, Long> {}

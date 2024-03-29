@@ -1,10 +1,8 @@
-package voicerecipeserver.model.dto;
+package talkychefserver.model.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import voicerecipeserver.model.dto.IngredientsDistributionDto;
-import voicerecipeserver.model.dto.StepDto;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;

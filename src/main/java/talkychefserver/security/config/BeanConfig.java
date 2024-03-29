@@ -1,4 +1,4 @@
-package voicerecipeserver.security.config;
+package talkychefserver.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

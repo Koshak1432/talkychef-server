@@ -1,4 +1,4 @@
-package voicerecipeserver.services.impl;
+package talkychefserver.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -6,14 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.entities.Media;
-import voicerecipeserver.model.entities.MediaType;
-import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.MediaRepository;
-import voicerecipeserver.respository.MediaTypeRepository;
-import voicerecipeserver.services.MediaService;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.entities.Media;
+import talkychefserver.model.entities.MediaType;
+import talkychefserver.model.exceptions.InvalidMediaTypeException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.respository.MediaRepository;
+import talkychefserver.respository.MediaTypeRepository;
+import talkychefserver.services.MediaService;
 
 import java.util.Optional;
 

@@ -1,18 +1,16 @@
-package voicerecipeserver.model.mappers;
+package talkychefserver.model.mappers;
 
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import voicerecipeserver.model.dto.*;
-import voicerecipeserver.model.dto.IngredientsDistributionDto;
-import voicerecipeserver.model.entities.*;
+import talkychefserver.model.dto.*;
+import talkychefserver.model.dto.IngredientsDistributionDto;
+import talkychefserver.model.entities.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class DefaultMapper extends ModelMapper {
@@ -50,6 +48,10 @@ public class DefaultMapper extends ModelMapper {
 
         this.typeMap(Recipe.class, RecipeDto.class).addMappings(m -> {
             m.map(src -> src.getAuthor().getUid(), RecipeDto::setAuthorUid);
+        });
+        this.typeMap(StepDto.class, Step.class).addMappings(m -> {
+            m.skip(Step::setId);
+            m.map(StepDto::getMediaId, (dest, v) -> dest.getMedia().setId((Long) v));
         });
 //        this.typeMap(Comment.class, CommentDto.class).addMappings(m -> {
 //            m.using(new LocalDateTimeToOffsetDateTimeConverter())

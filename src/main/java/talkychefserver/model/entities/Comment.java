@@ -1,11 +1,10 @@
-package voicerecipeserver.model.entities;
+package talkychefserver.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 @NoArgsConstructor

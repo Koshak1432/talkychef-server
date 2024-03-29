@@ -1,10 +1,8 @@
-package voicerecipeserver.utils;
+package talkychefserver.utils;
 
-import voicerecipeserver.model.entities.*;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.*;
-
-import java.util.List;
+import talkychefserver.model.entities.*;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.respository.*;
 
 
 public class FindUtils {

@@ -1,7 +1,7 @@
-package voicerecipeserver.respository;
+package talkychefserver.respository;
 
 import org.springframework.data.repository.CrudRepository;
-import voicerecipeserver.model.entities.Role;
+import talkychefserver.model.entities.Role;
 
 import java.util.Optional;
 

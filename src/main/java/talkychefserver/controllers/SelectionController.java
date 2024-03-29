@@ -1,13 +1,13 @@
-package voicerecipeserver.controllers;
+package talkychefserver.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import voicerecipeserver.api.SelectionApi;
-import voicerecipeserver.model.dto.CategoryDto;
-import voicerecipeserver.model.dto.SelectionDto;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.services.SelectionService;
+import talkychefserver.api.SelectionApi;
+import talkychefserver.model.dto.CategoryDto;
+import talkychefserver.model.dto.SelectionDto;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.services.SelectionService;
 
 import java.util.List;
 

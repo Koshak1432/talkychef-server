@@ -1,4 +1,4 @@
-package voicerecipeserver.api;
+package talkychefserver.api;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -7,10 +7,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.exceptions.InvalidMediaTypeException;
-import voicerecipeserver.model.exceptions.NotFoundException;
+import talkychefserver.config.Constants;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.exceptions.InvalidMediaTypeException;
+import talkychefserver.model.exceptions.NotFoundException;
 
 @Valid
 @RequestMapping(Constants.BASE_API_PATH + "/media")

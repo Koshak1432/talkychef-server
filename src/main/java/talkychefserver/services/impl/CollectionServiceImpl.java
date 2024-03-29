@@ -1,4 +1,4 @@
-package voicerecipeserver.services.impl;
+package talkychefserver.services.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,20 +6,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import voicerecipeserver.model.dto.CollectionDto;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.entities.Collection;
-import voicerecipeserver.model.entities.Media;
-import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.User;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.*;
-import voicerecipeserver.security.service.impl.AuthServiceCommon;
-import voicerecipeserver.services.CollectionService;
-import voicerecipeserver.utils.FindUtils;
-import voicerecipeserver.utils.GetUtil;
+import talkychefserver.model.dto.CollectionDto;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.dto.RecipeDto;
+import talkychefserver.model.entities.Collection;
+import talkychefserver.model.entities.Media;
+import talkychefserver.model.entities.Recipe;
+import talkychefserver.model.entities.User;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.respository.*;
+import talkychefserver.security.service.impl.AuthServiceCommon;
+import talkychefserver.services.CollectionService;
+import talkychefserver.utils.FindUtils;
+import talkychefserver.utils.GetUtil;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package voicerecipeserver.model;
+package talkychefserver.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,19 +10,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.controllers.RecipeApiController;
-import voicerecipeserver.model.dto.IngredientsDistributionDto;
-import voicerecipeserver.model.dto.RecipeDto;
-import voicerecipeserver.model.dto.StepDto;
-import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.Role;
-import voicerecipeserver.model.entities.User;
-import voicerecipeserver.respository.RecipeRepository;
-import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.domain.JwtAuthentication;
-import voicerecipeserver.services.impl.RecipeServiceImpl;
-import voicerecipeserver.utils.GetUtil;
+import talkychefserver.config.Constants;
+import talkychefserver.controllers.RecipeApiController;
+import talkychefserver.model.dto.IngredientsDistributionDto;
+import talkychefserver.model.dto.RecipeDto;
+import talkychefserver.model.dto.StepDto;
+import talkychefserver.model.entities.Recipe;
+import talkychefserver.model.entities.Role;
+import talkychefserver.model.entities.User;
+import talkychefserver.respository.RecipeRepository;
+import talkychefserver.respository.UserRepository;
+import talkychefserver.security.domain.JwtAuthentication;
+import talkychefserver.services.impl.RecipeServiceImpl;
 
 import java.util.*;
 

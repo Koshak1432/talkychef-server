@@ -1,4 +1,4 @@
-package voicerecipeserver.security.service.impl;
+package talkychefserver.security.service.impl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -7,9 +7,9 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import voicerecipeserver.model.entities.Role;
-import voicerecipeserver.model.entities.User;
-import voicerecipeserver.security.service.JwtProvider;
+import talkychefserver.model.entities.Role;
+import talkychefserver.model.entities.User;
+import talkychefserver.security.service.JwtProvider;
 
 import javax.crypto.SecretKey;
 import java.security.Key;

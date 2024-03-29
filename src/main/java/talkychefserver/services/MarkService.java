@@ -1,11 +1,11 @@
-package voicerecipeserver.services;
+package talkychefserver.services;
 
 import org.springframework.http.ResponseEntity;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarkDto;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.dto.MarkDto;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
 
 public interface MarkService {
 

@@ -1,4 +1,4 @@
-package voicerecipeserver.services.impl;
+package talkychefserver.services.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,25 +6,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.MarkDto;
-import voicerecipeserver.model.entities.Mark;
-import voicerecipeserver.model.entities.MarkKey;
-import voicerecipeserver.model.entities.Recipe;
-import voicerecipeserver.model.entities.User;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.MarkRepository;
-import voicerecipeserver.respository.RecipeRepository;
-import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.service.impl.AuthServiceCommon;
-import voicerecipeserver.services.MarkService;
-import voicerecipeserver.utils.FindUtils;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.dto.MarkDto;
+import talkychefserver.model.entities.Mark;
+import talkychefserver.model.entities.MarkKey;
+import talkychefserver.model.entities.Recipe;
+import talkychefserver.model.entities.User;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.respository.MarkRepository;
+import talkychefserver.respository.RecipeRepository;
+import talkychefserver.respository.UserRepository;
+import talkychefserver.security.service.impl.AuthServiceCommon;
+import talkychefserver.services.MarkService;
+import talkychefserver.utils.FindUtils;
 
 import java.util.Optional;
-
-import static voicerecipeserver.security.service.impl.AuthServiceCommon.checkAuthorities;
 
 @Service
 

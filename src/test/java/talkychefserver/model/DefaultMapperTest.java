@@ -1,12 +1,12 @@
-package voicerecipeserver.model;
+package talkychefserver.model;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import voicerecipeserver.model.dto.*;
-import voicerecipeserver.model.entities.*;
-import voicerecipeserver.model.mappers.DefaultMapper;
+import talkychefserver.model.dto.*;
+import talkychefserver.model.entities.*;
+import talkychefserver.model.mappers.DefaultMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

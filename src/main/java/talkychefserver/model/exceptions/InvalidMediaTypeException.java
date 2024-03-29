@@ -1,4 +1,4 @@
-package voicerecipeserver.model.exceptions;
+package talkychefserver.model.exceptions;
 
 public class InvalidMediaTypeException extends Exception{
     public InvalidMediaTypeException(String type){

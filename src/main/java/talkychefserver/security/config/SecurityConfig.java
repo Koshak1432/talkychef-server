@@ -1,4 +1,4 @@
-package voicerecipeserver.security.config;
+package talkychefserver.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +12,8 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.security.filter.JwtFilter;
+import talkychefserver.config.Constants;
+import talkychefserver.security.filter.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(Constants.BASE_API_PATH + "/profile/search/*").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/profile/restore-password").permitAll()
                         .requestMatchers(Constants.BASE_API_PATH + "/profile/restore-password/**").permitAll()
+                        .requestMatchers(Constants.BASE_API_PATH + "/recognition").permitAll()
                         .requestMatchers("/", Constants.BASE_API_PATH + "/recipes/**").permitAll() //todo вывод только рецептов
                         .requestMatchers(Constants.BASE_API_PATH + "/").permitAll()
                         .anyRequest().authenticated()

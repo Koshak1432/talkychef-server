@@ -1,4 +1,4 @@
-package voicerecipeserver.security.service.impl;
+package talkychefserver.security.service.impl;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
@@ -10,17 +10,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import voicerecipeserver.model.dto.UserDto;
-import voicerecipeserver.model.entities.User;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.respository.UserRepository;
-import voicerecipeserver.security.config.BeanConfig;
-import voicerecipeserver.security.dto.JwtRequest;
-import voicerecipeserver.security.dto.JwtResponse;
-import voicerecipeserver.security.service.AuthService;
-import voicerecipeserver.utils.FindUtils;
+import talkychefserver.model.dto.UserDto;
+import talkychefserver.model.entities.User;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.respository.UserRepository;
+import talkychefserver.security.config.BeanConfig;
+import talkychefserver.security.dto.JwtRequest;
+import talkychefserver.security.dto.JwtResponse;
+import talkychefserver.security.service.AuthService;
+import talkychefserver.utils.FindUtils;
 
 @Service
 

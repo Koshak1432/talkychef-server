@@ -1,12 +1,12 @@
-package voicerecipeserver.security.service.impl;
+package talkychefserver.security.service.impl;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import voicerecipeserver.config.Constants;
-import voicerecipeserver.model.dto.UserDto;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.security.domain.JwtAuthentication;
+import talkychefserver.config.Constants;
+import talkychefserver.model.dto.UserDto;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.security.domain.JwtAuthentication;
 
 import java.util.Collection;
 

@@ -1,17 +1,17 @@
-package voicerecipeserver.controllers;
+package talkychefserver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import voicerecipeserver.api.ProfileApi;
-import voicerecipeserver.model.dto.IdDto;
-import voicerecipeserver.model.dto.UserDto;
-import voicerecipeserver.model.dto.UserProfileDto;
-import voicerecipeserver.model.exceptions.AuthException;
-import voicerecipeserver.model.exceptions.BadRequestException;
-import voicerecipeserver.model.exceptions.NotFoundException;
-import voicerecipeserver.security.service.UserService;
+import talkychefserver.api.ProfileApi;
+import talkychefserver.model.dto.IdDto;
+import talkychefserver.model.dto.UserDto;
+import talkychefserver.model.dto.UserProfileDto;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.NotFoundException;
+import talkychefserver.security.service.UserService;
 
 import java.util.List;
 
