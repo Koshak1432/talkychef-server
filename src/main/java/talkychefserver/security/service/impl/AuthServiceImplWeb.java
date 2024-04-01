@@ -14,8 +14,7 @@ import talkychefserver.model.dto.UserDto;
 import talkychefserver.model.entities.User;
 import talkychefserver.model.exceptions.AuthException;
 import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.UserRepository;
+import talkychefserver.respositories.UserRepository;
 import talkychefserver.security.config.BeanConfig;
 import talkychefserver.security.dto.JwtRequest;
 import talkychefserver.security.dto.JwtResponse;
@@ -40,7 +39,7 @@ public class AuthServiceImplWeb implements AuthService {
     private final JwtProviderImpl jwtProviderImpl;
     private final UserRepository userRepository;
 
-    public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException, NotFoundException {
+    public JwtResponse login(@NonNull JwtRequest authRequest) {
         User user = FindUtils.findUserByUid(userRepository, authRequest.getLogin());
         if (passwordEncoder.getPasswordEncoder().matches(authRequest.getPassword(), user.getPassword())) {
             return getJwtResponseAndFillCookie(user);
@@ -49,7 +48,7 @@ public class AuthServiceImplWeb implements AuthService {
         }
     }
 
-    public JwtResponse getAccessToken(@NonNull String refreshToken) throws NotFoundException {
+    public JwtResponse getAccessToken(@NonNull String refreshToken) {
         JwtResponse jwtResponse = new JwtResponse();
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
@@ -71,8 +70,7 @@ public class AuthServiceImplWeb implements AuthService {
         response.addCookie(refreshTokenCookie);
     }
 
-    public JwtResponse refresh(@CookieValue(value = "refreshToken") @NonNull String refreshToken) throws AuthException,
-            NotFoundException {
+    public JwtResponse refresh(@CookieValue(value = "refreshToken") @NonNull String refreshToken) {
         if (!jwtProviderImpl.validateRefreshToken(refreshToken)) {
             throw new AuthException("Invalid JWT");
         }
@@ -83,7 +81,7 @@ public class AuthServiceImplWeb implements AuthService {
     }
 
 
-    public JwtResponse registration(UserDto userDto) throws AuthException, NotFoundException, BadRequestException {
+    public JwtResponse registration(UserDto userDto) {
         if (userDto.getLogin() == null) {
             throw new BadRequestException("Login must be present");
         }
@@ -96,7 +94,7 @@ public class AuthServiceImplWeb implements AuthService {
         return getJwtResponseAndFillCookie(user);
     }
 
-    public JwtResponse changePassword(UserDto userDto) throws NotFoundException, AuthException, BadRequestException {
+    public JwtResponse changePassword(UserDto userDto) {
         if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
             throw new AuthException("No rights");
         }

@@ -10,11 +10,10 @@ import talkychefserver.model.dto.RecipeDto;
 import talkychefserver.model.entities.Category;
 import talkychefserver.model.entities.Recipe;
 import talkychefserver.model.exceptions.AuthException;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.CategoryRepository;
-import talkychefserver.respository.RecipeRepository;
+import talkychefserver.respositories.CategoryRepository;
+import talkychefserver.respositories.RecipeRepository;
 import talkychefserver.security.service.impl.AuthServiceCommon;
-import talkychefserver.services.CategoryService;
+import talkychefserver.services.interfaces.CategoryService;
 import talkychefserver.utils.FindUtils;
 import talkychefserver.utils.GetUtil;
 
@@ -45,7 +44,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<List<RecipeDto>> getRecipesFromCategory(Long id, Integer limit,
                                                                   Integer page) { //todo проверить на пустой категории
-        List<Recipe> recipes = recipeRepository.findByCategoryId(id, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
+        List<Recipe> recipes = recipeRepository.findByCategoryId(id, GetUtil.getCurrentLimit(limit),
+                                                                 GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(
                 element -> modelMapper.map(element, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
@@ -53,8 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteRecipeFromCategory(Long categoryId, Long recipeId) throws NotFoundException,
-            AuthException {
+    public ResponseEntity<Void> deleteRecipeFromCategory(Long categoryId, Long recipeId) {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         if (!AuthServiceCommon.checkAuthorities(recipe.getAuthor().getUid())) {
             throw new AuthException("No rights");
@@ -66,8 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> addCategoryToRecipe(Long recipeId, Long categoryId) throws AuthException,
-            NotFoundException {
+    public ResponseEntity<Void> addCategoryToRecipe(Long recipeId, Long categoryId) {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         if (!AuthServiceCommon.checkAuthorities(recipe.getAuthor().getUid())) {
             throw new AuthException("No rights");

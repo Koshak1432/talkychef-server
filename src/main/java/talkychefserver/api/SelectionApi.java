@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import talkychefserver.config.Constants;
 import talkychefserver.model.dto.CategoryDto;
 import talkychefserver.model.dto.SelectionDto;
-import talkychefserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 
@@ -20,6 +19,5 @@ public interface SelectionApi {
     ResponseEntity<List<SelectionDto>> getAllSelections();
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(@PathVariable(value = "id") @Positive Long id) throws
-            NotFoundException;
+    ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(@PathVariable(value = "id") @Positive Long id);
 }

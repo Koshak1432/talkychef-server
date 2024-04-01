@@ -46,10 +46,11 @@ public class AuthServiceCommon {
         return principal.getLogin().equals(userUid);
     }
 
-    public static void checkRegisterConstraints(UserDto dto) throws BadRequestException {
+    public static void checkRegisterConstraints(UserDto dto) {
         if (!isLoginValid(dto.getLogin())) {
             throw new BadRequestException(
-                    "Invalid login, must be  " + Constants.LOGIN_MIN_SYMBOLS + "-" + Constants.LOGIN_MAX_SYMBOLS + " symbols, and contain valid symbols");
+                    "Invalid login, must be  " + Constants.LOGIN_MIN_SYMBOLS + "-" + Constants.LOGIN_MAX_SYMBOLS + " " +
+                            "symbols, and contain valid symbols");
         }
         if (!isPasswordValid(dto.getPassword())) {
             throw new BadRequestException(

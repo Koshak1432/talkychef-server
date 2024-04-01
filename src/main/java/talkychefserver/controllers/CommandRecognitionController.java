@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import talkychefserver.api.CommandRecognitionApi;
 import talkychefserver.model.dto.CommandDto;
-import talkychefserver.services.CommandRecognitionService;
+import talkychefserver.services.interfaces.CommandRecognitionService;
 
 @CrossOrigin(maxAge = 1440)
 @RestController

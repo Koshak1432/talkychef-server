@@ -15,9 +15,9 @@ import talkychefserver.model.exceptions.AuthException;
 import talkychefserver.model.exceptions.BadRequestException;
 import talkychefserver.model.exceptions.NotFoundException;
 import talkychefserver.recommend.SlopeOne;
-import talkychefserver.respository.*;
+import talkychefserver.respositories.*;
 import talkychefserver.security.service.impl.AuthServiceCommon;
-import talkychefserver.services.RecipeService;
+import talkychefserver.services.interfaces.RecipeService;
 import talkychefserver.utils.FindUtils;
 import talkychefserver.utils.GetUtil;
 
@@ -58,31 +58,31 @@ public class RecipeServiceImpl implements RecipeService {
 
 
     @Override
-    public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException {
+    public ResponseEntity<RecipeDto> getRecipeById(Long id) {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, id);
         RecipeDto recipeDto = mapper.map(recipe, RecipeDto.class);
         return ResponseEntity.ok(recipeDto);
     }
 
-    private void checkRecipeMediaUniqByStep(Long stepMediaId) throws BadRequestException {
+    private void checkRecipeMediaUniqByStep(Long stepMediaId) {
         if (recipeRepository.findRecipeByMediaId(stepMediaId).isPresent()) {
             throw new BadRequestException("Media id must be unique");
         }
     }
 
-    private void checkStepMediaUniqByRecipe(Long recipeMediaId) throws BadRequestException {
+    private void checkStepMediaUniqByRecipe(Long recipeMediaId) {
         if (stepRepository.findStepByMediaId(recipeMediaId).isPresent()) {
             throw new BadRequestException("Media id must be unique");
         }
     }
 
-    private void checkRecipeMediaUniq(Long recipeMediaId) throws BadRequestException {
+    private void checkRecipeMediaUniq(Long recipeMediaId) {
         if (recipeRepository.findRecipeByMediaId(recipeMediaId).isPresent()) {
             throw new BadRequestException("Media id must be unique");
         }
     }
 
-    private void checkMediaUniqueness(Recipe recipe) throws BadRequestException {
+    private void checkMediaUniqueness(Recipe recipe) {
         checkStepMediaUniqByRecipe(recipe.getMedia().getId());
         checkRecipeMediaUniq(recipe.getMedia().getId());
         Set<Long> mediaIds = new HashSet<>();
@@ -104,8 +104,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
-            AuthException {
+    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) {
         if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
             throw new AuthException("No rights");
         }
@@ -134,7 +133,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe savedRecipe = recipeRepository.save(recipe);
         String savedName = author.getUid() + "_saved";
         Collection saveCollection = collectionRepository.findByAuthorIdUserRecipeCollection(author.getId(),
-                                                                                                savedName).orElse(null);
+                                                                                            savedName).orElse(null);
         if (saveCollection == null) {
             saveCollection = collectionRepository.save(new Collection(savedName, 0, author));
         }
@@ -142,16 +141,14 @@ public class RecipeServiceImpl implements RecipeService {
         return ResponseEntity.ok(new IdDto().id(savedRecipe.getId()));
     }
 
-    private void setAuthorToRecipe(Recipe recipe) throws NotFoundException {
+    private void setAuthorToRecipe(Recipe recipe) {
         User author = FindUtils.findUserByUid(userRepository, recipe.getAuthor().getUid());
         recipe.setAuthor(author);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
-            AuthException {
-
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) {
         if (!AuthServiceCommon.checkAuthorities(recipeDto.getAuthorUid())) {
             throw new AuthException("No rights");
         }
@@ -167,7 +164,7 @@ public class RecipeServiceImpl implements RecipeService {
         return ResponseEntity.ok(new IdDto().id(newRecipe.getId()));
     }
 
-    private void setDistribution(Recipe recipe) throws BadRequestException {
+    private void setDistribution(Recipe recipe) {
         HashSet<String> ingredientsInRecipe = new HashSet<>();
         for (IngredientsDistribution ingredientsDistribution : recipe.getIngredientsDistributions()) {
             ingredientsDistribution.setRecipe(recipe);
@@ -224,14 +221,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) {
-        List<Recipe> recipes = recipeRepository.findByNameContaining(name, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
+        List<Recipe> recipes = recipeRepository.findByNameContaining(name, GetUtil.getCurrentLimit(limit),
+                                                                     GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteRecipe(Long recipeId) throws NotFoundException {
+    public ResponseEntity<Void> deleteRecipe(Long recipeId) {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         if (AuthServiceCommon.checkAuthorities(recipe.getAuthor().getUid())) {
             recipeRepository.deleteById(recipeId);
@@ -240,7 +238,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecommendations(Integer limit, Integer page) throws NotFoundException {
+    public ResponseEntity<List<RecipeDto>> getRecommendations(Integer limit, Integer page) {
         SlopeOne recommendAlgSlopeOne = new SlopeOne(mapper, userRepository, markRepository, recipeRepository);
         List<RecipeDto> recipes = recommendAlgSlopeOne.recommendAlgSlopeOne(limit, page);
         return ResponseEntity.ok(recipes);

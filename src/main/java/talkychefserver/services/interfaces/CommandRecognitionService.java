@@ -1,4 +1,4 @@
-package talkychefserver.services;
+package talkychefserver.services.interfaces;
 
 import talkychefserver.model.dto.CommandDto;
 

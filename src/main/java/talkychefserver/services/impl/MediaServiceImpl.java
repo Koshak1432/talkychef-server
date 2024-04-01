@@ -11,9 +11,9 @@ import talkychefserver.model.entities.Media;
 import talkychefserver.model.entities.MediaType;
 import talkychefserver.model.exceptions.InvalidMediaTypeException;
 import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.MediaRepository;
-import talkychefserver.respository.MediaTypeRepository;
-import talkychefserver.services.MediaService;
+import talkychefserver.respositories.MediaRepository;
+import talkychefserver.respositories.MediaTypeRepository;
+import talkychefserver.services.interfaces.MediaService;
 
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ public class MediaServiceImpl implements MediaService {
 
     //TODO тип медиа не проверяется
     @Override
-    public ResponseEntity<byte[]> getMediaById(Long id) throws NotFoundException {
+    public ResponseEntity<byte[]> getMediaById(Long id) {
         Optional<Media> media = mediaRepository.findById(id);
         if (media.isEmpty()) {
             throw new NotFoundException("Couldn't find media with id: " + id);
@@ -48,7 +48,7 @@ public class MediaServiceImpl implements MediaService {
     //todo кешнуть поддерживаемые типы при инициализации и потом их юзать. Эксепшены кидать при отсутствии типа.
     @Override
     @Transactional
-    public ResponseEntity<IdDto> addMedia(String contentTypeHeader, byte[] data) throws InvalidMediaTypeException {
+    public ResponseEntity<IdDto> addMedia(String contentTypeHeader, byte[] data) {
         int endOfTypeInd = contentTypeHeader.indexOf(';');
         String mimeType;
         if (endOfTypeInd == -1) {

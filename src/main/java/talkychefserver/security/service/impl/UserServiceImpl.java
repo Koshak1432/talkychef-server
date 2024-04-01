@@ -15,7 +15,10 @@ import talkychefserver.model.entities.User;
 import talkychefserver.model.entities.UserInfo;
 import talkychefserver.model.exceptions.BadRequestException;
 import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.*;
+import talkychefserver.respositories.MediaRepository;
+import talkychefserver.respositories.RoleRepository;
+import talkychefserver.respositories.UserInfoRepository;
+import talkychefserver.respositories.UserRepository;
 import talkychefserver.security.config.BeanConfig;
 import talkychefserver.security.service.UserService;
 import talkychefserver.utils.FindUtils;
@@ -48,7 +51,7 @@ public class UserServiceImpl implements UserService {
         this.mailSender = mailSender;
     }
 
-    private Role findRole(String name) throws NotFoundException {
+    private Role findRole(String name) {
         Optional<Role> roleOptional = roleRepository.findByName(name);
         if (roleOptional.isEmpty()) {
             throw new NotFoundException("Couldn't find role " + name);
@@ -58,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> addUser(UserDto userDto) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> addUser(UserDto userDto) {
         User user = mapper.map(userDto, User.class);
         if (userInfoRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new BadRequestException("Email is already registered");
@@ -83,7 +86,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException {
+    public ResponseEntity<UserProfileDto> getCurrentUserProfile() {
         User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
         UserInfo userInfo = FindUtils.findUserInfoById(userInfoRepository, user.getId());
         UserProfileDto userProfileDto = mapper.map(userInfo, UserProfileDto.class);
@@ -91,7 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> getUserProfileByLogin(String login) throws NotFoundException {
+    public ResponseEntity<UserProfileDto> getUserProfileByLogin(String login) {
         User user = FindUtils.findUserByUid(userRepository, login);
         UserInfo userInfo = FindUtils.findUserInfoById(userInfoRepository, user.getId());
         UserProfileDto userProfileDto = mapper.map(userInfo, UserProfileDto.class);
@@ -99,10 +102,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<List<UserProfileDto>> getUserProfilesByPartLogin(String login, Integer limit, Integer page) throws
-            NotFoundException {
+    public ResponseEntity<List<UserProfileDto>> getUserProfilesByPartLogin(String login, Integer limit, Integer page) {
         List<UserProfileDto> userProfileDtos = new ArrayList<>();
-        List<User> users = userRepository.findByUidContaining(login, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
+        List<User> users = userRepository.findByUidContaining(login, GetUtil.getCurrentLimit(limit),
+                                                              GetUtil.getCurrentPage(page));
         for (User user : users) {
             UserInfo userInfo = FindUtils.findUserInfoById(userInfoRepository, user.getId());
             UserProfileDto userProfileDto = mapper.map(userInfo, UserProfileDto.class);
@@ -113,8 +116,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) throws BadRequestException,
-            NotFoundException {
+    public ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("No rights");
         }
@@ -153,7 +155,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) {
         if (!AuthServiceCommon.checkAuthorities(profileDto.getUid())) {
             throw new BadRequestException("No rights");
         }
@@ -169,7 +171,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> sendEmailInstructions(String email) throws NotFoundException {
+    public ResponseEntity<Void> sendEmailInstructions(String email) {
         UserInfo user = FindUtils.findUserByEmail(userInfoRepository, email);
         String token = UUID.randomUUID().toString();
         user.setToken(token);
@@ -179,14 +181,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<IdDto> verifyCode(String token) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> verifyCode(String token) {
         UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
         return ResponseEntity.ok(new IdDto().id(userFromToken.getId()));
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException {
+    public ResponseEntity<Void> changePassword(String token, UserDto userDto) {
         UserInfo userFromToken = FindUtils.findUserByToken(userInfoRepository, token);
         userFromToken.setToken(null);
         userInfoRepository.save(userFromToken);
@@ -209,7 +211,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Transactional
-    public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> updateUserPassword(UserDto userDto) {
         if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
             throw new BadRequestException("No rights");
         }

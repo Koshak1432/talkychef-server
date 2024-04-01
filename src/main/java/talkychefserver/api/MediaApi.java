@@ -16,12 +16,12 @@ import talkychefserver.model.exceptions.NotFoundException;
 @RequestMapping(Constants.BASE_API_PATH + "/media")
 public interface MediaApi {
     @GetMapping(value = "/{id}")
-    ResponseEntity<byte[]> mediaGet(@PathVariable("id") @PositiveOrZero Long id) throws NotFoundException;
+    ResponseEntity<byte[]> mediaGet(@PathVariable("id") @PositiveOrZero Long id) ;
 
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PostMapping
     ResponseEntity<IdDto> mediaPost(@RequestHeader(HttpHeaders.CONTENT_TYPE) String contentTypeHeader,
-                                    @RequestBody @NotNull byte[] data) throws InvalidMediaTypeException;
+                                    @RequestBody @NotNull byte[] data);
 
 }

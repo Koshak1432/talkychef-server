@@ -1,7 +1,7 @@
 package talkychefserver.model.exceptions;
 
-public class NotFoundException extends Exception{
-    public NotFoundException(String msg){
+public class NotFoundException extends RuntimeException {
+    public NotFoundException(String msg) {
         super(msg);
     }
 }

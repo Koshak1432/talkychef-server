@@ -8,10 +8,7 @@ import talkychefserver.api.RecipeApi;
 import talkychefserver.model.dto.CategoryDto;
 import talkychefserver.model.dto.IdDto;
 import talkychefserver.model.dto.RecipeDto;
-import talkychefserver.model.exceptions.AuthException;
-import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.services.RecipeService;
+import talkychefserver.services.interfaces.RecipeService;
 
 import java.util.List;
 
@@ -29,29 +26,26 @@ public class RecipeApiController implements RecipeApi {
 
 
     @Override
-    public ResponseEntity<RecipeDto> getRecipeById(Long id) throws NotFoundException, AuthException {
+    public ResponseEntity<RecipeDto> getRecipeById(Long id) {
         return recipeService.getRecipeById(id);
     }
 
     @Override
-    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
-            AuthException {
+    public ResponseEntity<IdDto> addRecipe(RecipeDto recipeDto) {
         return recipeService.addRecipe(recipeDto);
     }
 
     @Override
-    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) throws NotFoundException, BadRequestException,
-            AuthException {
+    public ResponseEntity<IdDto> updateRecipe(RecipeDto recipeDto) {
         return recipeService.updateRecipe(recipeDto);
     }
 
     @Override
-    public ResponseEntity<Void> deleteRecipe(Long id) throws NotFoundException {
+    public ResponseEntity<Void> deleteRecipe(Long id) {
         return recipeService.deleteRecipe(id);
     }
 
-    public ResponseEntity<List<RecipeDto>> getRecipesByName(String name, Integer limit, Integer page) throws NotFoundException,
-            AuthException {
+    public ResponseEntity<List<RecipeDto>> getRecipesByName(String name, Integer limit, Integer page) {
         return recipeService.searchRecipesByName(name, limit, page);
     }
 
@@ -61,8 +55,7 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit, Integer page) throws
-            NotFoundException, AuthException {
+    public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit, Integer page) {
         return recipeService.getRecommendations(limit, page);
     }
 }

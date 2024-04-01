@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.persistence.TransactionRequiredException;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -20,9 +21,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import talkychefserver.model.dto.Error;
-import talkychefserver.model.exceptions.*;
-
-import jakarta.validation.ConstraintViolationException;
+import talkychefserver.model.exceptions.AuthException;
+import talkychefserver.model.exceptions.BadRequestException;
+import talkychefserver.model.exceptions.InvalidMediaTypeException;
+import talkychefserver.model.exceptions.NotFoundException;
 
 
 @RestControllerAdvice
@@ -34,20 +36,23 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
-        return new ResponseEntity<>(new Error().code(400).message("Validation failed, argument not valid"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new Error().code(400).message("Validation failed, argument not valid"),
+                                    HttpStatus.BAD_REQUEST);
     }
 
     @NonNull
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
-        return new ResponseEntity<>(new Error().code(400).message("Validation failed, http message not readable"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new Error().code(400).message("Validation failed, http message not readable"),
+                                    HttpStatus.BAD_REQUEST);
     }
 
     @NonNull
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
                                                         HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new Error().code(400).message("Validation failed, type mismatch"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new Error().code(400).message("Validation failed, type mismatch"),
+                                    HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NotFoundException.class})
@@ -68,7 +73,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class})
     protected ResponseEntity<Object> handleValidationFailed(ConstraintViolationException e) {
         String message = e.getMessage();
-        return new ResponseEntity<>(new Error().code(400).message("Validation failed: " + message.substring(message.indexOf(":"))), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                new Error().code(400).message("Validation failed: " + message.substring(message.indexOf(":"))),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({AuthException.class})
@@ -80,37 +87,41 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({DataIntegrityViolationException.class})
     protected ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         String message = e.getMessage();
-        return new ResponseEntity<>(new Error().code(400).message("Saving to db failed: " + message), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new Error().code(400).message("Saving to db failed: " + message),
+                                    HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({TransactionRequiredException.class})
     protected ResponseEntity<Object> handleTransactionRequiredException(TransactionRequiredException e) {
         String message = e.getMessage();
-        return new ResponseEntity<>(new Error().code(400).message("Deleting from db failed: " + message), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new Error().code(400).message("Deleting from db failed: " + message),
+                                    HttpStatus.BAD_REQUEST);
     }
-
 
 
     @ExceptionHandler({ExpiredJwtException.class})
     protected ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException e) {
         String message = e.getMessage();
         logger.error("Invalid token: {}", message, e);
-        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message),
+                                    HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler({MalformedJwtException.class})
     protected ResponseEntity<Object> handleMalformedJwtException(MalformedJwtException e) {
         String message = e.getMessage();
         logger.error("Invalid token: {}", message, e);
-        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message),
+                                    HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler({UnsupportedJwtException.class})
     protected ResponseEntity<Object> handleUnsupportedJwtException(UnsupportedJwtException e) {
         String message = e.getMessage();
         logger.error("Invalid token: {}", message, e);
-        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new Error().code(400).message("Invalid token: " + message),
+                                    HttpStatus.UNAUTHORIZED);
     }
-
-
 
 
 }

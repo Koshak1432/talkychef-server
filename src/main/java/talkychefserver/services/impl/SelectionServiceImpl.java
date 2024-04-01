@@ -7,10 +7,9 @@ import talkychefserver.model.dto.CategoryDto;
 import talkychefserver.model.dto.SelectionDto;
 import talkychefserver.model.entities.Category;
 import talkychefserver.model.entities.Selection;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.CategoryRepository;
-import talkychefserver.respository.SelectionRepository;
-import talkychefserver.services.SelectionService;
+import talkychefserver.respositories.CategoryRepository;
+import talkychefserver.respositories.SelectionRepository;
+import talkychefserver.services.interfaces.SelectionService;
 import talkychefserver.utils.FindUtils;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class SelectionServiceImpl implements SelectionService {
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getCategoriesOfSelection(Long id) throws NotFoundException {
+    public ResponseEntity<List<CategoryDto>> getCategoriesOfSelection(Long id) {
         FindUtils.findSelectionById(selectionRepository, id);
         List<Category> categories = categoryRepository.findBySelectionId(id);
         List<CategoryDto> categoryDtos = categories.stream().map(e -> mapper.map(e, CategoryDto.class)).toList();

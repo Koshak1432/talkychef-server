@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import talkychefserver.api.MarkApi;
 import talkychefserver.model.dto.IdDto;
 import talkychefserver.model.dto.MarkDto;
-import talkychefserver.model.exceptions.AuthException;
-import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.services.MarkService;
+import talkychefserver.services.interfaces.MarkService;
 
 @CrossOrigin(maxAge = 1440)
 @RestController
@@ -23,28 +20,27 @@ public class MarkApiController implements MarkApi {
     }
 
     @Override
-    public ResponseEntity<Float> getAvgMark(Long id) throws NotFoundException {
+    public ResponseEntity<Float> getAvgMark(Long id) {
         return markService.getAvgMark(id);
     }
 
     @Override
-    public ResponseEntity<MarkDto> getMark(String userUid, Long recipeId) throws NotFoundException {
+    public ResponseEntity<MarkDto> getMark(String userUid, Long recipeId) {
         return markService.getRecipeMark(userUid, recipeId);
     }
 
     @Override
-    public ResponseEntity<IdDto> markPost(MarkDto mark) throws BadRequestException, NotFoundException, AuthException {
+    public ResponseEntity<IdDto> markPost(MarkDto mark) {
         return markService.addRecipeMark(mark);
     }
 
     @Override
-    public ResponseEntity<IdDto> markUpdate(MarkDto mark) throws BadRequestException, NotFoundException, AuthException {
+    public ResponseEntity<IdDto> markUpdate(MarkDto mark) {
         return markService.updateRecipeMark(mark);
     }
 
     @Override
-    public ResponseEntity<Void> markDelete(String userUid, Long recipeId) throws NotFoundException, AuthException,
-            BadRequestException {
+    public ResponseEntity<Void> markDelete(String userUid, Long recipeId) {
         return markService.deleteRecipeMark(userUid, recipeId);
     }
 

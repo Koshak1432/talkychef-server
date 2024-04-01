@@ -7,8 +7,7 @@ import talkychefserver.config.Constants;
 import talkychefserver.model.dto.CommandDto;
 import talkychefserver.model.dto.CommandRecognitionRequest;
 import talkychefserver.model.dto.VoiceCommand;
-import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.services.CommandRecognitionService;
+import talkychefserver.services.interfaces.CommandRecognitionService;
 
 import java.net.URI;
 

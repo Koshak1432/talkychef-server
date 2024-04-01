@@ -15,8 +15,6 @@ RUN ./gradlew build || return 0
 
 # Build stage
 FROM gradle:latest AS build
-ARG WORKER_COUNT
-ENV WORKER_COUNT=${WORKER_COUNT}
 ENV APP_HOME=/usr/app/
 COPY --from=cache /usr/gradle/cache /home/gradle/.gradle
 WORKDIR $APP_HOME

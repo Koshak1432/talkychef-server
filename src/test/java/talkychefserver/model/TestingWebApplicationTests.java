@@ -18,8 +18,8 @@ import talkychefserver.model.dto.StepDto;
 import talkychefserver.model.entities.Recipe;
 import talkychefserver.model.entities.Role;
 import talkychefserver.model.entities.User;
-import talkychefserver.respository.RecipeRepository;
-import talkychefserver.respository.UserRepository;
+import talkychefserver.respositories.RecipeRepository;
+import talkychefserver.respositories.UserRepository;
 import talkychefserver.security.domain.JwtAuthentication;
 import talkychefserver.services.impl.RecipeServiceImpl;
 
