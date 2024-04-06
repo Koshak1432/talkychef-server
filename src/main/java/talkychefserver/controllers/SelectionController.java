@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import talkychefserver.api.SelectionApi;
 import talkychefserver.model.dto.CategoryDto;
 import talkychefserver.model.dto.SelectionDto;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.services.SelectionService;
+import talkychefserver.services.interfaces.SelectionService;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class SelectionController implements SelectionApi {
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(Long id) throws NotFoundException {
+    public ResponseEntity<List<CategoryDto>> getCategoriesBySelectionId(Long id) {
         return service.getCategoriesOfSelection(id);
     }
 }

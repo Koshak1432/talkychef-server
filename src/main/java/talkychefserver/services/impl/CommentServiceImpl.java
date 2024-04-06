@@ -11,12 +11,11 @@ import talkychefserver.model.dto.IdDto;
 import talkychefserver.model.entities.Comment;
 import talkychefserver.model.entities.Recipe;
 import talkychefserver.model.entities.User;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.CommentRepository;
-import talkychefserver.respository.RecipeRepository;
-import talkychefserver.respository.UserRepository;
+import talkychefserver.respositories.CommentRepository;
+import talkychefserver.respositories.RecipeRepository;
+import talkychefserver.respositories.UserRepository;
 import talkychefserver.security.service.impl.AuthServiceCommon;
-import talkychefserver.services.CommentService;
+import talkychefserver.services.interfaces.CommentService;
 import talkychefserver.utils.FindUtils;
 
 import java.util.List;
@@ -39,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> postComment(CommentDto commentDto) throws NotFoundException {
+    public ResponseEntity<IdDto> postComment(CommentDto commentDto) {
         Comment comment = mapper.map(commentDto, Comment.class);
         comment.setId(null);
         User user = FindUtils.findUserByUid(userRepository, commentDto.getUserUid());
@@ -52,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> updateComment(CommentDto commentDto) throws NotFoundException {
+    public ResponseEntity<IdDto> updateComment(CommentDto commentDto) {
         Comment comment = FindUtils.findComment(commentRepository, commentDto.getId());
         if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
             comment.setContent(commentDto.getContent());
@@ -63,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteComment(Long commentId) throws NotFoundException {
+    public ResponseEntity<Void> deleteComment(Long commentId) {
         Comment comment = FindUtils.findComment(commentRepository, commentId);
         if (AuthServiceCommon.checkAuthorities(comment.getUser().getUid())) {
             commentRepository.deleteById(commentId);

@@ -8,9 +8,6 @@ import talkychefserver.api.ProfileApi;
 import talkychefserver.model.dto.IdDto;
 import talkychefserver.model.dto.UserDto;
 import talkychefserver.model.dto.UserProfileDto;
-import talkychefserver.model.exceptions.AuthException;
-import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.model.exceptions.NotFoundException;
 import talkychefserver.security.service.UserService;
 
 import java.util.List;
@@ -27,44 +24,42 @@ public class ProfileApiController implements ProfileApi {
 
 
     @Override
-    public ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException {
+    public ResponseEntity<UserProfileDto> getCurrentUserProfile() {
         return userService.getCurrentUserProfile();
     }
 
     @Override
-    public ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) {
         return userService.updateProfile(profileDto);
     }
 
     @Override
-    public ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException {
+    public ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) {
         return userService.addProfile(profileDto);
     }
 
     @Override
-    public ResponseEntity<List<UserProfileDto>> getProfilesByPartUid(String login, Integer limit, Integer page) throws
-            NotFoundException {
+    public ResponseEntity<List<UserProfileDto>> getProfilesByPartUid(String login, Integer limit, Integer page) {
         return userService.getUserProfilesByPartLogin(login, limit, page);
     }
 
     @Override
-    public ResponseEntity<UserProfileDto> getProfileByUid(String login) throws NotFoundException {
+    public ResponseEntity<UserProfileDto> getProfileByUid(String login) {
         return userService.getUserProfileByLogin(login);
     }
 
     @Override
-    public ResponseEntity<Void> sendInstructions(String email) throws NotFoundException {
+    public ResponseEntity<Void> sendInstructions(String email) {
         return userService.sendEmailInstructions(email);
     }
 
     @Override
-    public ResponseEntity<IdDto> verifyCode(String token) throws NotFoundException, BadRequestException {
+    public ResponseEntity<IdDto> verifyCode(String token) {
         return userService.verifyCode(token);
     }
 
     @Override
-    public ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException,
-            BadRequestException, AuthException {
+    public ResponseEntity<Void> changePassword(String token, UserDto userDto) {
         return userService.changePassword(token, userDto);
 
     }

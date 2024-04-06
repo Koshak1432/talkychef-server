@@ -15,11 +15,11 @@ import talkychefserver.model.entities.User;
 import talkychefserver.model.exceptions.AuthException;
 import talkychefserver.model.exceptions.BadRequestException;
 import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.MarkRepository;
-import talkychefserver.respository.RecipeRepository;
-import talkychefserver.respository.UserRepository;
+import talkychefserver.respositories.MarkRepository;
+import talkychefserver.respositories.RecipeRepository;
+import talkychefserver.respositories.UserRepository;
 import talkychefserver.security.service.impl.AuthServiceCommon;
-import talkychefserver.services.MarkService;
+import talkychefserver.services.interfaces.MarkService;
 import talkychefserver.utils.FindUtils;
 
 import java.util.Optional;
@@ -41,20 +41,20 @@ public class MarkServiceImpl implements MarkService {
         this.markRepository = markRepository;
     }
 
-    private void setRecipeToMark(Mark mark, Long recipeId) throws NotFoundException {
+    private void setRecipeToMark(Mark mark, Long recipeId) {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         mark.getId().setRecipeId(recipe.getId());
         mark.setRecipe(recipe);
     }
 
-    private void setAuthorToMark(Mark mark, String uid) throws NotFoundException {
+    private void setAuthorToMark(Mark mark, String uid) {
         User author = FindUtils.findUserByUid(userRepository, uid);
         mark.getId().setUserId(author.getId());
         mark.setUser(author);
     }
 
     @Override
-    public ResponseEntity<Float> getAvgMark(Long recipeId) throws NotFoundException {
+    public ResponseEntity<Float> getAvgMark(Long recipeId) {
         Recipe recipe = FindUtils.findRecipe(recipeRepository, recipeId);
         Float res = 0f;
         if (recipe.getAvgMark() != null) {
@@ -64,7 +64,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public ResponseEntity<MarkDto> getRecipeMark(String userUid, Long recipeId) throws NotFoundException {
+    public ResponseEntity<MarkDto> getRecipeMark(String userUid, Long recipeId) {
         User user = FindUtils.findUserByUid(userRepository, userUid);
         Optional<Mark> mark = markRepository.findById(new MarkKey(user.getId(), recipeId));
         if (mark.isEmpty()) {
@@ -75,8 +75,7 @@ public class MarkServiceImpl implements MarkService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) throws NotFoundException, AuthException,
-            BadRequestException {
+    public ResponseEntity<IdDto> addRecipeMark(MarkDto markDto) {
         Mark mark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.isSamePerson(markDto.getUserUid())) {
             throw new AuthException("You cannot add mark from another user");
@@ -93,7 +92,7 @@ public class MarkServiceImpl implements MarkService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) throws NotFoundException, AuthException {
+    public ResponseEntity<IdDto> updateRecipeMark(MarkDto markDto) {
         Mark newMark = mapper.map(markDto, Mark.class);
         if (!AuthServiceCommon.checkAuthorities(markDto.getUserUid())) {
             throw new AuthException("No rights");
@@ -110,8 +109,7 @@ public class MarkServiceImpl implements MarkService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) throws AuthException,
-            NotFoundException {
+    public ResponseEntity<Void> deleteRecipeMark(String userUid, Long recipeId) {
         if (!AuthServiceCommon.checkAuthorities(userUid)) {
             throw new AuthException("No rights");
         }

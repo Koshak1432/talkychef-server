@@ -2,7 +2,7 @@ package talkychefserver.utils;
 
 import talkychefserver.model.entities.*;
 import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.*;
+import talkychefserver.respositories.*;
 
 
 public class FindUtils {
@@ -25,7 +25,8 @@ public class FindUtils {
     }
 
     public static Category findCategory(CategoryRepository repository, Long id) throws NotFoundException {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Couldn't find category with id: " + id));
+        return repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Couldn't find category with id: " + id));
     }
 
     public static Recipe findRecipe(RecipeRepository repository, Long id) throws NotFoundException {

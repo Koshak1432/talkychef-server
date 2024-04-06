@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import talkychefserver.config.Constants;
 import talkychefserver.model.dto.CommentDto;
 import talkychefserver.model.dto.IdDto;
-import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 
@@ -18,17 +16,15 @@ import java.util.List;
 public interface CommentApi {
     @PostMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto) throws NotFoundException;
+    ResponseEntity<IdDto> commentPost(@RequestBody CommentDto commentDto);
 
     @PutMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<IdDto> commentUpdate(@RequestBody CommentDto commentDto) throws NotFoundException,
-            BadRequestException;
+    ResponseEntity<IdDto> commentUpdate(@RequestBody CommentDto commentDto);
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<Void> commentDelete(
-            @PathVariable("id") @Positive(message = "comment id must be positive") Long id) throws NotFoundException;
+    ResponseEntity<Void> commentDelete(@PathVariable("id") @Positive(message = "comment id must be positive") Long id);
 
     @GetMapping("/{id}")
     ResponseEntity<List<CommentDto>> getRecipeComments(

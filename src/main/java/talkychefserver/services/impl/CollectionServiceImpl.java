@@ -14,10 +14,9 @@ import talkychefserver.model.entities.Media;
 import talkychefserver.model.entities.Recipe;
 import talkychefserver.model.entities.User;
 import talkychefserver.model.exceptions.AuthException;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.*;
+import talkychefserver.respositories.*;
 import talkychefserver.security.service.impl.AuthServiceCommon;
-import talkychefserver.services.CollectionService;
+import talkychefserver.services.interfaces.CollectionService;
 import talkychefserver.utils.FindUtils;
 import talkychefserver.utils.GetUtil;
 
@@ -50,7 +49,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> addCollection(CollectionDto body) throws NotFoundException {
+    public ResponseEntity<IdDto> addCollection(CollectionDto body) {
         FindUtils.findMedia(mediaRepository, body.getMediaId());
         Collection collection = mapper.map(body, Collection.class);
         collection.setAuthor(FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin()));
@@ -61,8 +60,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> addRecipeToCollection(Long recipeId, Long collectionId) throws NotFoundException,
-            AuthException {
+    public ResponseEntity<Void> addRecipeToCollection(Long recipeId, Long collectionId) {
         User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
         if (!user.equals(collection.getAuthor())) {
@@ -74,7 +72,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<CollectionDto> getCollectionById(Long collectionId) throws NotFoundException {
+    public ResponseEntity<CollectionDto> getCollectionById(Long collectionId) {
         Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
         CollectionDto collectionDto = mapper.map(collection, CollectionDto.class);
         return ResponseEntity.ok(collectionDto);
@@ -82,7 +80,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteCollection(Long id) throws NotFoundException, AuthException {
+    public ResponseEntity<Void> deleteCollection(Long id) {
         User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, id);
         if (collection.getAuthor() == null || !collection.getAuthor().getUid().equals(user.getUid())) {
@@ -94,7 +92,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> putCollection(Long id, CollectionDto body) throws AuthException, NotFoundException {
+    public ResponseEntity<IdDto> putCollection(Long id, CollectionDto body) {
         User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, id);
         if (collection.getAuthor() == null || !collection.getAuthor().getUid().equals(user.getUid())) {
@@ -111,8 +109,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<Void> deleteRecipeFromCollection(Long recipeId, Long collectionId) throws NotFoundException,
-            AuthException {
+    public ResponseEntity<Void> deleteRecipeFromCollection(Long recipeId, Long collectionId) {
         User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
         Collection collection = FindUtils.findCollection(collectionRepository, collectionId);
         if (collection.getAuthor() == null || !user.equals(collection.getAuthor())) {
@@ -124,8 +121,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<List<CollectionDto>> getCollections(String login, Integer limit, Integer page) throws
-            NotFoundException {
+    public ResponseEntity<List<CollectionDto>> getCollections(String login, Integer limit, Integer page) {
         String findLogin = login == null ? AuthServiceCommon.getUserLogin() : login;
         User user = FindUtils.findUserByUid(userRepository, findLogin);
         List<Collection> collections = collectionRepository.findByAuthorIdWithOffset(user.getId(),
@@ -146,8 +142,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id, Integer limit, Integer page) throws
-            NotFoundException {
+    public ResponseEntity<List<RecipeDto>> getCollectionRecipesById(Long id, Integer limit, Integer page) {
         FindUtils.findCollectionById(collectionRepository, id);
         List<Recipe> recipes = recipeRepository.findByCollectionId(id, GetUtil.getCurrentLimit(limit),
                                                                    GetUtil.getCurrentPage(page));
@@ -157,7 +152,7 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdDto> postLikedRecipe(Long recipeId) throws NotFoundException {
+    public ResponseEntity<IdDto> postLikedRecipe(Long recipeId) {
         FindUtils.findRecipe(recipeRepository, recipeId);
         String login = AuthServiceCommon.getUserLogin();
         String likedName = login + "_liked";

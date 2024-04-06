@@ -1,4 +1,4 @@
-package talkychefserver.respository;
+package talkychefserver.respositories;
 
 import org.springframework.data.repository.CrudRepository;
 import talkychefserver.model.entities.Role;

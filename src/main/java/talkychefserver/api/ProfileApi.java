@@ -12,9 +12,6 @@ import talkychefserver.config.Constants;
 import talkychefserver.model.dto.IdDto;
 import talkychefserver.model.dto.UserDto;
 import talkychefserver.model.dto.UserProfileDto;
-import talkychefserver.model.exceptions.AuthException;
-import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 
@@ -24,39 +21,34 @@ public interface ProfileApi {
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException;
+    ResponseEntity<UserProfileDto> getCurrentUserProfile();
 
     @PutMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<IdDto> updateProfile(@RequestBody UserProfileDto profileDto) throws BadRequestException,
-            NotFoundException;
+    ResponseEntity<IdDto> updateProfile(@RequestBody UserProfileDto profileDto);
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    ResponseEntity<IdDto> addProfile(@RequestBody UserProfileDto profileDto) throws BadRequestException,
-            NotFoundException;
+    ResponseEntity<IdDto> addProfile(@RequestBody UserProfileDto profileDto);
 
     @GetMapping("/search/{login}")
     ResponseEntity<List<UserProfileDto>> getProfilesByPartUid(
             @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login,
             @RequestParam(value = "limit", required = false) @Positive(message = "limit must be positive") Integer limit,
-            @RequestParam(value = "page", required = false) @PositiveOrZero Integer page) throws NotFoundException;
+            @RequestParam(value = "page", required = false) @PositiveOrZero Integer page);
 
     @GetMapping("/{login}")
     ResponseEntity<UserProfileDto> getProfileByUid(
-            @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login) throws
-            NotFoundException;
+            @Size(max = 128) @NotBlank(message = "name must be not blank") @PathVariable("login") String login);
 
     @PostMapping("/restore-password")
-    ResponseEntity<Void> sendInstructions(@RequestParam("email") String email) throws NotFoundException;
+    ResponseEntity<Void> sendInstructions(@RequestParam("email") String email);
 
     @GetMapping("/restore-password/{token}")
-    ResponseEntity<IdDto> verifyCode(@PathVariable("token") String token) throws NotFoundException,
-            BadRequestException;
+    ResponseEntity<IdDto> verifyCode(@PathVariable("token") String token);
 
     @PostMapping("/restore-password/{token}")
-    ResponseEntity<Void> changePassword(@PathVariable("token") String token, @RequestBody UserDto userDto) throws
-            NotFoundException, BadRequestException, AuthException;
+    ResponseEntity<Void> changePassword(@PathVariable("token") String token, @RequestBody UserDto userDto);
 
 
 }
