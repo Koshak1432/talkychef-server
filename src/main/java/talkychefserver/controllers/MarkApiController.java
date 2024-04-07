@@ -43,6 +43,4 @@ public class MarkApiController implements MarkApi {
     public ResponseEntity<Void> markDelete(String userUid, Long recipeId) {
         return markService.deleteRecipeMark(userUid, recipeId);
     }
-
-
 }
