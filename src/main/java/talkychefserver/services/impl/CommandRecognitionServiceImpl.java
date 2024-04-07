@@ -20,10 +20,9 @@ public class CommandRecognitionServiceImpl implements CommandRecognitionService 
     }
 
     @Override
-    public CommandDto recognizeCommand(String text) {
-        CommandRecognitionRequest request = new CommandRecognitionRequest(text);
+    public CommandDto recognizeCommand(CommandRecognitionRequest request) {
         ResponseEntity<Integer> response = restTemplate.postForEntity(URI.create(Constants.RECOGNIZER_URL), request,
-                                                                         Integer.class);
+                                                                      Integer.class);
         if (response.getBody() == null) {
             throw new RuntimeException("Couldn't get command recognition value");
         }
