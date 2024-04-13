@@ -54,10 +54,12 @@ public class TestingWebApplicationTests {
         Recipe recipe = Recipe.builder().id(2L).author(User.builder().uid("admin").id(1L).build()).name(
                 "Super dish").cookTimeMins(30).build();
         when(recipeRepository.findById(2L)).thenReturn(Optional.of(recipe));
-        this.mockMvc.perform(get(Constants.BASE_API_PATH + "/recipes/2")).andExpect(status().isOk()).andExpect(
-                content().contentType("application/json")).andExpect(jsonPath("$.id", is(2))).andExpect(
-                jsonPath("$.author_uid", is("admin"))).andExpect(jsonPath("$.name", is("Super dish"))).andExpect(
-                jsonPath("$.cook_time_mins", is(30)));
+        this.mockMvc.perform(get(Constants.BASE_API_PATH + "/recipes/2"))
+                .andExpect(status().isOk()).andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.author_uid", is("admin")))
+                .andExpect(jsonPath("$.name", is("Super dish")))
+                .andExpect(jsonPath("$.cook_time_mins", is(30)));
     }
 
     @Test
