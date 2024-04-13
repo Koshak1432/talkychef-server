@@ -4,6 +4,8 @@ services:
     container_name: talkyChef
     ports:
       - 8080:8080
+    volumes:
+      - ./logs:/usr/app/logs
     env_file:
       - ./env/talkychef.env
     depends_on:

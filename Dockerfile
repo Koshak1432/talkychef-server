@@ -24,6 +24,8 @@ RUN gradle bootJar
 
 # Run stage
 FROM openjdk:17-jdk-alpine
+RUN apk update
+RUN apk add vim
 ENV APP_HOME=/usr/app
 ENV ARTIFACT_NAME=talkychefserver-0.0.1-SNAPSHOT.jar
 WORKDIR $APP_HOME
