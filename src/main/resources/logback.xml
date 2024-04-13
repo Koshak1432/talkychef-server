@@ -1,15 +1,28 @@
 <configuration>
-    <property name="LOG_DIR" value="./logs" />
-    <property name="LOG_FILE" value="PlaytoxApp.log" />
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_DIR}/${LOG_FILE}</file>
-        <append>false</append>
+    <property name="LOG_DIR" value="./logs"/>
+    <property name="LOG_FILE" value="talkychef"/>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{35} - %.-512msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %.-512msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${LOG_FILE}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %.-512msg%n</pattern>
+            <outputPatternAsHeader>true</outputPatternAsHeader>
         </encoder>
     </appender>
 
     <root level="DEBUG">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="file"/>
     </root>
 </configuration>

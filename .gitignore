@@ -44,3 +44,4 @@ env
 db
 Dockerfile
 compose.yml
+logs
