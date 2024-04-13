@@ -48,14 +48,14 @@ public class SlopeOne {
     }
 
     public List<RecipeDto> recommendAlgSlopeOne(Integer limit, Integer page) {
-        log.trace("Starting recommendation algorithm");
+        log.debug("Starting recommendation algorithm");
         Map<User, HashMap<Recipe, Double>> inputData = initializeData();
         buildDifferencesMatrix(inputData);
         return predict(inputData, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
     }
 
     private Map<User, HashMap<Recipe, Double>> initializeData() {
-        log.trace("Initializing data");
+        log.debug("Initializing data");
         List<Mark> markList = StreamSupport.stream(markRepository.findAll().spliterator(), false).toList();
         Map<User, HashMap<Recipe, Double>> data = new HashMap<>();
         for (Mark m : markList) {
@@ -78,7 +78,7 @@ public class SlopeOne {
      * @param data existing user data and their items' ratings
      */
     private void buildDifferencesMatrix(Map<User, HashMap<Recipe, Double>> data) {
-        log.trace("Building differences matrix");
+        log.debug("Building differences matrix");
         data.values().forEach(mark -> {
             mark.forEach((recipe1, rating1) -> {
                 if (!diff.containsKey(recipe1)) {
@@ -110,7 +110,7 @@ public class SlopeOne {
      * @param data existing user data and their items' ratings
      */
     private List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data, int limit, int page) {
-        log.trace("Predicting");
+        log.debug("Predicting");
         // Initialize the uPred and uFreq maps
         HashMap<Recipe, Double> uPred = new HashMap<>();
         HashMap<Recipe, Integer> uFreq = new HashMap<>();
@@ -168,7 +168,7 @@ public class SlopeOne {
     }
 
     private List<RecipeDto> getSortedRecipeDtos(int limit, int page) {
-        log.trace("Sorting recipes");
+        log.debug("Sorting recipes");
         List<RecipeDto> recipeDtos;
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
             User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
@@ -192,7 +192,5 @@ public class SlopeOne {
         recipeDtos.addAll(recipes);
         return recipeDtos;
     }
-
-
 }
 
