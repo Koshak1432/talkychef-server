@@ -1,13 +1,16 @@
 <configuration>
     <property name="LOG_DIR" value="./logs"/>
     <property name="LOG_FILE" value="talkychef"/>
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %.-512msg%n</pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
     </appender>
 
-    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/${LOG_FILE}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_DIR}/${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
@@ -16,6 +19,9 @@
             </timeBasedFileNamingAndTriggeringPolicy>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %.-512msg%n</pattern>
             <outputPatternAsHeader>true</outputPatternAsHeader>
@@ -23,6 +29,9 @@
     </appender>
 
     <root level="DEBUG">
-        <appender-ref ref="file"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>
+
+
