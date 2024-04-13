@@ -35,28 +35,29 @@ public class Comment {
 
     @Column(name = "content")
     private String content;
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ?
-                ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ?
-                ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) {
-            return false;
-        }
-        Comment comment = (Comment) o;
-        return getId() != null && Objects.equals(getId(), comment.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return getClass().hashCode();
-    }
 }
+
+//    @Override
+//    public final boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//        if (o == null) {
+//            return false;
+//        }
+//        Class<?> oEffectiveClass = o instanceof HibernateProxy ?
+//                ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+//        Class<?> thisEffectiveClass = this instanceof HibernateProxy ?
+//                ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+//        if (thisEffectiveClass != oEffectiveClass) {
+//            return false;
+//        }
+//        Comment comment = (Comment) o;
+//        return getId() != null && Objects.equals(getId(), comment.getId());
+//    }
+//
+//    @Override
+//    public final int hashCode() {
+//        return getClass().hashCode();
+//    }
+//}
