@@ -1,5 +1,6 @@
 package talkychefserver.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import talkychefserver.services.interfaces.CommandRecognitionService;
 
 import java.net.URI;
 
+@Slf4j
 @Service
 public class CommandRecognitionServiceImpl implements CommandRecognitionService {
     private final RestTemplate restTemplate;
@@ -23,13 +25,17 @@ public class CommandRecognitionServiceImpl implements CommandRecognitionService 
     }
 
     @Override
-    public CommandDto recognizeCommand(CommandRecognitionRequest request) {
-        logger.info("Got request to recognize command: " + request.getValue());
+    public CommandDto recognizeCommand(String text) {
+        log.info("Processing recognize command request. Text to recognize: {}", text);
+        CommandRecognitionRequest request = new CommandRecognitionRequest(text);
         ResponseEntity<Integer> response = restTemplate.postForEntity(URI.create(Constants.RECOGNIZER_URL), request,
                                                                       Integer.class);
         if (response.getBody() == null) {
+            log.error("Couldn't get command, check recognizer");
             throw new RuntimeException("Couldn't get command recognition value");
         }
-        return new CommandDto(VoiceCommand.getByValue(response.getBody()));
+        VoiceCommand command = VoiceCommand.getByValue(response.getBody());
+        log.info("Recognized command [{}]", command.name());
+        return new CommandDto(command);
     }
 }

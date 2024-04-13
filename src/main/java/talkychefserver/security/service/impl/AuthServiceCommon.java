@@ -18,7 +18,7 @@ public class AuthServiceCommon {
 
     public static boolean checkAuthorities(String login) {
         JwtAuthentication principal = getAuthInfo();
-        if (principal == null) {
+        if (principal == null || login == null) {
             return false;
         }
         return isContainsRole(principal.getAuthorities(), "ADMIN") || principal.getLogin().equals(login);
@@ -41,16 +41,11 @@ public class AuthServiceCommon {
         return false;
     }
 
-    public static boolean isSamePerson(String userUid) {
-        JwtAuthentication principal = AuthServiceCommon.getAuthInfo();
-        return principal.getLogin().equals(userUid);
-    }
-
     public static void checkRegisterConstraints(UserDto dto) {
         if (!isLoginValid(dto.getLogin())) {
             throw new BadRequestException(
-                    "Invalid login, must be  " + Constants.LOGIN_MIN_SYMBOLS + "-" + Constants.LOGIN_MAX_SYMBOLS + " " +
-                            "symbols, and contain valid symbols");
+                    "Invalid login, must be  " + Constants.LOGIN_MIN_SYMBOLS + "-" + Constants.LOGIN_MAX_SYMBOLS + " "
+                            + "symbols, and contain valid symbols");
         }
         if (!isPasswordValid(dto.getPassword())) {
             throw new BadRequestException(

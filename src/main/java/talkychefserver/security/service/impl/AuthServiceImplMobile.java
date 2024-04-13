@@ -2,6 +2,7 @@ package talkychefserver.security.service.impl;
 
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import talkychefserver.model.dto.UserDto;
@@ -18,8 +19,8 @@ import talkychefserver.utils.FindUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
-
 public class AuthServiceImplMobile implements AuthService {
     private final BeanConfig passwordEncoder;
     private final UserServiceImpl userServiceImpl;
@@ -36,11 +37,14 @@ public class AuthServiceImplMobile implements AuthService {
         this.userRepository = userRepository;
     }
 
+    @Override
     public JwtResponse login(@NonNull JwtRequest authRequest) {
+        log.info("Processing login request");
         User user = FindUtils.findUserByUid(userRepository, authRequest.getLogin());
         if (passwordEncoder.getPasswordEncoder().matches(authRequest.getPassword(), user.getPassword())) {
             return getJwtResponse(user);
         } else {
+            log.error("Couldn't login: wrong password");
             throw new AuthException("Wrong password");
         }
     }
@@ -54,7 +58,9 @@ public class AuthServiceImplMobile implements AuthService {
         return jwtResponse;
     }
 
+    @Override
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
+        log.info("Processing get access token request");
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
@@ -67,42 +73,40 @@ public class AuthServiceImplMobile implements AuthService {
                 return jwtResponse;
             }
         }
+        log.error("Validating refresh token failed");
         throw new AuthException("Invalid JWT");
     }
 
+    @Override
     public JwtResponse refresh(@NonNull String refreshToken) {
+        log.info("Processing refresh request");
         if (!jwtProviderImpl.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                User user = FindUtils.findUserByUid(userRepository, login);
-                return getJwtResponse(user);
-            }
+            log.error("Validating refresh token failed");
+            throw new AuthException("Invalid JWT");
         }
-        throw new AuthException("Invalid JWT");
+        final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
+        final String login = claims.getSubject();
+        final String saveRefreshToken = refreshStorage.get(login);
+        if (saveRefreshToken == null || !saveRefreshToken.equals(refreshToken)) {
+            throw new AuthException("Invalid JWT");
+        }
+        User user = FindUtils.findUserByUid(userRepository, login);
+        return getJwtResponse(user);
     }
 
 
+    @Override
     public JwtResponse registration(UserDto userDto) {
-        if (userDto.getLogin() == null) {
-            throw new BadRequestException("Login must be present");
-        }
-        if (userRepository.findByUid(userDto.getLogin()).isPresent()) {
-            throw new AuthException("User already exists");
-        }
+        log.info("Processing registration request");
         AuthServiceCommon.checkRegisterConstraints(userDto);
         userServiceImpl.addUser(userDto);
         User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponse(user);
     }
 
+    @Override
     public JwtResponse changePassword(UserDto userDto) {
-        if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
-            throw new AuthException("No rights");
-        }
-        userServiceImpl.updateUserPassword(userDto);
-        User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
+        User user = userServiceImpl.updateUserPassword(userDto);
         return getJwtResponse(user);
     }
 
