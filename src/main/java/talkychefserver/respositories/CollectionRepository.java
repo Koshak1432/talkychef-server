@@ -25,6 +25,7 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
             """, nativeQuery = true)
     List<Collection> findByNameContaining(String namePart, int limit, int page);
 
+
     Optional<Collection> findCollectionByName(String name);
 
     @Modifying

@@ -18,6 +18,7 @@ import java.net.URI;
 @Service
 public class CommandRecognitionServiceImpl implements CommandRecognitionService {
     private final RestTemplate restTemplate;
+    private final Logger logger = LoggerFactory.getLogger(CommandRecognitionServiceImpl.class);
 
     public CommandRecognitionServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
