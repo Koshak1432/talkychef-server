@@ -1,8 +1,6 @@
 package talkychefserver.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,16 +16,14 @@ import java.net.URI;
 @Service
 public class CommandRecognitionServiceImpl implements CommandRecognitionService {
     private final RestTemplate restTemplate;
-    private final Logger logger = LoggerFactory.getLogger(CommandRecognitionServiceImpl.class);
 
     public CommandRecognitionServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public CommandDto recognizeCommand(String text) {
-        log.info("Processing recognize command request. Text to recognize: {}", text);
-        CommandRecognitionRequest request = new CommandRecognitionRequest(text);
+    public CommandDto recognizeCommand(CommandRecognitionRequest request) {
+        log.info("Processing recognize command request. Text to recognize: {}", request.getValue());
         ResponseEntity<Integer> response = restTemplate.postForEntity(URI.create(Constants.RECOGNIZER_URL), request,
                                                                       Integer.class);
         if (response.getBody() == null) {
