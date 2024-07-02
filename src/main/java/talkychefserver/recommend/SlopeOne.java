@@ -1,5 +1,6 @@
 package talkychefserver.recommend;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,9 @@ import talkychefserver.model.dto.RecipeDto;
 import talkychefserver.model.entities.Mark;
 import talkychefserver.model.entities.Recipe;
 import talkychefserver.model.entities.User;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.MarkRepository;
-import talkychefserver.respository.RecipeRepository;
-import talkychefserver.respository.UserRepository;
+import talkychefserver.respositories.MarkRepository;
+import talkychefserver.respositories.RecipeRepository;
+import talkychefserver.respositories.UserRepository;
 import talkychefserver.security.service.impl.AuthServiceCommon;
 import talkychefserver.utils.FindUtils;
 import talkychefserver.utils.GetUtil;
@@ -27,9 +27,9 @@ import java.util.stream.StreamSupport;
 /**
  * Slope One algorithm implementation
  */
+@Slf4j
 @Service
 public class SlopeOne {
-
     private final ModelMapper mapper;
     private final UserRepository userRepository;
     private final MarkRepository markRepository;
@@ -47,13 +47,15 @@ public class SlopeOne {
         this.recipeRepository = recipeRepository;
     }
 
-    public List<RecipeDto> recommendAlgSlopeOne(Integer limit, Integer page) throws NotFoundException {
+    public List<RecipeDto> recommendAlgSlopeOne(Integer limit, Integer page) {
+        log.debug("Starting recommendation algorithm");
         Map<User, HashMap<Recipe, Double>> inputData = initializeData();
         buildDifferencesMatrix(inputData);
         return predict(inputData, GetUtil.getCurrentLimit(limit), GetUtil.getCurrentPage(page));
     }
 
     private Map<User, HashMap<Recipe, Double>> initializeData() {
+        log.debug("Initializing data");
         List<Mark> markList = StreamSupport.stream(markRepository.findAll().spliterator(), false).toList();
         Map<User, HashMap<Recipe, Double>> data = new HashMap<>();
         for (Mark m : markList) {
@@ -76,6 +78,7 @@ public class SlopeOne {
      * @param data existing user data and their items' ratings
      */
     private void buildDifferencesMatrix(Map<User, HashMap<Recipe, Double>> data) {
+        log.debug("Building differences matrix");
         data.values().forEach(mark -> {
             mark.forEach((recipe1, rating1) -> {
                 if (!diff.containsKey(recipe1)) {
@@ -104,9 +107,10 @@ public class SlopeOne {
      * Based on existing data predict all missing ratings. If prediction is not
      * possible, the value will be equal to -1
      *
-     * @param data  existing user data and their items' ratings
+     * @param data existing user data and their items' ratings
      */
-    private List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data, int limit, int page) throws NotFoundException {
+    private List<RecipeDto> predict(Map<User, HashMap<Recipe, Double>> data, int limit, int page) {
+        log.debug("Predicting");
         // Initialize the uPred and uFreq maps
         HashMap<Recipe, Double> uPred = new HashMap<>();
         HashMap<Recipe, Integer> uFreq = new HashMap<>();
@@ -125,8 +129,8 @@ public class SlopeOne {
         return getSortedRecipeDtos(limit, page);
     }
 
-    private void updateUPredAndUFreq(Entry<User, HashMap<Recipe, Double>> e,
-                                     HashMap<Recipe, Double> uPred, HashMap<Recipe, Integer> uFreq) {
+    private void updateUPredAndUFreq(Entry<User, HashMap<Recipe, Double>> e, HashMap<Recipe, Double> uPred,
+                                     HashMap<Recipe, Integer> uFreq) {
         for (Recipe j : e.getValue().keySet()) {
             for (Recipe k : diff.keySet()) {
                 double diffValue = diff.get(k).getOrDefault(j, 0.0);
@@ -163,35 +167,30 @@ public class SlopeOne {
         });
     }
 
-    private List<RecipeDto> getSortedRecipeDtos(int limit, int page) throws NotFoundException {
+    private List<RecipeDto> getSortedRecipeDtos(int limit, int page) {
+        log.debug("Sorting recipes");
         List<RecipeDto> recipeDtos;
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
             User user = FindUtils.findUserByUid(userRepository, AuthServiceCommon.getUserLogin());
             HashMap<Recipe, Double> outputUserData = outputData.get(user);
             if (outputUserData != null) {
-                List<Recipe> sortedList = outputUserData.entrySet().stream()
-                        .sorted(Map.Entry.<Recipe, Double>comparingByValue().reversed())
-                        .skip((long) page * limit)
-                        .limit(limit)
-                        .map(Map.Entry::getKey)
-                        .toList();
-                recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {
-                }.getType());
+                List<Recipe> sortedList = outputUserData.entrySet().stream().sorted(
+                        Map.Entry.<Recipe, Double>comparingByValue().reversed()).skip((long) page * limit).limit(
+                        limit).map(Map.Entry::getKey).toList();
+                recipeDtos = mapper.map(sortedList, new TypeToken<List<RecipeDto>>() {}.getType());
             } else {
-                recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimitAndOffset(limit, page), new TypeToken<List<RecipeDto>>() {
-                }.getType());
+                recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimitAndOffset(limit, page),
+                                        new TypeToken<List<RecipeDto>>() {}.getType());
             }
         } else {
-            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimitAndOffset(limit, page), new TypeToken<List<RecipeDto>>() {
-            }.getType());
+            recipeDtos = mapper.map(recipeRepository.findTopRecipesWithLimitAndOffset(limit, page),
+                                    new TypeToken<List<RecipeDto>>() {}.getType());
         }
 
-        List<RecipeDto> recipes = mapper.map(recipeRepository.findRandomWithLimit(limit - recipeDtos.size()), new TypeToken<List<RecipeDto>>() {
-        }.getType());
+        List<RecipeDto> recipes = mapper.map(recipeRepository.findRandomWithLimit(limit - recipeDtos.size()),
+                                             new TypeToken<List<RecipeDto>>() {}.getType());
         recipeDtos.addAll(recipes);
         return recipeDtos;
     }
-
-
 }
 

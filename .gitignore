@@ -42,3 +42,6 @@ start.sh
 
 env
 db
+Dockerfile
+compose.yml
+logs

@@ -4,29 +4,25 @@ import org.springframework.http.ResponseEntity;
 import talkychefserver.model.dto.IdDto;
 import talkychefserver.model.dto.UserDto;
 import talkychefserver.model.dto.UserProfileDto;
-import talkychefserver.model.exceptions.AuthException;
-import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.model.exceptions.NotFoundException;
 
 import java.util.List;
 
 public interface UserService {
-    ResponseEntity<IdDto> addUser(UserDto userDto) throws NotFoundException, BadRequestException;
+    ResponseEntity<IdDto> addUser(UserDto userDto);
 
-    ResponseEntity<UserProfileDto> getCurrentUserProfile() throws NotFoundException;
+    ResponseEntity<UserProfileDto> getCurrentUserProfile();
 
-    ResponseEntity<List<UserProfileDto>> getUserProfilesByPartLogin(String login, Integer limit, Integer page) throws
-            NotFoundException;
+    ResponseEntity<List<UserProfileDto>> getUserProfilesByPartLogin(String login, Integer limit, Integer page);
 
-    ResponseEntity<UserProfileDto> getUserProfileByLogin(String login) throws NotFoundException;
+    ResponseEntity<UserProfileDto> getUserProfileByLogin(String login);
 
-    ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException;
+    ResponseEntity<IdDto> updateProfile(UserProfileDto profileDto);
 
-    ResponseEntity<IdDto> addProfile(UserProfileDto profileDto) throws BadRequestException, NotFoundException;
+    ResponseEntity<IdDto> addProfile(UserProfileDto profileDto);
 
-    ResponseEntity<Void> sendEmailInstructions(String email) throws NotFoundException;
+    ResponseEntity<Void> sendEmailInstructions(String email);
 
-    ResponseEntity<IdDto> verifyCode(String token) throws NotFoundException, BadRequestException;
+    ResponseEntity<IdDto> verifyCode(String token);
 
-    ResponseEntity<Void> changePassword(String token, UserDto userDto) throws NotFoundException, AuthException;
+    ResponseEntity<Void> changePassword(String token, UserDto userDto);
 }

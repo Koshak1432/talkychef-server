@@ -4,8 +4,10 @@ services:
     container_name: talkyChef
     ports:
       - 8080:8080
+    volumes:
+      - ./logs:/usr/app/logs
     env_file:
-      - /env/talkychef.env
+      - ./env/talkychef.env
     depends_on:
       - flyway
     networks:
@@ -26,7 +28,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - /env/postgres.env
+      - ./env/postgres.env
     networks:
       - talkychef-net
     volumes:

@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -14,16 +15,15 @@ import talkychefserver.model.dto.UserDto;
 import talkychefserver.model.entities.User;
 import talkychefserver.model.exceptions.AuthException;
 import talkychefserver.model.exceptions.BadRequestException;
-import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.UserRepository;
+import talkychefserver.respositories.UserRepository;
 import talkychefserver.security.config.BeanConfig;
 import talkychefserver.security.dto.JwtRequest;
 import talkychefserver.security.dto.JwtResponse;
 import talkychefserver.security.service.AuthService;
 import talkychefserver.utils.FindUtils;
 
+@Slf4j
 @Service
-
 public class AuthServiceImplWeb implements AuthService {
 
     @Autowired
@@ -40,25 +40,32 @@ public class AuthServiceImplWeb implements AuthService {
     private final JwtProviderImpl jwtProviderImpl;
     private final UserRepository userRepository;
 
-    public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException, NotFoundException {
+    @Override
+    public JwtResponse login(@NonNull JwtRequest authRequest) {
+        log.info("Processing login request");
         User user = FindUtils.findUserByUid(userRepository, authRequest.getLogin());
         if (passwordEncoder.getPasswordEncoder().matches(authRequest.getPassword(), user.getPassword())) {
             return getJwtResponseAndFillCookie(user);
         } else {
+            log.error("Couldn't login: wrong password");
             throw new AuthException("Wrong password");
         }
     }
 
-    public JwtResponse getAccessToken(@NonNull String refreshToken) throws NotFoundException {
-        JwtResponse jwtResponse = new JwtResponse();
+    @Override
+    public JwtResponse getAccessToken(@NonNull String refreshToken) {
+        log.info("Processing get access token request");
         if (jwtProviderImpl.validateRefreshToken(refreshToken)) {
+            JwtResponse jwtResponse = new JwtResponse();
             final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
             User user = FindUtils.findUserByUid(userRepository, login);
             final String accessToken = jwtProviderImpl.generateAccessToken(user);
             jwtResponse.setAccessToken(accessToken);
+            return jwtResponse;
         }
-        return jwtResponse;
+        log.error("Validating refresh token failed");
+        throw new AuthException("Invalid JWT");
     }
 
 
@@ -71,9 +78,11 @@ public class AuthServiceImplWeb implements AuthService {
         response.addCookie(refreshTokenCookie);
     }
 
-    public JwtResponse refresh(@CookieValue(value = "refreshToken") @NonNull String refreshToken) throws AuthException,
-            NotFoundException {
+    @Override
+    public JwtResponse refresh(@CookieValue(value = "refreshToken") @NonNull String refreshToken) {
+        log.info("Processing refresh request");
         if (!jwtProviderImpl.validateRefreshToken(refreshToken)) {
+            log.error("Validating refresh token failed");
             throw new AuthException("Invalid JWT");
         }
         final Claims claims = jwtProviderImpl.getRefreshClaims(refreshToken);
@@ -83,27 +92,19 @@ public class AuthServiceImplWeb implements AuthService {
     }
 
 
-    public JwtResponse registration(UserDto userDto) throws AuthException, NotFoundException, BadRequestException {
-        if (userDto.getLogin() == null) {
-            throw new BadRequestException("Login must be present");
-        }
-        if (userRepository.findByUid(userDto.getLogin()).isPresent()) {
-            throw new AuthException("User already exists");
-        }
+    @Override
+    public JwtResponse registration(UserDto userDto) {
+        log.info("Processing registration request");
         AuthServiceCommon.checkRegisterConstraints(userDto);
         userServiceImpl.addUser(userDto);
         User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
         return getJwtResponseAndFillCookie(user);
     }
 
-    public JwtResponse changePassword(UserDto userDto) throws NotFoundException, AuthException, BadRequestException {
-        if (!AuthServiceCommon.checkAuthorities(userDto.getLogin())) {
-            throw new AuthException("No rights");
-        }
-        userServiceImpl.updateUserPassword(userDto);
-        User user = FindUtils.findUserByUid(userRepository, userDto.getLogin());
+    @Override
+    public JwtResponse changePassword(UserDto userDto) {
+        User user = userServiceImpl.updateUserPassword(userDto);
         return getJwtResponseAndFillCookie(user);
-
     }
 
     private JwtResponse getJwtResponse(User user) {
@@ -114,8 +115,8 @@ public class AuthServiceImplWeb implements AuthService {
     }
 
     private JwtResponse getJwtResponseAndFillCookie(User user) {
-        JwtResponse jwtResponse;
-        jwtResponse = getJwtResponse(user);
+        log.info("Filling cookie");
+        JwtResponse jwtResponse = getJwtResponse(user);
         ServletRequestAttributes requestAttributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
@@ -125,6 +126,7 @@ public class AuthServiceImplWeb implements AuthService {
                 fillRefreshTokenCookie(response, refreshToken);
             }
         }
+        log.info("Cookie filled");
         return jwtResponse;
     }
 

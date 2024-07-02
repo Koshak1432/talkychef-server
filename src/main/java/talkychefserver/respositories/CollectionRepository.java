@@ -1,4 +1,4 @@
-package talkychefserver.respository;
+package talkychefserver.respositories;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,6 +24,7 @@ public interface CollectionRepository extends CrudRepository<Collection, Long> {
                 LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
     List<Collection> findByNameContaining(String namePart, int limit, int page);
+
 
     Optional<Collection> findCollectionByName(String name);
 

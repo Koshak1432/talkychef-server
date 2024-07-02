@@ -1,5 +1,8 @@
 package talkychefserver.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,15 +14,13 @@ import talkychefserver.model.entities.Media;
 import talkychefserver.model.entities.MediaType;
 import talkychefserver.model.exceptions.InvalidMediaTypeException;
 import talkychefserver.model.exceptions.NotFoundException;
-import talkychefserver.respository.MediaRepository;
-import talkychefserver.respository.MediaTypeRepository;
-import talkychefserver.services.MediaService;
+import talkychefserver.respositories.MediaRepository;
+import talkychefserver.respositories.MediaTypeRepository;
+import talkychefserver.services.interfaces.MediaService;
 
-import java.util.Optional;
-
+@Slf4j
 @Service
 public class MediaServiceImpl implements MediaService {
-
     private final MediaRepository mediaRepository;
     private final MediaTypeRepository mediaTypeRepository;
 
@@ -31,16 +32,16 @@ public class MediaServiceImpl implements MediaService {
 
     //TODO тип медиа не проверяется
     @Override
-    public ResponseEntity<byte[]> getMediaById(Long id) throws NotFoundException {
-        Optional<Media> media = mediaRepository.findById(id);
-        if (media.isEmpty()) {
-            throw new NotFoundException("Couldn't find media with id: " + id);
-        }
+    public ResponseEntity<byte[]> getMediaById(Long id) {
+        log.info("Processing get media [{}] by id request", id);
+        Media media = mediaRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Couldn't find media with id: " + id));
 
-        byte[] data = media.get().getFileData();
+        byte[] data = media.getFileData();
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.valueOf(media.get().getMediaType().getMimeType()));
+        headers.setContentType(org.springframework.http.MediaType.valueOf(media.getMediaType().getMimeType()));
         headers.setContentLength(data.length);
+        log.info("Processed get media by id request");
         return new ResponseEntity<>(data, headers, HttpStatus.OK);
     }
 
@@ -48,7 +49,8 @@ public class MediaServiceImpl implements MediaService {
     //todo кешнуть поддерживаемые типы при инициализации и потом их юзать. Эксепшены кидать при отсутствии типа.
     @Override
     @Transactional
-    public ResponseEntity<IdDto> addMedia(String contentTypeHeader, byte[] data) throws InvalidMediaTypeException {
+    public ResponseEntity<IdDto> addMedia(String contentTypeHeader, byte[] data) {
+        log.info("Processing add media request");
         int endOfTypeInd = contentTypeHeader.indexOf(';');
         String mimeType;
         if (endOfTypeInd == -1) {
@@ -57,20 +59,15 @@ public class MediaServiceImpl implements MediaService {
             mimeType = contentTypeHeader.substring(0, endOfTypeInd);
         }
 
-        Optional<MediaType> mediaTypeOptional = mediaTypeRepository.findByMimeType(mimeType);
-
-        if (mediaTypeOptional.isEmpty()) {
-            throw new InvalidMediaTypeException(mimeType);
-        }
-
-        MediaType mediaType = mediaTypeOptional.get();
+        MediaType mediaType = mediaTypeRepository.findByMimeType(mimeType).orElseThrow(
+                () -> new InvalidMediaTypeException(mimeType));
         Media media = new Media();
-
         media.setFileData(data);
         media.setMediaType(mediaType);
 
-        mediaRepository.save(media);
-        return ResponseEntity.ok(new IdDto().id(media.getId()));
+        Media savedMedia = mediaRepository.save(media);
+        log.info("Added media");
+        return ResponseEntity.ok(new IdDto().id(savedMedia.getId()));
     }
 
 }

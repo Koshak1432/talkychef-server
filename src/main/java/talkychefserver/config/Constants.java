@@ -4,7 +4,7 @@ public class Constants {
     public static final String API_VERSION = "1";
     public static final String BASE_API_PATH = "/api/v" + API_VERSION;
     public static final int MAX_ITEMS_PER_PAGE = 10;
-    public static final String PATH_TO_NN_SCRIPT = "../resources/commandrecognizer/script.py";
+    public static final String RECOGNIZER_URL = "http://recognizer:8000/recognize";
 
     public static final String LOGIN_PATTERN = "^[\\w-]+$";
     public static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[^0-9\\s]).*$";

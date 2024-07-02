@@ -15,8 +15,6 @@ RUN ./gradlew build || return 0
 
 # Build stage
 FROM gradle:latest AS build
-ARG WORKER_COUNT
-ENV WORKER_COUNT=${WORKER_COUNT}
 ENV APP_HOME=/usr/app/
 COPY --from=cache /usr/gradle/cache /home/gradle/.gradle
 WORKDIR $APP_HOME
@@ -26,6 +24,8 @@ RUN gradle bootJar
 
 # Run stage
 FROM openjdk:17-jdk-alpine
+RUN apk update
+RUN apk add vim
 ENV APP_HOME=/usr/app
 ENV ARTIFACT_NAME=talkychefserver-0.0.1-SNAPSHOT.jar
 WORKDIR $APP_HOME

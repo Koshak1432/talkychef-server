@@ -34,6 +34,7 @@ public class JwtProviderImpl implements JwtProvider {
     }
 
     public String generateAccessToken(@NonNull User user) {
+        log.info("Generating access token for user [{}]", user.getUid());
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(15).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
@@ -41,23 +42,28 @@ public class JwtProviderImpl implements JwtProvider {
         for (Role role : user.getRoles()) {
             roles.add(role.getName());
         }
+        log.info("Generated access token for user [{}]", user.getUid());
         return Jwts.builder().setSubject(user.getUid()).setExpiration(accessExpiration).signWith(jwtAccessSecret).claim(
                 "roles", roles).claim("login", user.getUid()).compact();
     }
 
     public String generateRefreshToken(@NonNull User user) {
+        log.info("Generating refresh token for user [{}]", user.getUid());
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
+        log.info("Generated refresh token for user [{}]", user.getUid());
         return Jwts.builder().setSubject(user.getUid()).setExpiration(refreshExpiration).signWith(
                 jwtRefreshSecret).compact();
     }
 
     public boolean validateAccessToken(@NonNull String accessToken) {
+        log.info("Validating access token");
         return validateToken(accessToken, jwtAccessSecret);
     }
 
     public boolean validateRefreshToken(@NonNull String refreshToken) {
+        log.info("Validating refresh token");
         return validateToken(refreshToken, jwtRefreshSecret);
     }
 
