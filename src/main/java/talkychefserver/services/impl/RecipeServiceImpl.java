@@ -2,8 +2,6 @@ package talkychefserver.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +37,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final MediaRepository mediaRepository;
     private final CollectionRepository collectionRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public RecipeServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository,
@@ -46,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
                              AvgMarkRepository avgMarkRepository, StepRepository stepRepository,
                              MarkRepository markRepository, UserRepository userRepository,
                              MediaRepository mediaRepository, CollectionRepository collectionRepository,
-                             CategoryRepository categoryRepository) {
+                             CategoryRepository categoryRepository, ProductRepository productRepository, ProductRepository productRepository1) {
 
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
@@ -58,6 +57,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.mediaRepository = mediaRepository;
         this.collectionRepository = collectionRepository;
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository1;
     }
 
 
@@ -207,7 +207,45 @@ public class RecipeServiceImpl implements RecipeService {
             // в БД. Хочется убрать лишний find.
             setMeasureUnit(ingredientsDistribution);
         }
+
         log.info("Set ingredients distribution");
+        setNutritionParameters( recipe);
+    }
+
+    private void setNutritionParameters( Recipe recipe) {
+        double kilocalories = 1;
+        double proteins = 1;
+        double fats = 1;
+        double carbohydrates = 1;
+        double totalWeight = 1;
+        double ingredientWeight;
+        log.info("Setting nutrition distribution");
+
+        for (IngredientsDistribution ingredientsDistribution : recipe.getIngredientsDistributions()) {
+            Optional<Product> optionalProduct = productRepository.findById(ingredientsDistribution.getIngredient().getId());
+            if (optionalProduct.isEmpty()) continue;
+            Product product = optionalProduct.get();
+            totalWeight += ingredientsDistribution.getMeasureUnitCount() * ingredientsDistribution.getUnit().getConversionToGrams();
+            ingredientWeight = ingredientsDistribution.getMeasureUnitCount() * ingredientsDistribution.getUnit().getConversionToGrams();
+
+            kilocalories += kilocalories + (ingredientWeight / product.getServing() * product.getEnergyValue());
+            proteins += proteins + (ingredientWeight / product.getServing() * product.getProtein());
+            fats += fats + (ingredientWeight / product.getServing() * product.getFat());
+            carbohydrates += carbohydrates + (ingredientWeight / product.getServing() * product.getCarbohydrates());
+        }
+        if (recipe.getServings()!=null) {
+            kilocalories/=recipe.getServings();
+            proteins/=recipe.getServings();
+            fats/=recipe.getServings();
+            carbohydrates/=recipe.getServings();
+            totalWeight/=recipe.getServings();
+        }
+        recipe.setKilocalories(kilocalories);
+        recipe.setProteins(proteins);
+        recipe.setFats(fats);
+        recipe.setCarbohydrates(carbohydrates);
+        recipe.setTotalWeight((long) totalWeight);
+        log.info("Set nutrition distribution");
     }
 
     private void setMeasureUnit(IngredientsDistribution ingredientsDistribution) {
