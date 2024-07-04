@@ -318,4 +318,11 @@ public class RecipeServiceImpl implements RecipeService {
         log.info("Response category list size: {}", categoryDtos.size());
         return ResponseEntity.ok(categoryDtos);
     }
+
+    @Override
+    public ResponseEntity<List<RecipeDto>> getRecipesByIds(List<Long> productIds) {
+        List<Recipe> recipes = recipeRepository.findRecipesNotContainingProducts(productIds);
+        List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
+        return ResponseEntity.ok(recipeDtos);
+    }
 }

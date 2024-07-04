@@ -2,6 +2,7 @@ package talkychefserver.respositories;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import talkychefserver.model.entities.Recipe;
 
@@ -73,4 +74,14 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                 LIMIT :limit OFFSET :limit * :page
             """, nativeQuery = true)
     List<Recipe> findByCollectionId(Long id, int limit, int page);
+
+    @Query(value = """
+            SELECT r.*
+            FROM recipes r
+            WHERE r.id NOT IN (
+                SELECT rp.recipe_id
+                FROM ingredients_distribution rp
+                WHERE rp.ingredient_id IN (:forbiddenProductIds);
+            """, nativeQuery = true)
+    List<Recipe> findRecipesNotContainingProducts(@Param("forbiddenProductIds") List<Long> forbiddenProductIds);
 }
