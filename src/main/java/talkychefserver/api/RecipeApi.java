@@ -51,4 +51,8 @@ public interface RecipeApi {
     ResponseEntity<List<RecipeDto>> getRecipesRecommendations(
             @RequestParam(value = "limit", required = false) @Positive Integer limit,
             @RequestParam(value = "page", required = false) @PositiveOrZero Integer page);
+
+    @PostMapping("/find-by-ids")
+     ResponseEntity<List<RecipeDto>> findRecipesByIds(@RequestBody List<Long> ids);
+
 }

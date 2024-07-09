@@ -58,4 +58,9 @@ public class RecipeApiController implements RecipeApi {
     public ResponseEntity<List<RecipeDto>> getRecipesRecommendations(Integer limit, Integer page) {
         return recipeService.getRecommendations(limit, page);
     }
+
+    @Override
+    public ResponseEntity<List<RecipeDto>> findRecipesByIds(List<Long> ids) {
+        return recipeService.getRecipesByIds(ids);
+    }
 }

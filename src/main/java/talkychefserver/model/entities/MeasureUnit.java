@@ -25,6 +25,9 @@ public class MeasureUnit {
     @Column(unique = true)
     private String name;
 
+    @Column(name = "conversion_to_grams")
+    private Long conversionToGrams;
+
 
     @OneToMany(mappedBy="unit")
     @ToString.Exclude

@@ -10,5 +10,4 @@ import java.util.Optional;
 public interface MeasureUnitRepository extends CrudRepository<MeasureUnit, Long> {
 
     Optional<MeasureUnit> findByName(String name);
-
 }

@@ -40,6 +40,7 @@ public class Recipe {
 
     private Integer servings;
 
+    private Long totalWeight;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
