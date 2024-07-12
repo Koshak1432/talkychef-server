@@ -76,12 +76,17 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
     List<Recipe> findByCollectionId(Long id, int limit, int page);
 
     @Query(value = """
+            WITH forbidden_ingredients AS (
+                SELECT ingredient_id
+                FROM ingredient_mappings im
+                WHERE im.similar_ingredient_with_nutrition_id IN (:forbiddenProductIds)
+            )
             SELECT r.*
             FROM recipes r
             WHERE r.id NOT IN (
                 SELECT rp.recipe_id
                 FROM ingredients_distribution rp
-                WHERE rp.ingredient_id IN (:forbiddenProductIds);
+                WHERE rp.ingredient_id IN (SELECT ingredient_id FROM forbidden_ingredients))
             """, nativeQuery = true)
     List<Recipe> findRecipesNotContainingProducts(@Param("forbiddenProductIds") List<Long> forbiddenProductIds);
 }
