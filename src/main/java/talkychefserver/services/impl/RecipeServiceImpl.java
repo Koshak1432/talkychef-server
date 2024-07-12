@@ -150,7 +150,7 @@ public class RecipeServiceImpl implements RecipeService {
         log.info("Adding recipe to saved(own) collection");
         String savedName = author.getUid() + "_saved";
         Collection saveCollection = collectionRepository.findByAuthorIdUserRecipeCollection(author.getId(),
-                                                                                            savedName).orElse(null);
+                savedName).orElse(null);
         if (saveCollection == null) {
             saveCollection = collectionRepository.save(new Collection(savedName, 0, author));
         }
@@ -209,10 +209,10 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         log.info("Set ingredients distribution");
-        setNutritionParameters( recipe);
+        setNutritionParameters(recipe);
     }
 
-    private void setNutritionParameters( Recipe recipe) {
+    private void setNutritionParameters(Recipe recipe) {
         double kilocalories = 1;
         double proteins = 1;
         double fats = 1;
@@ -233,17 +233,17 @@ public class RecipeServiceImpl implements RecipeService {
             fats += fats + (ingredientWeight / product.getServing() * product.getFat());
             carbohydrates += carbohydrates + (ingredientWeight / product.getServing() * product.getCarbohydrates());
         }
-        if (recipe.getServings()!=null) {
-            kilocalories/=recipe.getServings();
-            proteins/=recipe.getServings();
-            fats/=recipe.getServings();
-            carbohydrates/=recipe.getServings();
-            totalWeight/=recipe.getServings();
+        if (recipe.getServings() != null) {
+            kilocalories /= recipe.getServings();
+            proteins /= recipe.getServings();
+            fats /= recipe.getServings();
+            carbohydrates /= recipe.getServings();
+            totalWeight /= recipe.getServings();
         }
-        recipe.setKilocalories(kilocalories);
-        recipe.setProteins(proteins);
-        recipe.setFats(fats);
-        recipe.setCarbohydrates(carbohydrates);
+        recipe.setKilocalories(recipe.getKilocalories() != null ? recipe.getKilocalories() : kilocalories);
+        recipe.setProteins(recipe.getProteins() != null ? recipe.getProteins() : proteins);
+        recipe.setFats(recipe.getFats() != null ? recipe.getFats() : fats);
+        recipe.setCarbohydrates(recipe.getCarbohydrates() != null ? recipe.getCarbohydrates() : carbohydrates);
         recipe.setTotalWeight((long) totalWeight);
         log.info("Set nutrition distribution");
     }
@@ -265,7 +265,6 @@ public class RecipeServiceImpl implements RecipeService {
         oldSteps.sort(Comparator.comparingInt(Step::getStepNum));
         newSteps.sort(Comparator.comparingInt(Step::getStepNum));
 
-        // rest of the oldSteps will be deleted automatically because of orphanRemoval = true
         for (int i = 0; i < newSteps.size(); ++i) {
             Step newStep = newSteps.get(i);
             if (i < oldSteps.size()) {
@@ -280,7 +279,7 @@ public class RecipeServiceImpl implements RecipeService {
     public ResponseEntity<List<RecipeDto>> searchRecipesByName(String name, Integer limit, Integer page) {
         log.info("Processing search recipes by name [{}]", name);
         List<Recipe> recipes = recipeRepository.findByNameContaining(name, GetUtil.getCurrentLimit(limit),
-                                                                     GetUtil.getCurrentPage(page));
+                GetUtil.getCurrentPage(page));
         List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         log.info("Response recipe list size: {}", recipeDtos.size());
         return ResponseEntity.ok(recipeDtos);
