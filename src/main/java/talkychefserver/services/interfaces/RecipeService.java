@@ -22,5 +22,5 @@ public interface RecipeService {
 
     ResponseEntity<List<CategoryDto>> getCategoriesByRecipeId(Long id);
 
-    ResponseEntity<List<RecipeDto>> getRecipesByIds(List<Long> ids);
+    ResponseEntity<List<RecipeDto>> getRecipesByIds(List<Long> ids, Integer limit);
 }

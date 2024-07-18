@@ -87,6 +87,8 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
                 SELECT rp.recipe_id
                 FROM ingredients_distribution rp
                 WHERE rp.ingredient_id IN (SELECT ingredient_id FROM forbidden_ingredients))
+            LIMIT :limit
             """, nativeQuery = true)
-    List<Recipe> findRecipesNotContainingProducts(@Param("forbiddenProductIds") List<Long> forbiddenProductIds);
+
+    List<Recipe> findRecipesNotContainingProducts(@Param("forbiddenProductIds") List<Long> forbiddenProductIds, @Param("limit") Integer limit);
 }

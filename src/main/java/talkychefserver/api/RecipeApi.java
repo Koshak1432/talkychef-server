@@ -53,6 +53,6 @@ public interface RecipeApi {
             @RequestParam(value = "page", required = false) @PositiveOrZero Integer page);
 
     @PostMapping("/find-by-ids")
-     ResponseEntity<List<RecipeDto>> findRecipesByIds(@RequestBody List<Long> ids);
+     ResponseEntity<List<RecipeDto>> findRecipesByIds(@RequestBody List<Long> ids, @RequestParam(value = "limit", required = false, defaultValue = "100") @Positive Integer limit );
 
 }
