@@ -319,8 +319,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> getRecipesByIds(List<Long> productIds) {
-        List<Recipe> recipes = recipeRepository.findRecipesNotContainingProducts(productIds);
+    public ResponseEntity<List<RecipeDto>> getRecipesByIds(List<Long> productIds, Integer limit) {
+        List<Recipe> recipes = recipeRepository.findRecipesNotContainingProducts(productIds, limit);
         List<RecipeDto> recipeDtos = recipes.stream().map(recipe -> mapper.map(recipe, RecipeDto.class)).toList();
         return ResponseEntity.ok(recipeDtos);
     }

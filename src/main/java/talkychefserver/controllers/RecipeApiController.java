@@ -12,8 +12,6 @@ import talkychefserver.services.interfaces.RecipeService;
 
 import java.util.List;
 
-//TODO категории в рецепты добавить
-
 @CrossOrigin(maxAge = 1440)
 @RestController
 public class RecipeApiController implements RecipeApi {
@@ -60,7 +58,7 @@ public class RecipeApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<List<RecipeDto>> findRecipesByIds(List<Long> ids) {
-        return recipeService.getRecipesByIds(ids);
+    public ResponseEntity<List<RecipeDto>> findRecipesByIds(List<Long> ids, Integer limit) {
+        return recipeService.getRecipesByIds(ids, limit);
     }
 }

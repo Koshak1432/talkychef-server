@@ -32,8 +32,9 @@ BEGIN
                p.carbohydrates,
                mu.conversion_to_grams
         FROM ingredients_distribution id
+            JOIN ingredient_mappings im ON id.ingredient_id = im.ingredient_id
                  JOIN ingredients_with_nutrition p
-                      ON id.ingredient_id = p.ingredient_id
+                      ON im.similar_ingredient_with_nutrition_id = p.ingredient_id
                  JOIN measure_units mu ON id.measure_unit_id = mu.id
         WHERE id.recipe_id = recipee_id
         LOOP
