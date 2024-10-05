@@ -23,7 +23,7 @@ RUN gradle bootJar
 
 
 # Run stage
-FROM openjdk:17-jdk-alpine
+FROM amazoncorretto:17-alpine
 RUN apk update
 RUN apk add vim
 ENV APP_HOME=/usr/app

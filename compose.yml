@@ -1,3 +1,4 @@
+version: '2'
 services:
   talkychef:
     build: .
@@ -6,13 +7,26 @@ services:
       - 8080:8080
     volumes:
       - ./logs:/usr/app/logs
-    env_file:
-      - ./env/talkychef.env
+    environment:
+      DB_NAME: postgresql
+      DATASOURCE_URL: jdbc:postgresql://database:5432/postgres
+      DATASOURCE_USERNAME: ${DB_USER}
+      DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+      ENABLE_SSL: ${ENABLE_SSL}
+      SERVER_PORT: 8080
+      ENABLE_HTTP2: ${ENABLE_HTTP2}
+
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+
+      SECRET_ACCESS: ${SECRET_ACCESS}
+      SECRET_REFRESH: ${SECRET_REFRESH}
     depends_on:
       - flyway
     networks:
       - talkychef-net
-
+    restart: always
 
   recognizer:
     image: koshak1432/talky-chef-recognizer-image:1.0
@@ -27,8 +41,9 @@ services:
     container_name: database
     ports:
       - 5432:5432
-    env_file:
-      - ./env/postgres.env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
       - talkychef-net
     volumes:
@@ -39,20 +54,26 @@ services:
       interval: 15s
       timeout: 10s
       retries: 3
+    restart: always
 
   flyway:
     container_name: flyway
     image: flyway/flyway:latest
-    command: -configFiles=/flyway/conf/flyway.conf -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    entrypoint: /bin/bash
+    command: [
+      "-c",
+      "/flyway/flyway -url=jdbc:postgresql://database:5432/postgres -schemas=public -user=$$DB_USER -password=$$DB_PASSWORD -locations=filesystem:/flyway/sql -connectRetries=60 migrate"
+    ]
     volumes:
       - ./src/main/resources/db:/flyway/sql
-      - ./env/flyway.conf:/flyway/conf/flyway.conf
     depends_on:
       database:
         condition: service_healthy
     networks:
       - talkychef-net
-
 
 networks:
   talkychef-net:

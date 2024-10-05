@@ -1,0 +1,43 @@
+name: Deploy by runner
+
+on:
+  push:
+    branches: ["ci/cd", "main"]
+
+jobs:
+  prepare-prod:
+    runs-on: self-hosted
+    environment: prod
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      ENABLE_SSL: ${{ vars.ENABLE_SSL }}
+      ENABLE_HTTP2: ${{ vars.ENABLE_HTTP2 }}
+      MAIL_USERNAME: ${{ vars.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ vars.MAIL_PASSWORD }}
+      SECRET_ACCESS: ${{ vars.SECRET_ACCESS }}
+      SECRET_REFRESH: ${{ vars.SECRET_REFRESH }}
+    steps:
+#      - name: Stop and remove containers, networks
+#        run: docker-compose -f docker/docker-compose.yml down
+      - name: Remove unused data
+        run: docker system prune -a -f
+  deploy-on-prod:
+    runs-on: self-hosted
+    environment: prod
+    needs: prepare-prod
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      ENABLE_SSL: ${{ vars.ENABLE_SSL }}
+      ENABLE_HTTP2: ${{ vars.ENABLE_HTTP2 }}
+      MAIL_USERNAME: ${{ vars.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ vars.MAIL_PASSWORD }}
+      SECRET_ACCESS: ${{ vars.SECRET_ACCESS }}
+      SECRET_REFRESH: ${{ vars.SECRET_REFRESH }}
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+      - name: docker-compose
+        run: docker-compose -f compose.yml up -d
