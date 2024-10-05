@@ -18,8 +18,8 @@ jobs:
       SECRET_ACCESS: ${{ vars.SECRET_ACCESS }}
       SECRET_REFRESH: ${{ vars.SECRET_REFRESH }}
     steps:
-#      - name: Stop and remove containers, networks
-#        run: docker-compose -f docker/docker-compose.yml down
+      - name: Stop and remove containers, networks
+        run: docker compose -f compose.yml down
       - name: Remove unused data
         run: docker system prune -a -f
   deploy-on-prod:

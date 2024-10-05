@@ -9,6 +9,7 @@ services:
       - ./logs:/usr/app/logs
     environment:
       DB_NAME: postgresql
+      SCHEMA_NAME: public
       DATASOURCE_URL: jdbc:postgresql://database:5432/postgres
       DATASOURCE_USERNAME: ${DB_USER}
       DATASOURCE_PASSWORD: ${DB_PASSWORD}
